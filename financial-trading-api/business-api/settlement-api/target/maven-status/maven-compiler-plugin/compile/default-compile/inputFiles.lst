@@ -1,8 +1,0 @@
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/enums/SettlementStatus.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/events/SettlementCompletedEvent.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/events/SettlementFailedEvent.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/commands/StartSettlementCommand.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/services/SettlementService.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/dto/SettlementDTO.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/dto/SettlementReportDTO.java
-/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-api/business-api/settlement-api/src/main/java/net/ijupiter/trading/api/settlement/events/SettlementStartedEvent.java

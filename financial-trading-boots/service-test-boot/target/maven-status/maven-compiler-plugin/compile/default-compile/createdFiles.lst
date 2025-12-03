@@ -1,7 +1,0 @@
-net/ijupiter/trading/boot/service/test/config/QueryProperties.class
-net/ijupiter/trading/boot/service/test/config/QueryProperties$Cache.class
-net/ijupiter/trading/boot/service/test/config/MessageConfig.class
-net/ijupiter/trading/boot/service/test/config/QueryProperties$EventProcessor.class
-net/ijupiter/trading/boot/service/test/config/QueryProperties$Pagination.class
-net/ijupiter/trading/boot/service/test/TestServiceApplication.class
-net/ijupiter/trading/boot/service/test/config/AxonConfig.class

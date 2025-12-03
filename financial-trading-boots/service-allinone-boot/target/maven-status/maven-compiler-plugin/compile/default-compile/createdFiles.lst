@@ -1,7 +1,0 @@
-net/ijupiter/trading/boot/service/allinone/ServiceApplication.class
-net/ijupiter/trading/boot/service/allinone/config/QueryProperties$Cache.class
-net/ijupiter/trading/boot/service/allinone/config/QueryProperties$Pagination.class
-net/ijupiter/trading/boot/service/allinone/config/QueryConfig.class
-net/ijupiter/trading/boot/service/allinone/config/AxonConfig.class
-net/ijupiter/trading/boot/service/allinone/config/QueryProperties$EventProcessor.class
-net/ijupiter/trading/boot/service/allinone/config/QueryProperties.class

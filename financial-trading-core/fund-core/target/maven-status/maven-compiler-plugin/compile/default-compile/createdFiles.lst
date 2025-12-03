@@ -1,7 +1,0 @@
-net/ijupiter/trading/core/fund/repositories/FundAccountRepository.class
-net/ijupiter/trading/core/fund/config/FundConfig.class
-net/ijupiter/trading/core/fund/entities/FundAccountEntity.class
-net/ijupiter/trading/core/fund/services/FundServiceImpl.class
-net/ijupiter/trading/core/fund/entities/FundTransactionEntity.class
-net/ijupiter/trading/core/fund/repositories/FundTransactionRepository.class
-net/ijupiter/trading/core/fund/aggregates/FundAccountAggregate.class

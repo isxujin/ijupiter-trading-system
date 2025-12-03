@@ -1,9 +1,0 @@
-net/ijupiter/trading/web/admin/controller/AdminHomeController.class
-net/ijupiter/trading/web/admin/config/AdminSecurityConfig.class
-net/ijupiter/trading/web/admin/controller/AdminBaseController$MenuItem.class
-net/ijupiter/trading/web/admin/controller/AdminBaseController.class
-net/ijupiter/trading/web/admin/controller/AdminBaseController$NavigationItem.class
-net/ijupiter/trading/web/admin/controller/SettingsController.class
-net/ijupiter/trading/web/admin/controller/AdminLoginController.class
-net/ijupiter/trading/web/admin/controller/ProductController.class
-net/ijupiter/trading/web/admin/controller/TradeController.class

@@ -1,2 +1,0 @@
-# Spring Boot 自动配置
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.ijupiter.trading.web.common.config.CommonAutoConfiguration
