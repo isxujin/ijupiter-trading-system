@@ -1,0 +1,32 @@
+# Spring 基础配置
+spring:
+  application:
+    name: web-test-boot
+  # Thymeleaf 配置
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/admin/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+  # 静态资源配置
+  web:
+    resources:
+      static-locations: classpath:/static/admin/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+
+# 服务器配置
+server:
+  port: 9000  # 日志中显示端口是9000，保持一致
+
+# 管理员终端自定义配置（补全缺失的属性）
+admin:
+  terminal:
+    title: 金融交易系统管理平台  # 缺失的配置项
+    version: 1.0.1-SNAPSHOT     # 缺失的配置项
+
+# 日志配置（便于调试）
+logging:
+  level:
+    org.springframework.security: INFO
+    net.ijupiter.trading.web.admin: DEBUG
+    org.springframework.beans.factory: DEBUG

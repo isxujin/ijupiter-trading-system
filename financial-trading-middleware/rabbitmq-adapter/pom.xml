@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.ijupiter.trading</groupId>
+        <artifactId>financial-trading-middleware</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>rabbitmq-adapter</artifactId>
+    <packaging>jar</packaging>
+    <name>RabbitMQ Adapter</name>
+    <description>RabbitMQ消息队列适配器实现</description>
+
+    <dependencies>
+        <!-- API依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>message-adapter-api</artifactId>
+        </dependency>
+        
+        <!-- RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+    </dependencies>
+</project>

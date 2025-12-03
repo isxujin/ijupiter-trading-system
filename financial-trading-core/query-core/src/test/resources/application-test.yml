@@ -1,0 +1,46 @@
+# 测试配置文件
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+  data:
+    mongodb:
+      host: localhost
+      port: 0
+      database: testdb
+  redis:
+    host: localhost
+    port: 0
+    database: 0
+  rabbitmq:
+    host: localhost
+    port: 0
+    virtual-host: /
+
+axon:
+  amqp:
+    transaction-mode: none
+  tokenstore:
+    jdbc:
+      enable-purge: true
+
+trading:
+  query:
+    cache:
+      enabled: false
+
+logging:
+  level:
+    net.ijupiter.trading: DEBUG
+    org.axonframework: DEBUG
+    org.springframework.amqp: WARN

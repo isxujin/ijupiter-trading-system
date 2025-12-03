@@ -1,0 +1,17 @@
+net/ijupiter/trading/api/product/commands/SuspendProductCommand.class
+net/ijupiter/trading/api/product/enums/ProductType.class
+net/ijupiter/trading/api/product/events/ProductDelistedEvent.class
+net/ijupiter/trading/api/product/events/ProductResumedEvent.class
+net/ijupiter/trading/api/product/services/ProductService.class
+net/ijupiter/trading/api/product/dto/ProductDTO.class
+net/ijupiter/trading/api/product/dto/ProductDTO$ProductDTOBuilder.class
+net/ijupiter/trading/api/product/commands/ResumeProductCommand.class
+net/ijupiter/trading/api/product/events/ProductSuspendedEvent.class
+net/ijupiter/trading/api/product/commands/CreateProductCommand.class
+net/ijupiter/trading/api/product/events/ProductUpdatedEvent.class
+net/ijupiter/trading/api/product/commands/DelistProductCommand.class
+net/ijupiter/trading/api/product/commands/UpdateProductCommand.class
+net/ijupiter/trading/api/product/dto/ProductTradingRules$ProductTradingRulesBuilder.class
+net/ijupiter/trading/api/product/events/ProductCreatedEvent.class
+net/ijupiter/trading/api/product/enums/ProductStatus.class
+net/ijupiter/trading/api/product/dto/ProductTradingRules.class

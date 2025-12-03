@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录 - 金融交易系统管理平台</title>
+
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        .login-card {
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .brand-logo i {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+        .brand-logo span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <div class="card login-card">
+            <div class="card-body p-4">
+                <!-- 品牌标志 -->
+                <div class="brand-logo">
+                    <i class="bi bi-shield-check"></i>
+                    <span>金融交易系统</span>
+                </div>
+                
+                <!-- 登录表单 -->
+                <form th:action="@{/admin/login}" method="post">
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        用户名或密码错误
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                        您已成功退出登录
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">用户名</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="请输入用户名" required autofocus>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">密码</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="请输入密码" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me">
+                        <label class="form-check-label" for="rememberMe">
+                            记住我
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> 登录
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <small class="text-muted">
+                        &copy; 2023 金融交易系统管理平台 | 版本 1.0.1-SNAPSHOT
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WebJars - jQuery -->
+    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>
+    
+    <!-- WebJars - Bootstrap JS -->
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    
+    <script>
+        // 获取URL中的错误参数
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('error')) {
+                $('.alert-danger').show();
+            }
+            if (urlParams.has('logout')) {
+                $('.alert-success').show();
+            }
+        });
+    </script>
+</body>
+</html>

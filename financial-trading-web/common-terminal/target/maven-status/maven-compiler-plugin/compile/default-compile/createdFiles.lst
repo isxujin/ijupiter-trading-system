@@ -1,0 +1,11 @@
+net/ijupiter/trading/web/common/config/CommonAutoConfiguration.class
+net/ijupiter/trading/web/common/config/ThymeleafConfig.class
+net/ijupiter/trading/web/common/controller/BaseController.class
+net/ijupiter/trading/web/common/controller/HomeController.class
+net/ijupiter/trading/web/common/controller/WebErrorController.class
+net/ijupiter/trading/web/common/controller/ErrorController.class
+net/ijupiter/trading/web/common/controller/HomeController$SystemInfo.class
+net/ijupiter/trading/web/common/dto/ApiResponse.class
+net/ijupiter/trading/web/common/controller/HomeController$MenuItem.class
+net/ijupiter/trading/web/common/controller/BaseController$WebJarsVersion.class
+net/ijupiter/trading/web/common/config/CommonConfig.class

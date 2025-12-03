@@ -1,0 +1,5 @@
+/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-core/account-core/src/main/java/net/ijupiter/trading/core/account/repositories/AccountRepository.java
+/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-core/account-core/src/main/java/net/ijupiter/trading/core/account/entities/AccountEntity.java
+/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-core/account-core/src/main/java/net/ijupiter/trading/core/account/aggregates/AccountAggregate.java
+/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-core/account-core/src/main/java/net/ijupiter/trading/core/account/config/AccountConfig.java
+/Volumes/iWork/iGitRoot/xujin/ijupiter-trading-system/financial-trading-core/account-core/src/main/java/net/ijupiter/trading/core/account/services/AccountServiceImpl.java
