@@ -99,7 +99,7 @@
                 <version>${webjars-bootstrap.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.webjars</groupId>
+                <groupId>org.webjars.npm</groupId>
                 <artifactId>jquery</artifactId>
                 <version>${webjars-jquery.version}</version>
             </dependency>
@@ -109,8 +109,8 @@
                 <version>${webjars-bootstrap-icons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>chartjs</artifactId>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>chart.js</artifactId>
                 <version>${webjars-chartjs.version}</version>
             </dependency>
 

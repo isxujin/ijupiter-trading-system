@@ -6,10 +6,13 @@
     <title th:text="'错误 - ' + ${status != null ? status : '500'} + ' - iJupiter Trading System'">错误 - iJupiter Trading System</title>
 
     <!-- Bootstrap CSS -->
-    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
+    <!--    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">-->
+    <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css}" rel="stylesheet">
-    
+    <!--    <link th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css}" rel="stylesheet">-->
+    <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
+
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <!-- 自定义样式 -->
     <style>
         .error-container {
@@ -75,6 +78,7 @@
     </div>
 
     <!-- WebJars - Bootstrap JS -->
-    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <!--    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>-->
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
 </body>
 </html>

@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title + ' - ' + systemTitle}">交易管理 - 金融交易系统管理平台</title>
 
-    <!-- 替换原来的错误表达式，比如引入Bootstrap CSS -->
-    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- 引入Bootstrap JS -->
-    <script th:href="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <!-- Bootstrap CSS -->
+    <!--    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">-->
+    <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
+
     <!-- Bootstrap Icons -->
-    <link th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css}" rel="stylesheet">
-    
+    <!--    <link th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css}" rel="stylesheet">-->
+    <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
+
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <!-- 自定义样式 -->
     <style>
         .sidebar {
@@ -317,10 +319,12 @@
     </div>
 
     <!-- WebJars - jQuery -->
-    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>
-    
+    <!--    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>-->
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+
     <!-- WebJars - Bootstrap JS -->
-    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <!--    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>-->
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
     
     <script>
         // 刷新按钮点击事件

@@ -1,9 +1,10 @@
 package net.ijupiter.trading.web.common.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.webjars.WebJarAssetLocator;
 
 /**
  * 终端公共基础控制器
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Slf4j
 @Controller
 public abstract class BaseController {
+    // 注入WebJarAssetLocator用于动态获取版本
+    @Autowired
+    private WebJarAssetLocator webJarAssetLocator;
 
     /**
      * 添加全局模型属性
@@ -29,16 +33,25 @@ public abstract class BaseController {
         return new WebJarsVersion();
     }
 
-    /**
-     * WebJars版本信息DTO
-     */
-    public static class WebJarsVersion {
+    // 内部类：通过WebJarAssetLocator获取版本
+    public class WebJarsVersion {
+        // 获取bootstrap版本
         public String getBootstrap() {
-            return "5.2.3";
+            // 从getWebJars()返回的map中获取"bootstrap"对应的版本
+            return webJarAssetLocator.getWebJars().get("bootstrap");
         }
 
         public String getJquery() {
-            return "3.6.4";
+            return webJarAssetLocator.getWebJars().get("jquery");
+        }
+
+        public String getChartjs() {
+            return webJarAssetLocator.getWebJars().get("chart.js");
+        }
+
+        // 新增：获取 bootstrap-icons 版本
+        public String getBootstrapIcons() {
+            return webJarAssetLocator.getWebJars().get("bootstrap-icons");
         }
     }
 }
