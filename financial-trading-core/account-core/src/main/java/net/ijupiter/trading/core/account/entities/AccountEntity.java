@@ -1,8 +1,10 @@
 package net.ijupiter.trading.core.account.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 
 import jakarta.persistence.*;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
  * @since 1.0.1-SNAPSHOT
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "account", indexes = {
         @Index(name = "idx_user_id", columnList = "user_id"),
@@ -23,7 +26,7 @@ import java.time.LocalDateTime;
         @Index(name = "idx_account_status", columnList = "account_status"),
         @Index(name = "idx_user_type_status", columnList = "user_id, account_type, account_status")
 })
-public class AccountEntity {
+public class AccountEntity extends BaseEntityWithCustomId {
 
     @Id
     @Column(name = "account_id")
@@ -42,12 +45,6 @@ public class AccountEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false)
     private AccountStatus accountStatus;
-
-    @Column(name = "create_time", nullable = false)
-    private LocalDateTime createTime;
-
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
 
     @Column(name = "close_time")
     private LocalDateTime closeTime;

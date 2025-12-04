@@ -1,5 +1,6 @@
 package net.ijupiter.trading.system.api.services;
 
+import net.ijupiter.trading.common.base.BaseService;
 import net.ijupiter.trading.system.api.dto.OperatorDTO;
 import net.ijupiter.trading.system.api.dto.OperatorQueryDTO;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author iJupiter
  * @version 1.0.1
  */
-public interface OperatorService {
+public interface OperatorService extends BaseService<OperatorDTO, String> {
 
     /**
      * 查询操作员列表

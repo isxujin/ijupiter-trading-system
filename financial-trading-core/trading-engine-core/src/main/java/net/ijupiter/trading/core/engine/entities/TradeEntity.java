@@ -2,6 +2,7 @@ package net.ijupiter.trading.core.engine.entities;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 
 //import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
         @Index(name = "idx_product_id", columnList = "product_id"),
         @Index(name = "idx_trade_time", columnList = "trade_time")
 })
-public class TradeEntity {
+public class TradeEntity extends BaseEntityWithCustomId {
 
     @Id
     @Column(name = "trade_id")

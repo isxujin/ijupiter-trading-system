@@ -3,6 +3,7 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -18,8 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_permission")
 @Comment("权限表")
-public class Permission {
-
+public class Permission  extends BaseEntityWithCustomId {
     /**
      * 权限ID
      */
@@ -91,17 +91,4 @@ public class Permission {
     @Comment("状态（0-禁用，1-启用）")
     private Integer status;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_time")
-    @Comment("更新时间")
-    private LocalDateTime updateTime;
 }

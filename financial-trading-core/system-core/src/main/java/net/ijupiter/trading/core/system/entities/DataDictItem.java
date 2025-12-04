@@ -3,6 +3,7 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_data_dict_item")
 @Comment("数据字典项表")
-public class DataDictItem {
+public class DataDictItem  extends BaseEntityWithCustomId {
 
     /**
      * 字典项ID
@@ -70,17 +71,4 @@ public class DataDictItem {
     @Comment("状态（0-禁用，1-启用）")
     private Integer status;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_time")
-    @Comment("更新时间")
-    private LocalDateTime updateTime;
 }

@@ -16,6 +16,10 @@
     <description>账户管理API接口定义</description>
 
     <dependencies>
-
+        <!-- Common模块依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>financial-trading-common</artifactId>
+        </dependency>
     </dependencies>
 </project>

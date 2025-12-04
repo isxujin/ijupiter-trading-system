@@ -1,7 +1,9 @@
 package net.ijupiter.trading.core.system.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
@@ -15,10 +17,11 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "sys_operator")
 @Comment("操作员表")
-public class Operator {
+public class Operator extends BaseEntityWithCustomId {
 
     /**
      * 操作员ID
@@ -69,20 +72,6 @@ public class Operator {
     @Column(name = "status")
     @Comment("状态（0-禁用，1-启用）")
     private Integer status;
-
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_time")
-    @Comment("更新时间")
-    private LocalDateTime updateTime;
 
     /**
      * 最后登录时间

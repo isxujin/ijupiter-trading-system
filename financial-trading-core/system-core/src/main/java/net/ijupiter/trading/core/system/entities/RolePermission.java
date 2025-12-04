@@ -3,6 +3,8 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntity;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -18,17 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_role_permission")
 @Comment("角色权限关联表")
-public class RolePermission {
-
-    /**
-     * ID
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Comment("主键ID")
-    private Long id;
-
+public class RolePermission  extends BaseEntity {
     /**
      * 角色ID
      */
@@ -43,10 +35,4 @@ public class RolePermission {
     @Comment("权限ID")
     private String permissionId;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
 }

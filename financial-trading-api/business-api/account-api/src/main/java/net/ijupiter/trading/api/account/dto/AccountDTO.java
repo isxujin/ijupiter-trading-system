@@ -3,9 +3,11 @@ package net.ijupiter.trading.api.account.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
+import net.ijupiter.trading.common.base.BaseDTOWithCustomId;
 
 import java.time.LocalDateTime;
 
@@ -19,15 +21,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountDTO {
+@EqualsAndHashCode(callSuper = true)
+public class AccountDTO extends BaseDTOWithCustomId {
 
     private String accountId;
     private String userId;
     private String accountName;
     private AccountType accountType;
     private AccountStatus accountStatus;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
     private LocalDateTime closeTime;
     private String closeReason;
 

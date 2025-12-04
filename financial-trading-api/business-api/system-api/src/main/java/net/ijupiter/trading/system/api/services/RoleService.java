@@ -1,5 +1,6 @@
 package net.ijupiter.trading.system.api.services;
 
+import net.ijupiter.trading.common.base.BaseService;
 import net.ijupiter.trading.system.api.dto.RoleDTO;
 import net.ijupiter.trading.system.api.dto.RoleQueryDTO;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author iJupiter
  * @version 1.0.1
  */
-public interface RoleService {
+public interface RoleService extends BaseService<RoleDTO, String> {
 
     /**
      * 查询角色列表

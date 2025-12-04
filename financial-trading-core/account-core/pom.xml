@@ -16,6 +16,12 @@
     <description>账户管理核心实现</description>
 
     <dependencies>
+        <!-- Common模块依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>financial-trading-common</artifactId>
+        </dependency>
+        
         <!-- API依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>

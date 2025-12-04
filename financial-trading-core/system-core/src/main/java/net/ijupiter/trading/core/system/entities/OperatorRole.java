@@ -3,6 +3,8 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntity;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -18,17 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_operator_role")
 @Comment("操作员角色关联表")
-public class OperatorRole {
-
-    /**
-     * ID
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @Comment("主键ID")
-    private Long id;
-
+public class OperatorRole  extends BaseEntity{
     /**
      * 操作员ID
      */
@@ -43,10 +35,4 @@ public class OperatorRole {
     @Comment("角色ID")
     private String roleId;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
 }

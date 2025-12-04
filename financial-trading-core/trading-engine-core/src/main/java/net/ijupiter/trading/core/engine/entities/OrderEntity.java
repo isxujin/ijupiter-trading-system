@@ -6,6 +6,7 @@ import net.ijupiter.trading.api.engine.enums.OrderStatus;
 import net.ijupiter.trading.api.engine.enums.OrderType;
 
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 
 //import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ import java.time.LocalDateTime;
         @Index(name = "idx_side", columnList = "side"),
         @Index(name = "idx_product_status_side", columnList = "product_id, status, side")
 })
-public class OrderEntity {
+public class OrderEntity extends BaseEntityWithCustomId {
 
     @Id
     @Column(name = "order_id")

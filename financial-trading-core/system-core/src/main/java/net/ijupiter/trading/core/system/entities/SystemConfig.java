@@ -3,6 +3,7 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_config")
 @Comment("系统配置表")
-public class SystemConfig {
+public class SystemConfig  extends BaseEntityWithCustomId {
 
     /**
      * 配置ID
@@ -63,17 +64,4 @@ public class SystemConfig {
     @Comment("是否系统内置配置")
     private Boolean isSystem;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_time")
-    @Comment("更新时间")
-    private LocalDateTime updateTime;
 }

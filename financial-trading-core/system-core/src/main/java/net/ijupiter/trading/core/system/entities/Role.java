@@ -1,7 +1,9 @@
 package net.ijupiter.trading.core.system.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
@@ -15,10 +17,11 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "sys_role")
 @Comment("角色表")
-public class Role {
+public class Role extends BaseEntityWithCustomId {
 
     /**
      * 角色ID
@@ -62,18 +65,4 @@ public class Role {
     @Column(name = "is_system")
     @Comment("是否系统内置角色")
     private Boolean isSystem;
-
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_time")
-    @Comment("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_time")
-    @Comment("更新时间")
-    private LocalDateTime updateTime;
 }

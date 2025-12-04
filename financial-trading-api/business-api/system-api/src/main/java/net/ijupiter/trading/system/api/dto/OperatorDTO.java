@@ -1,7 +1,9 @@
 package net.ijupiter.trading.system.api.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import net.ijupiter.trading.common.base.BaseDTOWithCustomId;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -15,7 +17,8 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class OperatorDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class OperatorDTO extends BaseDTOWithCustomId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -66,16 +69,6 @@ public class OperatorDTO implements Serializable {
      * 角色名称列表
      */
     private List<String> roleNames;
-
-    /**
-     * 创建时间
-     */
-    private String createTime;
-
-    /**
-     * 更新时间
-     */
-    private String updateTime;
 
     /**
      * 最后登录时间

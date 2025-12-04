@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -269,5 +270,108 @@ public class AccountServiceImpl implements AccountService {
         AccountDTO dto = new AccountDTO();
         BeanUtils.copyProperties(account, dto);
         return dto;
+    }
+
+    /**
+     * 转换DTO为账户实体
+     * 
+     * @param dto 账户DTO
+     * @return 账户实体
+     */
+    private AccountEntity convertToAccountEntity(AccountDTO dto) {
+        AccountEntity entity = new AccountEntity();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
+    }
+
+    // ==================== BaseService接口实现 ====================
+
+    @Override
+    @Transactional
+    public AccountDTO save(AccountDTO entity) {
+        log.debug("保存账户实体: {}", entity);
+        AccountEntity accountEntity = convertToAccountEntity(entity);
+        AccountEntity savedEntity = accountRepository.save(accountEntity);
+        return convertToAccountDTO(savedEntity);
+    }
+
+    @Override
+    public Optional<AccountDTO> findById(String id) {
+        log.debug("根据ID查询账户: {}", id);
+        return accountRepository.findById(id)
+                .map(this::convertToAccountDTO);
+    }
+
+    @Override
+    public List<AccountDTO> findAll() {
+        log.debug("查询所有账户");
+        return accountRepository.findAll().stream()
+                .map(this::convertToAccountDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        log.debug("检查账户是否存在: {}", id);
+        return accountRepository.existsById(id);
+    }
+
+    @Override
+    public long count() {
+        log.debug("统计账户数量");
+        return accountRepository.count();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(String id) {
+        log.info("删除账户: {}", id);
+        accountRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void delete(AccountDTO entity) {
+        log.info("删除账户实体: {}", entity);
+        if (entity.getAccountId() != null) {
+            accountRepository.deleteById(entity.getAccountId());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll() {
+        log.info("删除所有账户");
+        accountRepository.deleteAll();
+    }
+
+    @Override
+    @Transactional
+    public AccountDTO saveAndFlush(AccountDTO entity) {
+        log.debug("保存并刷新账户实体: {}", entity);
+        AccountEntity accountEntity = convertToAccountEntity(entity);
+        AccountEntity savedEntity = accountRepository.saveAndFlush(accountEntity);
+        return convertToAccountDTO(savedEntity);
+    }
+
+    @Override
+    @Transactional
+    public List<AccountDTO> saveAll(List<AccountDTO> entities) {
+        log.debug("批量保存账户实体: {}", entities.size());
+        List<AccountEntity> accountEntities = entities.stream()
+                .map(this::convertToAccountEntity)
+                .collect(Collectors.toList());
+        List<AccountEntity> savedEntities = accountRepository.saveAll(accountEntities);
+        return savedEntities.stream()
+                .map(this::convertToAccountDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AccountDTO> findAllById(List<String> ids) {
+        log.debug("根据ID列表查询账户: {}", ids);
+        return accountRepository.findAllById(ids).stream()
+                .map(this::convertToAccountDTO)
+                .collect(Collectors.toList());
     }
 }

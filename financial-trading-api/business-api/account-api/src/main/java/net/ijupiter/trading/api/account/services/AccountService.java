@@ -6,6 +6,7 @@ import net.ijupiter.trading.api.account.commands.UpdateAccountCommand;
 import net.ijupiter.trading.api.account.dto.AccountDTO;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
+import net.ijupiter.trading.common.base.BaseService;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ijupiter
  * @since 1.0.1-SNAPSHOT
  */
-public interface AccountService {
+public interface AccountService extends BaseService<AccountDTO, String> {
 
     /**
      * 创建账户
