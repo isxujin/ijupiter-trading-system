@@ -13,7 +13,7 @@ spring:
   # 1.3 静态资源配置
   web:
     resources:
-      static-locations: classpath:/static/admin/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+      static-locations: classpath:/static/management/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
   # 1.4 数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true

@@ -1,0 +1,26 @@
+# 新增 management-terminal 配置
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/management/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+  web:
+    resources:
+      static-locations: classpath:/static/management/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+  security:
+    filter:
+      order: -100
+
+# 管理员终端配置
+admin:
+  terminal:
+    title: 金融交易系统管理平台
+    version: 1.0.1-SNAPSHOT
+
+# 日志配置
+logging:
+  level:
+    org.springframework.security: INFO
+    net.ijupiter.trading.web.admin: INFO

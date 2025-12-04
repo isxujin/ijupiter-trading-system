@@ -17,7 +17,7 @@
 
     <modules>
         <module>business-api</module>
-        <module>middleware-api</module>
+        <module>middleware-spi</module>
     </modules>
 
     <dependencies>

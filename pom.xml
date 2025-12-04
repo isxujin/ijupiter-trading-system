@@ -51,12 +51,12 @@
             <!-- 接口模块 -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>message-adapter-api</artifactId>
+                <artifactId>message-adapter-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>cache-adapter-api</artifactId>
+                <artifactId>cache-adapter-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -143,22 +143,22 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>common-terminal</artifactId>
+                <artifactId>common-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>system-terminal</artifactId>
+                <artifactId>system-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>investor-terminal</artifactId>
+                <artifactId>investor-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>admin-terminal</artifactId>
+                <artifactId>management-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

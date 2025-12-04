@@ -25,7 +25,7 @@ public class TestWebApplication {
 
         System.out.println("==================================================================");
         System.out.println("[OK] Financial Trading System terminal started successfully!");
-        System.out.println("[OK] Administrator terminal:    http://localhost:9000/admin");
+        System.out.println("[OK] Administrator terminal:    http://localhost:9000/management");
         System.out.println("[OK] Investor terminal:         http://localhost:9000/investor");
         System.out.println("==================================================================");
     }

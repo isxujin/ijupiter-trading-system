@@ -18,11 +18,11 @@
         <!-- Web模块依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>investor-terminal</artifactId>
+            <artifactId>investor-web</artifactId>
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>admin-terminal</artifactId>
+            <artifactId>management-web</artifactId>
         </dependency>
 
         <!-- 1. 核心Web启动依赖 -->

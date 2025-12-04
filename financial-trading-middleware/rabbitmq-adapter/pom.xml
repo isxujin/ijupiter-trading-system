@@ -19,7 +19,7 @@
         <!-- API依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>message-adapter-api</artifactId>
+            <artifactId>message-adapter-spi</artifactId>
         </dependency>
         
         <!-- RabbitMQ -->

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({
-        "net.ijupiter.trading.web",  // admin-terminal的控制器、配置
+        "net.ijupiter.trading.web",  // management-terminal的控制器、配置
         "net.ijupiter.trading.boot.web"
 })
 public class WebApplication extends SpringBootServletInitializer {
@@ -21,7 +21,7 @@ public class WebApplication extends SpringBootServletInitializer {
 
         System.out.println("==================================================================");
         System.out.println("[OK] Financial Trading System terminal started successfully!");
-        System.out.println("[OK] Administrator terminal:    http://localhost:9000/admin");
+        System.out.println("[OK] Administrator terminal:    http://localhost:9000/management");
         System.out.println("[OK] Investor terminal:         http://localhost:9000/investor");
         System.out.println("==================================================================");
     }

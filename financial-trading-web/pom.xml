@@ -16,10 +16,10 @@
     <description>通用金融交易系统 - Web交互模块</description>
 
     <modules>
-        <module>common-terminal</module>
-        <module>investor-terminal</module>
-        <module>admin-terminal</module>
-        <module>system-terminal</module>
+        <module>common-web</module>
+        <module>investor-web</module>
+        <module>management-web</module>
+        <module>system-web</module>
     </modules>
 
     <dependencies>

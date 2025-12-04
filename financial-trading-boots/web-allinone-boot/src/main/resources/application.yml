@@ -5,14 +5,14 @@ spring:
   # Thymeleaf 配置
   thymeleaf:
     cache: false
-    prefix: classpath:/templates/admin/
+    prefix: classpath:/templates/management/
     suffix: .html
     encoding: UTF-8
     mode: HTML
   # 静态资源配置
   web:
     resources:
-      static-locations: classpath:/static/admin/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+      static-locations: classpath:/static/management/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
 
 # 服务器配置
 server:

@@ -6,26 +6,24 @@
 
     <parent>
         <groupId>net.ijupiter.trading</groupId>
-        <artifactId>financial-trading-middleware</artifactId>
+        <artifactId>middleware-spi</artifactId>
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>redis-adapter</artifactId>
+    <artifactId>message-adapter-spi</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Redis Adapter</name>
-    <description>Redis缓存适配器实现</description>
+    <name>Message Adapter API</name>
+    <description>消息适配器API接口定义</description>
 
     <dependencies>
-        <!-- API依赖 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>cache-adapter-spi</artifactId>
-        </dependency>
-        
-        <!-- Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-messaging</artifactId>
         </dependency>
     </dependencies>
 </project>
