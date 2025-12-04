@@ -1,13 +1,13 @@
 # iJupiter 金融交易系统
 
 [![Java Version](https://img.shields.io/badge/Java-17-orange?style=flat&logo=java)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen?style=flat&logo=spring-boot)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?style=flat&logo=spring-boot)](https://spring.io/projects/spring-boot)
 [![Axon Framework](https://img.shields.io/badge/Axon-4.12.2-blue?style=flat&logo=axon-framework)](https://axoniq.io/)
 [![Maven Wrapper](https://img.shields.io/badge/Maven%20Wrapper-3.9.5-red?style=flat&logo=apache-maven)](https://maven.apache.org/)
 
 ## 项目概述
 
-iJupiter金融交易系统是一个基于事件引擎架构的通用金融交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot 2.7.18和Axon Framework 4.12.2构建，具备高可扩展性、高性能和高可用性特点。
+iJupiter金融交易系统是一个基于事件引擎架构的通用金融交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot 3.2.5和Axon Framework 4.12.2构建，具备高可扩展性、高性能和高可用性特点。
 
 系统以事件驱动为核心，通过领域事件解耦各业务模块，实现异步处理和数据最终一致性。项目已配置Maven Wrapper，确保所有开发环境使用一致的Maven版本。
 
@@ -45,16 +45,18 @@ ijupiter-trading-system (父模块)
 │   │   ├── account-api            # 账户API
 │   │   ├── fund-api               # 资金API
 │   │   ├── product-api            # 产品API
+│   │   ├── system-api             # 系统管理API
 │   │   ├── trading-engine-api      # 交易引擎API
 │   │   ├── settlement-api         # 结算API
 │   │   └── query-api             # 查询API
-│   └── middleware-api              # 中间件API
-│       ├── message-adapter-api     # 消息适配器API
-│       └── cache-adapter-api      # 缓存适配器API
+│   └── middleware-spi              # 中间件SPI（服务提供者接口）
+│       ├── message-adapter-spi     # 消息适配器SPI
+│       └── cache-adapter-spi      # 缓存适配器SPI
 ├── financial-trading-core            # 核心业务实现层
 │   ├── account-core                # 账户核心服务
 │   ├── fund-core                   # 资金核心服务
 │   ├── product-core                # 产品核心服务
+│   ├── system-core                 # 系统管理核心服务
 │   ├── trading-engine-core         # 交易引擎核心服务
 │   ├── settlement-core             # 结算核心服务
 │   └── query-core                  # 查询核心服务
@@ -62,9 +64,10 @@ ijupiter-trading-system (父模块)
 │   ├── rabbitmq-adapter            # RabbitMQ消息适配器
 │   └── redis-adapter             # Redis缓存适配器
 ├── financial-trading-web             # Web表示层
-│   ├── common-terminal             # 公共终端模块，提供视图层框架资源和控制层公共资源
-│   ├── admin-terminal              # 管理终端
-│   └── investor-terminal           # 投资者终端
+│   ├── common-web                 # 公共Web模块，提供视图层框架资源和控制层公共资源
+│   ├── management-web             # 管理端Web模块
+│   ├── investor-web               # 投资者端Web模块
+│   └── system-web                 # 系统管理Web模块
 ├── financial-trading-boots            # 应用启动层
 │   ├── service-allinone-boot       # 服务单体启动器
 │   ├── service-test-boot          # 服务测试启动器
@@ -96,8 +99,10 @@ ijupiter-trading-system (父模块)
 #### financial-trading-api
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
-  - **business-api**: 业务领域API，包括账户、资金、产品、交易、结算、查询等API
-  - **middleware-api**: 中间件API，包括消息和缓存适配器API
+  - **business-api**: 业务领域API，包括账户、资金、产品、系统管理、交易、结算、查询等API
+  - **middleware-spi**: 中间件SPI（服务提供者接口），包括：
+    - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
+    - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口
 
 #### financial-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
@@ -105,6 +110,7 @@ ijupiter-trading-system (父模块)
   - **account-core**: 账户管理核心，处理用户账户、权限等
   - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
   - **product-core**: 产品管理核心，处理金融产品定义、规则等
+  - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
   - **trading-engine-core**: 交易引擎核心，处理订单撮合、成交等
   - **settlement-core**: 结算核心，处理资金结算、交收等
   - **query-core**: 查询核心，处理各种查询请求
@@ -118,13 +124,14 @@ ijupiter-trading-system (父模块)
 #### financial-trading-web
 - **职责**: 提供Web界面和API入口
 - **子模块**:
-  - **common-terminal**: 公共终端模块，提供视图层框架资源和控制层公共资源，包括：
+  - **common-web**: 公共Web模块，提供视图层框架资源和控制层公共资源，包括：
     - Spring MVC和Thymeleaf配置
     - WebJars资源管理（Bootstrap和jQuery）
     - 基础控制器类和公共API响应格式
     - 统一的页面模板结构
-  - **admin-terminal**: 管理终端，提供后台管理界面，继承common-terminal的公共资源
-  - **investor-terminal**: 投资者终端，提供交易界面，继承common-terminal的公共资源
+  - **management-web**: 管理端Web模块，提供后台管理界面，继承common-web的公共资源
+  - **investor-web**: 投资者端Web模块，提供交易界面，继承common-web的公共资源
+  - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
 
 #### financial-trading-boots
 - **职责**: 提供不同场景的应用启动入口
@@ -226,8 +233,9 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 
 #### 访问应用
 
-- 管理终端: http://localhost:8080/admin
-- 投资者终端: http://localhost:8080/investor
+- 管理端: http://localhost:8080/admin
+- 投资者端: http://localhost:8080/investor
+- 系统管理: http://localhost:8080/system
 
 ## 核心功能
 
@@ -267,6 +275,12 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 - 资金流水查询
 - 持仓信息查询
 
+### 7. 系统管理
+- 操作员管理
+- 角色权限管理
+- 数据字典管理
+- 系统参数配置
+
 ## 架构特点
 
 ### 1. 领域驱动设计（DDD）
@@ -288,6 +302,16 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 - 系统按业务垂直拆分
 - 每个服务独立部署和扩展
 - 通过API和事件进行服务间通信
+
+### 5. Web公共模块设计
+- **common-web**: 作为Web层的公共基础模块，采用面向对象设计和继承机制
+  - 提供统一的视图层框架（Spring MVC和Thymeleaf）
+  - 集成WebJars管理前端资源（Bootstrap和jQuery）
+  - 定义基础控制器类和统一API响应格式
+  - 实现页面模板继承和组件复用
+  - 支持模块化扩展，各Web模块可继承和扩展公共功能
+- **继承设计**: management-web、investor-web和system-web继承common-web，避免代码重复
+- **资源统一**: 所有前端资源通过WebJars统一管理，确保版本一致性
 
 ## 性能指标
 
@@ -380,20 +404,22 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 - ✅ 账户管理核心模块（聚合、实体、服务）
 - ✅ 交易引擎核心模块（订单匹配、交易执行）
 - ✅ 资金管理核心模块（资金账户、交易记录）
+- ✅ 系统管理核心模块（操作员、角色、权限、数据字典等）
 - ✅ 基础API接口定义
 - ✅ 消息中间件适配器（RabbitMQ）
 - ✅ 缓存中间件适配器（Redis）
 - ✅ Web服务启动器配置
 - ✅ 编码转换脚本
-- ✅ common-terminal公共模块（Spring MVC、Thymeleaf、WebJars集成）
-- ✅ admin-terminal管理终端（重构完成，统一使用公共资源）
+- ✅ common-web公共模块（Spring MVC、Thymeleaf、WebJars集成）
+- ✅ management-web管理端模块（重构完成，统一使用公共资源）
+- ✅ investor-web投资者端模块（重构为使用common-web）
+- ✅ system-web系统管理模块（新增，使用common-web）
 
 ### 待完善功能
 
 - ⏳ 持仓管理模块
 - ⏳ 结算核心模块完整实现
 - ⏳ 风控规则引擎
-- ⏳ investor-terminal投资者终端（重构为使用common-terminal）
 - ⏳ 完整的单元测试覆盖
 - ⏳ API文档生成
 - ⏳ 监控与日志系统
