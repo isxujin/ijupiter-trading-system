@@ -23,6 +23,11 @@
         <spring-data.version>3.5.6</spring-data.version>
         <spring-security.version>6.5.7</spring-security.version>
         <thymeleaf.version>3.2.6.RELEASE</thymeleaf.version>
+        <webjars-locator-core.version>0.59</webjars-locator-core.version>
+        <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>
+        <webjars-jquery.version>3.6.4</webjars-jquery.version>
+        <webjars-bootstrap-icons.version>1.10.5</webjars-bootstrap-icons.version>
+        <webjars-chartjs.version>4.4.3</webjars-chartjs.version>
 
         <lombok.version>1.18.42</lombok.version>
         <hutool.version>5.8.42</hutool.version>
@@ -80,6 +85,33 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+            </dependency>
+
+            <!-- WebJars BOM -->
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>webjars-locator-core</artifactId>
+                <version>${webjars-locator-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>bootstrap</artifactId>
+                <version>${webjars-bootstrap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>jquery</artifactId>
+                <version>${webjars-jquery.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars.npm</groupId>
+                <artifactId>bootstrap-icons</artifactId>
+                <version>${webjars-bootstrap-icons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>chartjs</artifactId>
+                <version>${webjars-chartjs.version}</version>
             </dependency>
 
             <!-- 工具类 -->

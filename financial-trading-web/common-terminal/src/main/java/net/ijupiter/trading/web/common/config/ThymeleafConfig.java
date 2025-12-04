@@ -27,14 +27,11 @@ public class ThymeleafConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // ========== 核心：WebJars资源映射 ==========
-        // 匹配 /webjars/** 请求，映射到classpath:/META-INF/resources/webjars/
-        // 解决 ${webjarsVersion.bootstrap} 依赖的资源访问问题
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/")
-                .setCachePeriod(3600); // 生产环境缓存1小时，开发环境可设为0
+                .setCachePeriod(0); // 生产环境缓存1小时(3600)，开发环境可设为0
 
         // ========== 本地静态资源映射 ==========
-        // 匹配 /static/**、/css/**、/js/**、/img/** 等请求，映射到classpath:/static/
         registry.addResourceHandler("/**")
                 .addResourceLocations(
                         "classpath:/static/",

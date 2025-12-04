@@ -58,7 +58,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 5. WebJars依赖（通过admin-terminal已传递依赖，此处显式声明确保版本一致） -->
+        <!-- 5. WebJars依赖 -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
@@ -66,17 +66,18 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>5.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.6.4</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
             <artifactId>bootstrap-icons</artifactId>
-            <version>1.10.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>chartjs</artifactId>
         </dependency>
 
         <!-- 6. 可选：日志增强（便于测试调试） -->

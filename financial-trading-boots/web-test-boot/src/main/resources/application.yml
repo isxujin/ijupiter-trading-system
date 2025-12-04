@@ -13,12 +13,6 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/admin/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
-  # Spring Security 配置
-#  security:
-#    user:
-#      name: admin
-#      password: $2a$10$GRLdNijSQMUvl/au9ofL.eDwmo5r3jRrOT076b5Wv5n4K8JDs23yi  # 加密后的admin@123
-#      roles: ADMIN
 
 # 服务器配置
 server:
