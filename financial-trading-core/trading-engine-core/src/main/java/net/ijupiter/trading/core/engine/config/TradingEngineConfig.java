@@ -1,4 +1,4 @@
-package net.ijupiter.trading.core.config;
+package net.ijupiter.trading.core.engine.config;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;

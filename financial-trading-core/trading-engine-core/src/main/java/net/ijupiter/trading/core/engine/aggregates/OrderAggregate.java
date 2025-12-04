@@ -1,4 +1,4 @@
-package net.ijupiter.trading.core.aggregates;
+package net.ijupiter.trading.core.engine.aggregates;
 
 import lombok.NoArgsConstructor;
 import net.ijupiter.trading.api.engine.commands.CancelOrderCommand;
@@ -8,7 +8,7 @@ import net.ijupiter.trading.api.engine.enums.OrderStatus;
 import net.ijupiter.trading.api.engine.enums.OrderType;
 import net.ijupiter.trading.api.engine.events.OrderCancelledEvent;
 import net.ijupiter.trading.api.engine.events.OrderCreatedEvent;
-import net.ijupiter.trading.core.entities.OrderEntity;
+import net.ijupiter.trading.core.engine.entities.OrderEntity;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;

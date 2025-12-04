@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.ijupiter.trading</groupId>
+        <artifactId>financial-trading-web</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>system-terminal</artifactId>
+    <packaging>jar</packaging>
+    <name>System Terminal</name>
+    <description>系统管理终端</description>
+
+    <dependencies>
+        <!-- 公共终端模块 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>common-terminal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <!-- 内部API依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>system-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>system-core</artifactId>
+        </dependency>
+
+        <!-- Spring Security 扩展 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

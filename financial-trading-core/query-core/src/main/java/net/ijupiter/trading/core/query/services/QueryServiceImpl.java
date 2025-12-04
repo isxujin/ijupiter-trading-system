@@ -1,4 +1,4 @@
-package net.ijupiter.trading.core.query.service;
+package net.ijupiter.trading.core.query.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import net.ijupiter.trading.api.query.dto.*;
 import net.ijupiter.trading.api.query.queries.*;
 import net.ijupiter.trading.api.query.services.QueryService;
 import net.ijupiter.trading.core.query.model.*;
-import net.ijupiter.trading.core.query.repository.*;
+import net.ijupiter.trading.core.query.repositories.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

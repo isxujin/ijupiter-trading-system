@@ -1,4 +1,4 @@
-package net.ijupiter.trading.core.entities;
+package net.ijupiter.trading.core.engine.entities;
 import lombok.Data;
 
 import jakarta.persistence.*;

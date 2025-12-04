@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title + ' - ' + systemTitle}">系统参数管理 - 金融交易系统管理平台</title>
+
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link th:href="@{/webjars/bootstrap-icons/font/bootstrap-icons.css}" rel="stylesheet">
+    
+    <!-- 自定义样式 -->
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar .nav-link {
+            color: #333;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            margin: 0.125rem 0;
+        }
+        .sidebar .nav-link.active {
+            font-weight: bold;
+            background-color: #0d6efd;
+            color: white;
+        }
+        .sidebar .nav-link:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .main-content {
+            padding-top: 20px;
+        }
+        .search-bar {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .action-btn {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/system/config}">
+                <i class="bi bi-gear-fill"></i>
+                <span th:text="${systemTitle}">金融交易系统管理平台</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/system/config}">系统参数</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/system/operator}">操作员管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/system/role}">角色管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/system/permission}">权限设置</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/system/dict}">数据字典</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span sec:authentication="name">用户</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/admin/settings}"><i class="bi bi-gear"></i> 系统设置</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> 个人设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> 退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item" th:each="item : ${sidebarItems}">
+                            <a class="nav-link" th:href="${item.url}" th:classappend="${item.active ? 'active' : ''}">
+                                <i th:class="${item.icon}"></i>
+                                <span th:text="${item.name}">菜单项</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <!-- 页面标题 -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">系统参数管理</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshConfig()">
+                                <i class="bi bi-arrow-clockwise"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addConfigModal">
+                                <i class="bi bi-plus-circle"></i> 新增配置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 搜索区域 -->
+                <div class="search-bar">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="configKey" placeholder="配置键">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="configType">
+                                <option value="">全部类型</option>
+                                <option value="system">系统配置</option>
+                                <option value="business">业务配置</option>
+                                <option value="security">安全配置</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary w-100" onclick="searchConfigs()">
+                                <i class="bi bi-search"></i> 搜索
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 配置列表 -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>配置键</th>
+                                <th>配置值</th>
+                                <th>配置类型</th>
+                                <th>描述</th>
+                                <th>是否系统内置</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="configTableBody">
+                            <!-- 这里将通过AJAX加载数据 -->
+                            <tr>
+                                <td colspan="7" class="text-center">正在加载数据...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分页 -->
+                <nav aria-label="系统配置分页" class="mt-3">
+                    <ul class="pagination justify-content-center" id="configPagination">
+                        <!-- 这里将通过AJAX加载分页数据 -->
+                    </ul>
+                </nav>
+            </main>
+        </div>
+    </div>
+
+    <!-- 新增配置模态框 -->
+    <div class="modal fade" id="addConfigModal" tabindex="-1" aria-labelledby="addConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addConfigModalLabel">新增系统配置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="configForm">
+                        <div class="mb-3">
+                            <label for="configKey" class="form-label">配置键</label>
+                            <input type="text" class="form-control" id="configKey" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="configValue" class="form-label">配置值</label>
+                            <textarea class="form-control" id="configValue" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="configType" class="form-label">配置类型</label>
+                            <select class="form-select" id="configType" required>
+                                <option value="">请选择</option>
+                                <option value="system">系统配置</option>
+                                <option value="business">业务配置</option>
+                                <option value="security">安全配置</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">描述</label>
+                            <textarea class="form-control" id="description" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isSystem">
+                                <label class="form-check-label" for="isSystem">
+                                    系统内置配置
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveConfig()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WebJars - jQuery -->
+    <script th:src="@{/webjars/jquery/dist/jquery.min.js}"></script>
+    
+    <!-- WebJars - Bootstrap JS -->
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // 页面加载完成后获取数据
+            searchConfigs();
+        });
+
+        // 搜索配置
+        function searchConfigs() {
+            const configKey = $('#configKey').val();
+            const configType = $('#configType').val();
+            
+            $.ajax({
+                url: '/system/config/list',
+                type: 'GET',
+                data: {
+                    configKey: configKey,
+                    configType: configType
+                },
+                success: function(result) {
+                    renderConfigTable(result);
+                },
+                error: function() {
+                    alert('获取系统配置失败');
+                }
+            });
+        }
+
+        // 渲染配置表格
+        function renderConfigTable(configs) {
+            const tbody = $('#configTableBody');
+            tbody.empty();
+            
+            if (configs.length === 0) {
+                tbody.append('<tr><td colspan="7" class="text-center">暂无数据</td></tr>');
+                return;
+            }
+            
+            configs.forEach(function(config) {
+                const isSystemText = config.isSystem ? '是' : '否';
+                const row = `
+                    <tr>
+                        <td>${config.configKey}</td>
+                        <td>${config.configValue}</td>
+                        <td>${config.configType || ''}</td>
+                        <td>${config.description || ''}</td>
+                        <td>${isSystemText}</td>
+                        <td>${config.createTime || ''}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary action-btn" onclick="editConfig('${config.configId}')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger action-btn" onclick="deleteConfig('${config.configId}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+
+        // 保存配置
+        function saveConfig() {
+            const formData = {
+                configKey: $('#configKey').val(),
+                configValue: $('#configValue').val(),
+                configType: $('#configType').val(),
+                description: $('#description').val(),
+                isSystem: $('#isSystem').is(':checked')
+            };
+            
+            // 验证必填字段
+            if (!formData.configKey || !formData.configValue) {
+                alert('配置键和配置值不能为空');
+                return;
+            }
+            
+            $.ajax({
+                url: '/system/config',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(result) {
+                    $('#addConfigModal').modal('hide');
+                    searchConfigs();
+                    alert('保存成功');
+                },
+                error: function() {
+                    alert('保存失败');
+                }
+            });
+        }
+
+        // 编辑配置
+        function editConfig(configId) {
+            $.ajax({
+                url: '/system/config/' + configId,
+                type: 'GET',
+                success: function(config) {
+                    $('#configKey').val(config.configKey);
+                    $('#configValue').val(config.configValue);
+                    $('#configType').val(config.configType);
+                    $('#description').val(config.description);
+                    $('#isSystem').prop('checked', config.isSystem);
+                    $('#addConfigModalLabel').text('编辑系统配置');
+                    $('#addConfigModal').modal('show');
+                },
+                error: function() {
+                    alert('获取配置详情失败');
+                }
+            });
+        }
+
+        // 删除配置
+        function deleteConfig(configId) {
+            if (!confirm('确定要删除这条配置吗？')) {
+                return;
+            }
+            
+            $.ajax({
+                url: '/system/config/' + configId,
+                type: 'DELETE',
+                success: function(result) {
+                    if (result) {
+                        searchConfigs();
+                        alert('删除成功');
+                    } else {
+                        alert('删除失败');
+                    }
+                },
+                error: function() {
+                    alert('删除失败');
+                }
+            });
+        }
+
+        // 刷新配置
+        function refreshConfig() {
+            searchConfigs();
+        }
+
+        // 模态框关闭时重置表单
+        $('#addConfigModal').on('hidden.bs.modal', function() {
+            $('#configForm')[0].reset();
+            $('#addConfigModalLabel').text('新增系统配置');
+        });
+    </script>
+</body>
+</html>

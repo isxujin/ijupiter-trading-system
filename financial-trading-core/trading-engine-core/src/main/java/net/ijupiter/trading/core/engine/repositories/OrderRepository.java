@@ -1,6 +1,6 @@
-package net.ijupiter.trading.core.repositories;
+package net.ijupiter.trading.core.engine.repositories;
 
-import net.ijupiter.trading.core.entities.OrderEntity;
+import net.ijupiter.trading.core.engine.entities.OrderEntity;
 import net.ijupiter.trading.api.engine.enums.OrderSide;
 import net.ijupiter.trading.api.engine.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

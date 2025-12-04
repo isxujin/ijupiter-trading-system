@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.fund.events.*;
 import net.ijupiter.trading.core.query.model.FundAccountView;
-import net.ijupiter.trading.core.query.repository.AccountViewRepository;
-import net.ijupiter.trading.core.query.repository.FundAccountViewRepository;
+import net.ijupiter.trading.core.query.repositories.AccountViewRepository;
+import net.ijupiter.trading.core.query.repositories.FundAccountViewRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 

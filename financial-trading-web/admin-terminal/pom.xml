@@ -22,6 +22,11 @@
             <artifactId>common-terminal</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>system-terminal</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <!-- 内部API依赖 -->
         <dependency>

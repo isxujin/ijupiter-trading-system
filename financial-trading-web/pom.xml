@@ -19,6 +19,7 @@
         <module>common-terminal</module>
         <module>investor-terminal</module>
         <module>admin-terminal</module>
+        <module>system-terminal</module>
     </modules>
 
     <dependencies>

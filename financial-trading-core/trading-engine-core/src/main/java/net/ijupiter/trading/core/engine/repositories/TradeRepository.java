@@ -1,6 +1,6 @@
-package net.ijupiter.trading.core.repositories;
+package net.ijupiter.trading.core.engine.repositories;
 
-import net.ijupiter.trading.core.entities.TradeEntity;
+import net.ijupiter.trading.core.engine.entities.TradeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

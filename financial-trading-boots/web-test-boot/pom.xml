@@ -40,13 +40,30 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!-- 3. 内部Web模块依赖 - 管理终端 -->
+        <!-- 内部Web模块依赖 - 管理终端 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>admin-terminal</artifactId>
         </dependency>
+        
+        <!-- 系统管理模块依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>system-terminal</artifactId>
+        </dependency>
 
-        <!-- 4. 测试依赖 -->
+        <!-- 4. 数据库相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- 5. 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -80,7 +97,7 @@
             <artifactId>chart.js</artifactId>
         </dependency>
 
-        <!-- 6. 可选：日志增强（便于测试调试） -->
+        <!-- 7. 可选：日志增强（便于测试调试） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>

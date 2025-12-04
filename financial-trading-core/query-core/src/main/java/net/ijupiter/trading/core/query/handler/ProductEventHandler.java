@@ -3,7 +3,7 @@ package net.ijupiter.trading.core.query.handler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.core.query.model.ProductView;
-import net.ijupiter.trading.core.query.repository.ProductViewRepository;
+import net.ijupiter.trading.core.query.repositories.ProductViewRepository;
 import net.ijupiter.trading.api.product.events.ProductCreatedEvent;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;

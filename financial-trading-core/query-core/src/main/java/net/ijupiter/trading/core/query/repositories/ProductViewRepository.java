@@ -1,4 +1,4 @@
-package net.ijupiter.trading.core.query.repository;
+package net.ijupiter.trading.core.query.repositories;
 
 import net.ijupiter.trading.core.query.model.ProductView;
 import org.springframework.data.jpa.repository.JpaRepository;

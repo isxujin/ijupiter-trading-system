@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.account.events.AccountCreatedEvent;
 import net.ijupiter.trading.core.query.model.AccountView;
-import net.ijupiter.trading.core.query.repository.AccountViewRepository;
+import net.ijupiter.trading.core.query.repositories.AccountViewRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 

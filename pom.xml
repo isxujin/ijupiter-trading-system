@@ -51,6 +51,21 @@
             <!-- 接口模块 -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
+                <artifactId>message-adapter-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>cache-adapter-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>system-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
                 <artifactId>trading-engine-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -79,16 +94,7 @@
                 <artifactId>query-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>message-adapter-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>cache-adapter-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <!-- 实现模块 -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
@@ -98,6 +104,11 @@
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>redis-adapter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>system-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -128,6 +139,16 @@
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>query-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>common-terminal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>system-terminal</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
