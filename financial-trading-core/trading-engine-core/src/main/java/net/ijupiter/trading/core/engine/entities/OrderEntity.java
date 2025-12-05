@@ -1,12 +1,13 @@
 package net.ijupiter.trading.core.engine.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.ijupiter.trading.api.engine.enums.OrderSide;
 import net.ijupiter.trading.api.engine.enums.OrderStatus;
 import net.ijupiter.trading.api.engine.enums.OrderType;
 
 import jakarta.persistence.*;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
+import net.ijupiter.trading.common.entities.BaseEntity;
 
 //import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
  * @since 1.0.1-SNAPSHOT
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "trading_order", indexes = {
         @Index(name = "idx_account_id", columnList = "account_id"),
@@ -27,7 +29,7 @@ import java.time.LocalDateTime;
         @Index(name = "idx_side", columnList = "side"),
         @Index(name = "idx_product_status_side", columnList = "product_id, status, side")
 })
-public class OrderEntity extends BaseEntityWithCustomId {
+public class OrderEntity extends BaseEntity {
 
     @Id
     @Column(name = "order_id")
@@ -65,12 +67,6 @@ public class OrderEntity extends BaseEntityWithCustomId {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private OrderStatus status;
-
-    @Column(name = "create_time", nullable = false)
-    private LocalDateTime createTime;
-
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
 
     @Column(name = "cancel_time")
     private LocalDateTime cancelTime;

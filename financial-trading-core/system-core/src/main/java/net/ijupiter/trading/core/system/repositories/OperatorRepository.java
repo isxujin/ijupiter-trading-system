@@ -49,7 +49,7 @@ public interface OperatorRepository extends JpaRepository<Operator, String>, Jpa
      * @param roleId 角色ID
      * @return 操作员列表
      */
-    @Query("SELECT o FROM Operator o JOIN OperatorRole or ON o.operatorId = or.operatorId WHERE or.roleId = :roleId")
+    @Query("SELECT o FROM Operator o JOIN OperatorRole or ON o.id = or.operatorId WHERE or.roleId = :roleId")
     List<Operator> findByRoleId(@Param("roleId") String roleId);
 
     /**

@@ -1,6 +1,6 @@
 package net.ijupiter.trading.web.management.controller;
 
-import net.ijupiter.trading.web.common.dto.ApiResponse;
+import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

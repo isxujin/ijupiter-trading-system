@@ -2,8 +2,8 @@ package net.ijupiter.trading.core.system.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.ijupiter.trading.system.api.dto.SystemConfigDTO;
-import net.ijupiter.trading.system.api.dto.SystemConfigQueryDTO;
+import net.ijupiter.trading.system.api.dtos.SystemConfigDTO;
+import net.ijupiter.trading.system.api.dtos.SystemConfigQueryDTO;
 import net.ijupiter.trading.system.api.services.SystemConfigService;
 import net.ijupiter.trading.core.system.entities.SystemConfig;
 import net.ijupiter.trading.core.system.repositories.SystemConfigRepository;

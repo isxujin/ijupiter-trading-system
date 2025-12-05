@@ -3,10 +3,11 @@ package net.ijupiter.trading.api.account.services;
 import net.ijupiter.trading.api.account.commands.CloseAccountCommand;
 import net.ijupiter.trading.api.account.commands.CreateAccountCommand;
 import net.ijupiter.trading.api.account.commands.UpdateAccountCommand;
-import net.ijupiter.trading.api.account.dto.AccountDTO;
+import net.ijupiter.trading.api.account.dtos.AccountDTO;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
-import net.ijupiter.trading.common.base.BaseService;
+import net.ijupiter.trading.common.services.BaseService;
+
 import java.util.List;
 
 /**

@@ -1,7 +1,7 @@
 package net.ijupiter.trading.system.api.services;
 
-import net.ijupiter.trading.system.api.dto.PermissionDTO;
-import net.ijupiter.trading.system.api.dto.PermissionQueryDTO;
+import net.ijupiter.trading.system.api.dtos.PermissionDTO;
+import net.ijupiter.trading.system.api.dtos.PermissionQueryDTO;
 
 import java.util.List;
 

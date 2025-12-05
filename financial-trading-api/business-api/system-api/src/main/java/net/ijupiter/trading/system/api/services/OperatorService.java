@@ -1,8 +1,8 @@
 package net.ijupiter.trading.system.api.services;
 
-import net.ijupiter.trading.common.base.BaseService;
-import net.ijupiter.trading.system.api.dto.OperatorDTO;
-import net.ijupiter.trading.system.api.dto.OperatorQueryDTO;
+import net.ijupiter.trading.common.services.BaseService;
+import net.ijupiter.trading.system.api.dtos.OperatorDTO;
+import net.ijupiter.trading.system.api.dtos.OperatorQueryDTO;
 
 import java.util.List;
 

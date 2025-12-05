@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.account.commands.CloseAccountCommand;
 import net.ijupiter.trading.api.account.commands.CreateAccountCommand;
 import net.ijupiter.trading.api.account.commands.UpdateAccountCommand;
-import net.ijupiter.trading.api.account.dto.AccountDTO;
+import net.ijupiter.trading.api.account.dtos.AccountDTO;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
 import net.ijupiter.trading.api.account.events.AccountClosedEvent;
@@ -20,11 +20,14 @@ import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * 账户服务实现
@@ -106,8 +109,7 @@ public class AccountServiceImpl implements AccountService {
         
         AccountEntity account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("账户不存在: " + accountId));
-        
-        return convertToAccountDTO(account);
+        return new AccountDTO().convertFrom(account);
     }
 
     @Override
@@ -117,7 +119,7 @@ public class AccountServiceImpl implements AccountService {
         List<AccountEntity> accounts = accountRepository.findByUserId(userId);
         
         return accounts.stream()
-                .map(this::convertToAccountDTO)
+                .map(entity->new AccountDTO().convertFrom(entity))
                 .collect(Collectors.toList());
     }
 
@@ -128,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
         List<AccountEntity> accounts = accountRepository.findByUserIdAndAccountType(userId, accountType);
         
         return accounts.stream()
-                .map(this::convertToAccountDTO)
+                .map(entity->new AccountDTO().convertFrom(entity))
                 .collect(Collectors.toList());
     }
 
@@ -139,7 +141,7 @@ public class AccountServiceImpl implements AccountService {
         List<AccountEntity> accounts = accountRepository.findByUserIdAndAccountStatus(userId, accountStatus);
         
         return accounts.stream()
-                .map(this::convertToAccountDTO)
+                .map(entity->new AccountDTO().convertFrom(entity))
                 .collect(Collectors.toList());
     }
 
@@ -231,13 +233,10 @@ public class AccountServiceImpl implements AccountService {
     @EventHandler
     public void on(AccountUpdatedEvent event) {
         log.debug("处理账户更新事件: {}", event);
-        
         AccountEntity account = accountRepository.findById(event.getAccountId())
                 .orElseThrow(() -> new RuntimeException("账户不存在: " + event.getAccountId()));
-        
         account.setAccountName(event.getAccountName());
         account.setUpdateTime(event.getUpdateTime());
-        
         accountRepository.save(account);
     }
 
@@ -249,71 +248,58 @@ public class AccountServiceImpl implements AccountService {
     @EventHandler
     public void on(AccountClosedEvent event) {
         log.debug("处理账户关闭事件: {}", event);
-        
         AccountEntity account = accountRepository.findById(event.getAccountId())
                 .orElseThrow(() -> new RuntimeException("账户不存在: " + event.getAccountId()));
-        
         account.setAccountStatus(AccountStatus.CLOSED);
         account.setCloseTime(event.getCloseTime());
         account.setCloseReason(event.getReason());
-        
         accountRepository.save(account);
-    }
-
-    /**
-     * 转换账户实体为DTO
-     * 
-     * @param account 账户实体
-     * @return 账户DTO
-     */
-    private AccountDTO convertToAccountDTO(AccountEntity account) {
-        AccountDTO dto = new AccountDTO();
-        BeanUtils.copyProperties(account, dto);
-        return dto;
-    }
-
-    /**
-     * 转换DTO为账户实体
-     * 
-     * @param dto 账户DTO
-     * @return 账户实体
-     */
-    private AccountEntity convertToAccountEntity(AccountDTO dto) {
-        AccountEntity entity = new AccountEntity();
-        BeanUtils.copyProperties(dto, entity);
-        return entity;
     }
 
     // ==================== BaseService接口实现 ====================
 
     @Override
     @Transactional
-    public AccountDTO save(AccountDTO entity) {
-        log.debug("保存账户实体: {}", entity);
-        AccountEntity accountEntity = convertToAccountEntity(entity);
-        AccountEntity savedEntity = accountRepository.save(accountEntity);
-        return convertToAccountDTO(savedEntity);
+    public AccountDTO save(AccountDTO dto) {
+        Assert.notNull(dto, "保存失败：账户DTO不能为空");
+        log.debug("保存账户（延迟刷库），DTO核心属性：{}", dto.getId() + "-" + dto.getAccountName());
+
+        try {
+            // 显式指定泛型<AccountEntity>，解决Entity转换推断问题
+            AccountEntity entity = new AccountEntity().convertFrom(dto);
+            AccountEntity savedEntity = accountRepository.save(entity);
+
+            // 显式指定泛型<AccountDTO>，解决DTO转换推断问题
+            return new AccountDTO().convertFrom(savedEntity);
+
+        } catch (Exception e) {
+            log.error("保存账户失败，DTO：{}", dto, e);
+            throw new RuntimeException("账户保存失败：" + e.getMessage(), e);
+        }
     }
 
     @Override
     public Optional<AccountDTO> findById(String id) {
         log.debug("根据ID查询账户: {}", id);
+        // 核心逻辑：Repository查Entity → Optional.map转换为DTO
         return accountRepository.findById(id)
-                .map(this::convertToAccountDTO);
+                // 利用AccountDTO的convertFrom方法转换，泛型自动推断为AccountDTO
+                .map(entity -> new AccountDTO().convertFrom(entity));
     }
 
     @Override
     public List<AccountDTO> findAll() {
         log.debug("查询所有账户");
         return accountRepository.findAll().stream()
-                .map(this::convertToAccountDTO)
+                // 核心：显式指定泛型类型 <AccountDTO>，解决推断失效
+                .map(entity -> new AccountDTO().convertFrom(entity))
                 .collect(Collectors.toList());
     }
 
     @Override
     public boolean existsById(String id) {
         log.debug("检查账户是否存在: {}", id);
-        return accountRepository.existsById(id);
+        return accountRepository.existsById(id.toString());
     }
 
     @Override
@@ -326,7 +312,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void deleteById(String id) {
         log.info("删除账户: {}", id);
-        accountRepository.deleteById(id);
+        accountRepository.deleteById(id.toString());
     }
 
     @Override
@@ -347,31 +333,66 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountDTO saveAndFlush(AccountDTO entity) {
-        log.debug("保存并刷新账户实体: {}", entity);
-        AccountEntity accountEntity = convertToAccountEntity(entity);
-        AccountEntity savedEntity = accountRepository.saveAndFlush(accountEntity);
-        return convertToAccountDTO(savedEntity);
+    public AccountDTO saveAndFlush(AccountDTO dto) {
+        log.debug("保存并刷新账户实体: {}", dto);
+        try {
+            AccountEntity entity = new AccountEntity().convertFrom(dto);
+            AccountEntity savedEntity = accountRepository.saveAndFlush(entity);
+            return new AccountDTO().convertFrom(savedEntity);
+        } catch (Exception e) {
+            log.error("保存并刷新账户失败，DTO：{}", dto, e);
+            throw new RuntimeException("保存账户失败：" + e.getMessage(), e);
+        }
     }
 
     @Override
     @Transactional
-    public List<AccountDTO> saveAll(List<AccountDTO> entities) {
-        log.debug("批量保存账户实体: {}", entities.size());
-        List<AccountEntity> accountEntities = entities.stream()
-                .map(this::convertToAccountEntity)
-                .collect(Collectors.toList());
-        List<AccountEntity> savedEntities = accountRepository.saveAll(accountEntities);
-        return savedEntities.stream()
-                .map(this::convertToAccountDTO)
-                .collect(Collectors.toList());
+    public List<AccountDTO> saveAll(List<AccountDTO> dtoList) {
+        // 1. 日志记录 + 空值处理
+        log.debug("批量保存账户，待保存数量：{}", CollectionUtils.isEmpty(dtoList) ? 0 : dtoList.size());
+        if (CollectionUtils.isEmpty(dtoList)) {
+            return List.of(); // 返回空列表，避免返回null
+        }
+
+        try {
+            // 核心：显式指定泛型 <AccountEntity>，解决推断失效
+            List<AccountEntity> entityList = dtoList.stream()
+                    .map(dto -> new AccountEntity().<AccountEntity>convertFrom(dto))
+                    .collect(Collectors.toList());
+
+            List<AccountEntity> savedEntityList = accountRepository.saveAll(entityList);
+
+            return savedEntityList.stream()
+                    .map(entity -> new AccountDTO().<AccountDTO>convertFrom(entity))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("批量保存账户失败，待保存DTO数量：{}", dtoList.size(), e);
+            throw new RuntimeException("批量保存账户失败：" + e.getMessage(), e);
+        }
     }
 
     @Override
     public List<AccountDTO> findAllById(List<String> ids) {
-        log.debug("根据ID列表查询账户: {}", ids);
-        return accountRepository.findAllById(ids).stream()
-                .map(this::convertToAccountDTO)
-                .collect(Collectors.toList());
+        // 1. 日志记录 + 空值处理（避免NPE，返回空列表而非null）
+        log.debug("批量根据ID查询账户，待查询ID数量：{}", CollectionUtils.isEmpty(ids) ? 0 : ids.size());
+        if (CollectionUtils.isEmpty(ids)) {
+            return List.of(); // 返回不可变空列表，符合非null集合最佳实践
+        }
+
+        try {
+            // 2. 调用Repository批量查询（返回Iterable<AccountEntity>）
+            Iterable<AccountEntity> entityIterable = accountRepository.findAllById(ids);
+
+            // 3. Iterable转Stream → 转换为AccountDTO列表（复用BaseDTO的convertFrom）
+            return StreamSupport.stream(entityIterable.spliterator(), false)
+                    .map(entity -> new AccountDTO().convertFrom(entity))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            // 4. 异常封装：便于定位批量查询失败原因（如ID格式错误、数据库异常）
+            log.error("批量根据ID查询账户失败，待查询ID数量：{}", ids.size(), e);
+            throw new RuntimeException("批量查询账户失败：" + e.getMessage(), e);
+        }
     }
 }

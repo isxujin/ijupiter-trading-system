@@ -2,8 +2,8 @@ package net.ijupiter.trading.core.system.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.ijupiter.trading.system.api.dto.PermissionDTO;
-import net.ijupiter.trading.system.api.dto.PermissionQueryDTO;
+import net.ijupiter.trading.system.api.dtos.PermissionDTO;
+import net.ijupiter.trading.system.api.dtos.PermissionQueryDTO;
 import net.ijupiter.trading.system.api.services.PermissionService;
 import net.ijupiter.trading.core.system.entities.Permission;
 import net.ijupiter.trading.core.system.repositories.PermissionRepository;

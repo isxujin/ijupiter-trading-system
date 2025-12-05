@@ -3,8 +3,8 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.entities.BaseEntity;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -21,16 +21,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_operator")
 @Comment("操作员表")
-public class Operator extends BaseEntityWithCustomId {
-
-    /**
-     * 操作员ID
-     */
-    @Id
-    @Column(name = "operator_id", length = 32)
-    @Comment("操作员ID")
-    private String operatorId;
-
+public class Operator extends BaseEntity<Operator> {
+    @Column(name = "operator_code", length = 64, nullable = false)
+    @Comment("操作员编码")
+    private String operatorCode;
     /**
      * 操作员名称
      */

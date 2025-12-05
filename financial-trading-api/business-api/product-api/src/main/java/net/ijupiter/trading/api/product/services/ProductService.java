@@ -5,8 +5,8 @@ import net.ijupiter.trading.api.product.commands.DelistProductCommand;
 import net.ijupiter.trading.api.product.commands.ResumeProductCommand;
 import net.ijupiter.trading.api.product.commands.SuspendProductCommand;
 import net.ijupiter.trading.api.product.commands.UpdateProductCommand;
-import net.ijupiter.trading.api.product.dto.ProductDTO;
-import net.ijupiter.trading.api.product.dto.ProductTradingRules;
+import net.ijupiter.trading.api.product.dtos.ProductDTO;
+import net.ijupiter.trading.api.product.dtos.ProductTradingRules;
 import net.ijupiter.trading.api.product.enums.ProductStatus;
 import net.ijupiter.trading.api.product.enums.ProductType;
 

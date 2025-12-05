@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.ijupiter.trading.api.account.enums.AccountStatus;
 import net.ijupiter.trading.api.account.enums.AccountType;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.entities.BaseEntity;
 
 //import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,8 +26,11 @@ import java.time.LocalDateTime;
         @Index(name = "idx_account_status", columnList = "account_status"),
         @Index(name = "idx_user_type_status", columnList = "user_id, account_type, account_status")
 })
-public class AccountEntity extends BaseEntityWithCustomId {
-
+public class AccountEntity extends BaseEntity<AccountEntity> {
+    
+    /**
+     * 账户ID
+     */
     @Id
     @Column(name = "account_id")
     private String accountId;
@@ -51,4 +54,5 @@ public class AccountEntity extends BaseEntityWithCustomId {
 
     @Column(name = "close_reason", length = 200)
     private String closeReason;
+
 }

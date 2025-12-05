@@ -60,7 +60,7 @@ public interface PermissionRepository extends JpaRepository<Permission, String>,
     @Query("SELECT DISTINCT p FROM Permission p " +
            "JOIN RolePermission rp ON p.id = rp.permissionId " +
            "JOIN OperatorRole orr ON rp.roleId = orr.roleId " +
-           "WHERE orr.operatorId = :operatorId AND p.status = 1 " +
+           "WHERE orr.id = :operatorId AND p.status = 1 " +
            "ORDER BY p.sortOrder")
     List<Permission> findByOperatorId(@Param("operatorId") String operatorId);
 }

@@ -1,7 +1,7 @@
 package net.ijupiter.trading.core;
 
 import lombok.extern.slf4j.Slf4j;
-import net.ijupiter.trading.api.query.dto.*;
+import net.ijupiter.trading.api.query.dtos.*;
 import net.ijupiter.trading.api.query.queries.*;
 import net.ijupiter.trading.api.query.services.QueryService;
 import org.junit.jupiter.api.Test;

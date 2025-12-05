@@ -1,6 +1,6 @@
 package net.ijupiter.trading.web.common.controller;
 
-import net.ijupiter.trading.web.common.dto.ApiResponse;
+import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

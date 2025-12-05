@@ -2,7 +2,7 @@ package net.ijupiter.trading.web.system.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.ijupiter.trading.system.api.dto.*;
+import net.ijupiter.trading.system.api.dtos.*;
 import net.ijupiter.trading.system.api.services.*;
 import net.ijupiter.trading.web.common.controller.BaseController;
 import org.springframework.security.access.prepost.PreAuthorize;

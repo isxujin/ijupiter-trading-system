@@ -2,8 +2,8 @@ package net.ijupiter.trading.api.engine.services;
 
 import net.ijupiter.trading.api.engine.commands.CreateOrderCommand;
 import net.ijupiter.trading.api.engine.commands.CancelOrderCommand;
-import net.ijupiter.trading.api.engine.dto.OrderDTO;
-import net.ijupiter.trading.api.engine.dto.TradeDTO;
+import net.ijupiter.trading.api.engine.dtos.OrderDTO;
+import net.ijupiter.trading.api.engine.dtos.TradeDTO;
 import net.ijupiter.trading.api.engine.enums.OrderStatus;
 
 import java.math.BigDecimal;

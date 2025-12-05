@@ -3,11 +3,11 @@ package net.ijupiter.trading.core.system.entities;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
 import jakarta.persistence.*;
+import net.ijupiter.trading.common.entities.BaseEntity;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+
 
 /**
  * 角色实体
@@ -21,15 +21,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sys_role")
 @Comment("角色表")
-public class Role extends BaseEntityWithCustomId {
-
+public class Role extends BaseEntity<Role> {
     /**
-     * 角色ID
+     * 角色编码
      */
-    @Id
-    @Column(name = "role_id", length = 32)
-    @Comment("角色ID")
-    private String roleId;
+    @Column(name = "role_code", length = 64, nullable = false)
+    @Comment("角色编码")
+    private String roleCode;
 
     /**
      * 角色名称
@@ -37,13 +35,6 @@ public class Role extends BaseEntityWithCustomId {
     @Column(name = "role_name", length = 64, nullable = false)
     @Comment("角色名称")
     private String roleName;
-
-    /**
-     * 角色编码
-     */
-    @Column(name = "role_code", length = 64, nullable = false)
-    @Comment("角色编码")
-    private String roleCode;
 
     /**
      * 角色描述

@@ -5,8 +5,8 @@ import net.ijupiter.trading.api.fund.commands.DepositFundCommand;
 import net.ijupiter.trading.api.fund.commands.FreezeFundCommand;
 import net.ijupiter.trading.api.fund.commands.UnfreezeFundCommand;
 import net.ijupiter.trading.api.fund.commands.WithdrawFundCommand;
-import net.ijupiter.trading.api.fund.dto.FundAccountDTO;
-import net.ijupiter.trading.api.fund.dto.FundTransactionDTO;
+import net.ijupiter.trading.api.fund.dtos.FundAccountDTO;
+import net.ijupiter.trading.api.fund.dtos.FundTransactionDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,8 +1,8 @@
 package net.ijupiter.trading.system.api.services;
 
-import net.ijupiter.trading.common.base.BaseService;
-import net.ijupiter.trading.system.api.dto.RoleDTO;
-import net.ijupiter.trading.system.api.dto.RoleQueryDTO;
+import net.ijupiter.trading.common.services.BaseService;
+import net.ijupiter.trading.system.api.dtos.RoleDTO;
+import net.ijupiter.trading.system.api.dtos.RoleQueryDTO;
 
 import java.util.List;
 

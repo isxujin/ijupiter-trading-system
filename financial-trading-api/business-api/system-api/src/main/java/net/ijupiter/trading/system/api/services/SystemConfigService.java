@@ -1,7 +1,7 @@
 package net.ijupiter.trading.system.api.services;
 
-import net.ijupiter.trading.system.api.dto.SystemConfigDTO;
-import net.ijupiter.trading.system.api.dto.SystemConfigQueryDTO;
+import net.ijupiter.trading.system.api.dtos.SystemConfigDTO;
+import net.ijupiter.trading.system.api.dtos.SystemConfigQueryDTO;
 
 import java.util.List;
 

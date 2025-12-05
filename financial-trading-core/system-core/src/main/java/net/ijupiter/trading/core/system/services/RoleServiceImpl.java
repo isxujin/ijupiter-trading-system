@@ -2,8 +2,8 @@ package net.ijupiter.trading.core.system.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.ijupiter.trading.system.api.dto.RoleDTO;
-import net.ijupiter.trading.system.api.dto.RoleQueryDTO;
+import net.ijupiter.trading.system.api.dtos.RoleDTO;
+import net.ijupiter.trading.system.api.dtos.RoleQueryDTO;
 import net.ijupiter.trading.system.api.services.RoleService;
 import net.ijupiter.trading.core.system.entities.Role;
 import net.ijupiter.trading.core.system.repositories.RoleRepository;
@@ -31,61 +31,19 @@ public class RoleServiceImpl implements RoleService {
     
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * 实体转DTO
-     */
-    private RoleDTO convertToDTO(Role role) {
-        RoleDTO dto = new RoleDTO();
-        
-        // 手动复制属性，避免时间字段问题
-        dto.setRoleId(role.getRoleId());
-        dto.setRoleName(role.getRoleName());
-        dto.setRoleCode(role.getRoleCode());
-        dto.setDescription(role.getDescription());
-        dto.setStatus(role.getStatus());
-        dto.setIsSystem(role.getIsSystem());
-        
-        // 时间字段从实体复制到DTO
-        dto.setCreateTime(role.getCreateTime());
-        dto.setUpdateTime(role.getUpdateTime());
-        
-        return dto;
-    }
-
-    /**
-     * DTO转实体
-     */
-    private Role convertToEntity(RoleDTO dto) {
-        Role entity = new Role();
-        
-        // 手动复制属性，避免时间字段问题
-        entity.setRoleId(dto.getRoleId());
-        entity.setRoleName(dto.getRoleName());
-        entity.setRoleCode(dto.getRoleCode());
-        entity.setDescription(dto.getDescription());
-        entity.setStatus(dto.getStatus());
-        entity.setIsSystem(dto.getIsSystem());
-        
-        // 时间字段从DTO复制，确保正确处理
-        entity.setCreateTime(dto.getCreateTime());
-        entity.setUpdateTime(dto.getUpdateTime());
-        
-        return entity;
-    }
-
     @Override
     @Transactional(readOnly = true)
     public List<RoleDTO> queryRoles(RoleQueryDTO queryDTO) {
         // 实现查询逻辑
         return roleRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(entity ->new RoleDTO().convertFrom(entity))
                 .collect(java.util.stream.Collectors.toList());
     }
 
     @Override
     public RoleDTO getRoleById(String roleId) {
         Optional<Role> role = roleRepository.findById(roleId);
-        return role.map(this::convertToDTO).orElse(null);
+        return role.map(entity ->new RoleDTO().convertFrom(entity)).orElse(null);
     }
 
     @Override
@@ -93,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
         // 使用Optional包装可能不是Optional的返回值
         Role role = roleRepository.findByRoleCode(roleCode).get();
         if (role != null) {
-            return convertToDTO(role);
+            return new RoleDTO().convertFrom(role);
         }
         return null;
     }
@@ -102,12 +60,11 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public RoleDTO createRole(RoleDTO roleDTO) {
         log.debug("创建角色: {}", roleDTO);
-        
-        Role role = convertToEntity(roleDTO);
+        Role role = new Role().convertFrom(roleDTO);
         role.setCreateTime(LocalDateTime.now());
         Role savedRole = roleRepository.save(role);
         
-        return convertToDTO(savedRole);
+        return new RoleDTO().convertFrom(savedRole);
     }
 
     @Override
@@ -126,7 +83,7 @@ public class RoleServiceImpl implements RoleService {
         role.setUpdateTime(LocalDateTime.now());
         
         Role savedRole = roleRepository.save(role);
-        return convertToDTO(savedRole);
+        return new RoleDTO().convertFrom(savedRole);
     }
 
     @Override
@@ -193,26 +150,26 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public RoleDTO save(RoleDTO entity) {
         log.debug("保存角色实体: {}", entity);
-        Role role = convertToEntity(entity);
+        Role role = new Role().convertFrom(entity);
         if (role.getCreateTime() == null) {
             role.setCreateTime(LocalDateTime.now());
         }
         Role savedRole = roleRepository.save(role);
-        return convertToDTO(savedRole);
+        return new RoleDTO().convertFrom(savedRole);
     }
 
     @Override
     public Optional<RoleDTO> findById(String id) {
         log.debug("根据ID查询角色: {}", id);
         return roleRepository.findById(id)
-                .map(this::convertToDTO);
+                .map(entity ->new RoleDTO().convertFrom(entity));
     }
 
     @Override
     public List<RoleDTO> findAll() {
         log.debug("查询所有角色");
         return roleRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(entity ->new RoleDTO().convertFrom(entity))
                 .collect(java.util.stream.Collectors.toList());
     }
 
@@ -253,14 +210,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public RoleDTO saveAndFlush(RoleDTO entity) {
-        log.debug("保存并刷新角色实体: {}", entity);
-        Role role = convertToEntity(entity);
+    public RoleDTO saveAndFlush(RoleDTO dto) {
+        log.debug("保存并刷新角色实体: {}", dto);
+        Role role = new Role().convertFrom(dto);
         if (role.getCreateTime() == null) {
             role.setCreateTime(LocalDateTime.now());
         }
         Role savedRole = roleRepository.saveAndFlush(role);
-        return convertToDTO(savedRole);
+        return new RoleDTO().convertFrom(savedRole);
     }
 
     @Override
@@ -268,7 +225,7 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleDTO> saveAll(List<RoleDTO> entities) {
         log.debug("批量保存角色实体: {}", entities.size());
         List<Role> roles = entities.stream()
-                .map(this::convertToEntity)
+                .map(dto ->new Role().convertFrom(dto))
                 .collect(java.util.stream.Collectors.toList());
         
         // 设置创建时间
@@ -281,7 +238,7 @@ public class RoleServiceImpl implements RoleService {
         
         List<Role> savedRoles = roleRepository.saveAll(roles);
         return savedRoles.stream()
-                .map(this::convertToDTO)
+                .map(entity ->new RoleDTO().convertFrom(entity))
                 .collect(java.util.stream.Collectors.toList());
     }
 
@@ -289,7 +246,7 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleDTO> findAllById(List<String> ids) {
         log.debug("根据ID列表查询角色: {}", ids);
         return roleRepository.findAllById(ids).stream()
-                .map(this::convertToDTO)
+                .map(entity ->new RoleDTO().convertFrom(entity))
                 .collect(java.util.stream.Collectors.toList());
     }
 }

@@ -1,12 +1,13 @@
 package net.ijupiter.trading.core.system.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
+import net.ijupiter.trading.common.entities.BaseEntity;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+
 
 /**
  * 权限实体
@@ -15,18 +16,18 @@ import java.time.LocalDateTime;
  * @version 1.0.1
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Entity
 @Table(name = "sys_permission")
 @Comment("权限表")
-public class Permission  extends BaseEntityWithCustomId {
+public class Permission extends BaseEntity<Permission> {
     /**
-     * 权限ID
+     * 权限编码
      */
-    @Id
-    @Column(name = "permission_id", length = 32)
-    @Comment("权限ID")
-    private String permissionId;
+    @Column(name = "permission_code", length = 64, nullable = false)
+    @Comment("权限编码")
+    private String permissionCode;
 
     /**
      * 权限名称
@@ -34,13 +35,6 @@ public class Permission  extends BaseEntityWithCustomId {
     @Column(name = "permission_name", length = 64, nullable = false)
     @Comment("权限名称")
     private String permissionName;
-
-    /**
-     * 权限编码
-     */
-    @Column(name = "permission_code", length = 64, nullable = false)
-    @Comment("权限编码")
-    private String permissionCode;
 
     /**
      * 权限描述
@@ -90,5 +84,4 @@ public class Permission  extends BaseEntityWithCustomId {
     @Column(name = "status")
     @Comment("状态（0-禁用，1-启用）")
     private Integer status;
-
 }

@@ -1,8 +1,8 @@
 package net.ijupiter.trading.api.settlement.services;
 
 import net.ijupiter.trading.api.settlement.commands.StartSettlementCommand;
-import net.ijupiter.trading.api.settlement.dto.SettlementDTO;
-import net.ijupiter.trading.api.settlement.dto.SettlementReportDTO;
+import net.ijupiter.trading.api.settlement.dtos.SettlementDTO;
+import net.ijupiter.trading.api.settlement.dtos.SettlementReportDTO;
 import net.ijupiter.trading.api.settlement.enums.SettlementStatus;
 
 import java.time.LocalDate;

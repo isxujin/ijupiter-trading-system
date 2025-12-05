@@ -1,6 +1,6 @@
 package net.ijupiter.trading.api.query.services;
 
-import net.ijupiter.trading.api.query.dto.*;
+import net.ijupiter.trading.api.query.dtos.*;
 import net.ijupiter.trading.api.query.queries.*;
 
 import java.util.List;

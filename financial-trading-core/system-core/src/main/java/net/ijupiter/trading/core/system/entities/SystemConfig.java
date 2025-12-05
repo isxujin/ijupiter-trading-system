@@ -1,12 +1,13 @@
 package net.ijupiter.trading.core.system.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
-import net.ijupiter.trading.common.base.BaseEntityWithCustomId;
+import net.ijupiter.trading.common.entities.BaseEntity;
 import org.hibernate.annotations.Comment;
 
-import java.time.LocalDateTime;
+
 
 /**
  * 系统配置实体
@@ -15,20 +16,12 @@ import java.time.LocalDateTime;
  * @version 1.0.1
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Entity
 @Table(name = "sys_config")
 @Comment("系统配置表")
-public class SystemConfig  extends BaseEntityWithCustomId {
-
-    /**
-     * 配置ID
-     */
-    @Id
-    @Column(name = "config_id", length = 32)
-    @Comment("配置ID")
-    private String configId;
-
+public class SystemConfig  extends BaseEntity<SystemConfig> {
     /**
      * 配置键
      */

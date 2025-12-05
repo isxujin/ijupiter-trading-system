@@ -1,8 +1,8 @@
 package net.ijupiter.trading.system.api.services;
 
-import net.ijupiter.trading.system.api.dto.DataDictDTO;
-import net.ijupiter.trading.system.api.dto.DataDictQueryDTO;
-import net.ijupiter.trading.system.api.dto.DataDictItemDTO;
+import net.ijupiter.trading.system.api.dtos.DataDictDTO;
+import net.ijupiter.trading.system.api.dtos.DataDictQueryDTO;
+import net.ijupiter.trading.system.api.dtos.DataDictItemDTO;
 
 import java.util.List;
 
