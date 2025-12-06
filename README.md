@@ -43,6 +43,7 @@ ijupiter-trading-system (父模块)
 ├── financial-trading-api              # API接口定义层
 │   ├── business-api                 # 业务API
 │   │   ├── account-api            # 账户API
+│   │   ├── customer-api           # 客户管理API
 │   │   ├── fund-api               # 资金API
 │   │   ├── product-api            # 产品API
 │   │   ├── system-api             # 系统管理API
@@ -54,6 +55,7 @@ ijupiter-trading-system (父模块)
 │       └── cache-adapter-spi      # 缓存适配器SPI
 ├── financial-trading-core            # 核心业务实现层
 │   ├── account-core                # 账户核心服务
+│   ├── customer-core               # 客户管理核心服务
 │   ├── fund-core                   # 资金核心服务
 │   ├── product-core                # 产品核心服务
 │   ├── system-core                 # 系统管理核心服务
@@ -65,6 +67,7 @@ ijupiter-trading-system (父模块)
 │   └── redis-adapter             # Redis缓存适配器
 ├── financial-trading-web             # Web表示层
 │   ├── common-web                 # 公共Web模块，提供视图层框架资源和控制层公共资源
+│   ├── customer-web               # 客户管理Web模块
 │   ├── management-web             # 管理端Web模块
 │   ├── investor-web               # 投资者端Web模块
 │   └── system-web                 # 系统管理Web模块
@@ -99,7 +102,8 @@ ijupiter-trading-system (父模块)
 #### financial-trading-api
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
-  - **business-api**: 业务领域API，包括账户、资金、产品、系统管理、交易、结算、查询等API
+  - **business-api**: 业务领域API，包括账户、客户管理、资金、产品、系统管理、交易、结算、查询等API
+    - **customer-api**: 客户管理API，提供客户、交易账户、资金账户等接口
   - **middleware-spi**: 中间件SPI（服务提供者接口），包括：
     - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
     - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口
@@ -108,6 +112,9 @@ ijupiter-trading-system (父模块)
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
   - **account-core**: 账户管理核心，处理用户账户、权限等
+  - **customer-core**: 客户管理核心，处理客户信息、交易账户、资金账户等
+    - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
+    - 银行卡信息已合并到资金账户，交易所账号信息已合并到交易账户
   - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
   - **product-core**: 产品管理核心，处理金融产品定义、规则等
   - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
@@ -127,8 +134,10 @@ ijupiter-trading-system (父模块)
   - **common-web**: 公共Web模块，提供视图层框架资源和控制层公共资源，包括：
     - Spring MVC和Thymeleaf配置
     - WebJars资源管理（Bootstrap和jQuery）
-    - 基础控制器类和公共API响应格式
+    - 基础控制器类和统一API响应格式（Result和PageResult）
     - 统一的页面模板结构
+    - 包结构调整：控制器包名从/controller调整为/controllers，模型包名从/dto调整为/models
+  - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源
   - **management-web**: 管理端Web模块，提供后台管理界面，继承common-web的公共资源
   - **investor-web**: 投资者端Web模块，提供交易界面，继承common-web的公共资源
   - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
@@ -235,11 +244,22 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 
 - 管理端: http://localhost:8080/admin
 - 投资者端: http://localhost:8080/investor
+- 客户管理: http://localhost:8080/customer
 - 系统管理: http://localhost:8080/system
 
 ## 核心功能
 
-### 1. 账户管理
+### 1. 客户管理
+- 客户注册与认证
+- 客户信息管理
+- 交易账户管理（基本信息、持仓信息）
+- 资金账户管理（基本信息、余额信息）
+- 银行卡绑定与管理（合并到资金账户）
+- 交易所账号绑定与管理（合并到交易账户）
+- 客户状态管理（正常、冻结、注销）
+- 事件溯源与数据审计
+
+### 2. 账户管理
 - 用户注册与认证
 - 账户信息管理
 - 权限角色管理
@@ -402,15 +422,17 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 
 - ✅ Maven Wrapper配置与验证脚本
 - ✅ 账户管理核心模块（聚合、实体、服务）
+- ✅ 客户管理核心模块（客户、交易账户、资金账户管理，银行卡和交易所账号信息合并）
+- ✅ 客户管理Web模块（客户信息、交易账户、资金账户等界面）
 - ✅ 交易引擎核心模块（订单匹配、交易执行）
 - ✅ 资金管理核心模块（资金账户、交易记录）
 - ✅ 系统管理核心模块（操作员、角色、权限、数据字典等）
-- ✅ 基础API接口定义
+- ✅ 基础API接口定义（新增客户管理API）
 - ✅ 消息中间件适配器（RabbitMQ）
 - ✅ 缓存中间件适配器（Redis）
-- ✅ Web服务启动器配置
+- ✅ Web服务启动器配置（集成客户模块）
 - ✅ 编码转换脚本
-- ✅ common-web公共模块（Spring MVC、Thymeleaf、WebJars集成）
+- ✅ common-web公共模块（Spring MVC、Thymeleaf、WebJars集成，包结构调整）
 - ✅ management-web管理端模块（重构完成，统一使用公共资源）
 - ✅ investor-web投资者端模块（重构为使用common-web）
 - ✅ system-web系统管理模块（新增，使用common-web）

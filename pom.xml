@@ -66,6 +66,11 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
+                <artifactId>customer-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
                 <artifactId>trading-engine-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -94,6 +99,11 @@
                 <artifactId>query-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>customer-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- 实现模块 -->
             <dependency>
@@ -109,6 +119,11 @@
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>system-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>customer-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -143,6 +158,11 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
+                <artifactId>customer-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
                 <artifactId>common-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -159,6 +179,11 @@
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>management-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>customer-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

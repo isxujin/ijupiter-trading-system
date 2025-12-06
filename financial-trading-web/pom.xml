@@ -20,6 +20,7 @@
         <module>investor-web</module>
         <module>management-web</module>
         <module>system-web</module>
+        <module>customer-web</module>
     </modules>
 
     <dependencies>

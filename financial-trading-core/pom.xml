@@ -23,6 +23,7 @@
         <module>settlement-core</module>
         <module>query-core</module>
         <module>system-core</module>
+        <module>customer-core</module>
     </modules>
 
     <dependencies>

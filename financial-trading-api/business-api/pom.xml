@@ -23,5 +23,6 @@
         <module>settlement-api</module>
         <module>query-api</module>
         <module>system-api</module>
+        <module>customer-api</module>
     </modules>
 </project>

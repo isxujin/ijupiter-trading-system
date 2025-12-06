@@ -57,6 +57,7 @@ ijupiter-trading-system (父模块)
 ├── financial-trading-api              # API接口定义层
 │   ├── business-api                 # 业务API
 │   │   ├── account-api            # 账户API
+│   │   ├── customer-api           # 客户管理API
 │   │   ├── fund-api               # 资金API
 │   │   ├── product-api            # 产品API
 │   │   ├── system-api             # 系统管理API
@@ -68,6 +69,7 @@ ijupiter-trading-system (父模块)
 │       └── cache-adapter-spi      # 缓存适配器SPI
 ├── financial-trading-core            # 核心业务实现层
 │   ├── account-core                # 账户核心服务
+│   ├── customer-core               # 客户管理核心服务
 │   ├── fund-core                   # 资金核心服务
 │   ├── product-core                # 产品核心服务
 │   ├── system-core                 # 系统管理核心服务
@@ -79,6 +81,7 @@ ijupiter-trading-system (父模块)
 │   └── redis-adapter             # Redis缓存适配器
 ├── financial-trading-web             # Web表示层
 │   ├── common-web                 # 公共Web模块，提供视图层框架资源和控制层公共资源
+│   ├── customer-web               # 客户管理Web模块
 │   ├── management-web             # 管理端Web模块
 │   ├── investor-web               # 投资者端Web模块
 │   └── system-web                 # 系统管理Web模块
@@ -113,7 +116,8 @@ ijupiter-trading-system (父模块)
 #### 3. financial-trading-api
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
-  - **business-api**: 业务领域API，包括账户、资金、产品、系统管理、交易、结算、查询等API
+  - **business-api**: 业务领域API，包括账户、客户管理、资金、产品、系统管理、交易、结算、查询等API
+    - **customer-api**: 客户管理API，提供客户、交易账户、资金账户等接口
     - **system-api**: 系统管理API，提供操作员、角色、权限、数据字典等接口
   - **middleware-spi**: 中间件SPI（服务提供者接口），定义中间件实现的标准接口
     - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
@@ -123,6 +127,12 @@ ijupiter-trading-system (父模块)
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
   - **account-core**: 账户管理核心，处理用户账户、权限等
+  - **customer-core**: 客户管理核心，处理客户信息、交易账户、资金账户等
+    - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
+    - 银行卡信息已合并到资金账户，交易所账号信息已合并到交易账户
+    - 实体层：客户、交易账户基本信息、交易账户持仓、资金账户基本信息、资金账户余额等实体
+    - 仓储层：各实体的Repository接口
+    - 服务层：客户管理相关Service实现
   - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
   - **product-core**: 产品管理核心，处理金融产品定义、规则等
   - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
@@ -145,8 +155,10 @@ ijupiter-trading-system (父模块)
   - **common-web**: 公共Web模块，提供视图层框架资源和控制层公共资源，包括：
     - Spring MVC和Thymeleaf配置
     - WebJars资源管理（Bootstrap和jQuery）
-    - 基础控制器类和公共API响应格式
+    - 基础控制器类和统一API响应格式（Result和PageResult）
     - 统一的页面模板结构
+    - 包结构调整：控制器包名从/controller调整为/controllers，模型包名从/dto调整为/models
+  - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源
   - **management-web**: 管理端Web模块，提供后台管理界面，继承common-web的公共资源
   - **investor-web**: 投资者端Web模块，提供交易界面，继承common-web的公共资源
   - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
@@ -192,7 +204,26 @@ ijupiter-trading-system (父模块)
 - **继承设计**: management-web、investor-web和system-web继承common-web，避免代码重复
 - **资源统一**: 所有前端资源通过WebJars统一管理，确保版本一致性
 
-### 6. 系统管理模块设计
+### 6. 客户管理模块设计
+- **customer-core**: 客户管理核心模块，采用DDD分层架构
+  - **聚合设计**: 客户聚合、交易账户聚合、资金账户聚合
+  - **实体拆分**: 
+    - 交易账户拆分为基本信息和持仓两部分
+    - 资金账户拆分为基本信息和余额两部分
+  - **信息合并**: 
+    - 银行卡信息合并到资金账户基本信息
+    - 交易所账号信息合并到交易账户基本信息
+  - **仓储层**: 各实体对应的Repository接口
+  - **服务层**: 实现客户管理相关的业务逻辑
+  - **事件驱动**: 使用Axon Framework实现事件溯源和命令处理
+- **customer-web**: 客户管理Web模块，继承common-web的公共资源
+  - 提供完整的客户管理界面
+  - 支持客户信息管理、交易账户管理、资金账户管理等功能
+- **数据模型设计**: 
+  - DTO与Entity分离：DTO不包含系统字段（createTime、updateTime、version），仅在Entity中保留
+  - 业务时间字段：使用openDate、closeDate等业务字段替代系统时间字段
+
+### 7. 系统管理模块设计
 - **system-core**: 系统管理核心模块，采用MVC分层架构
   - **实体层**: 操作员、角色、权限、数据字典、系统配置等实体
   - **仓储层**: 提供JPA Repository接口和实现，支持复杂查询和分页
@@ -202,13 +233,27 @@ ijupiter-trading-system (父模块)
   - 提供完整的系统设置界面
   - 支持操作员管理、角色权限管理、数据字典管理等功能
 
-### 7. Maven Wrapper集成
+### 8. Maven Wrapper集成
 - 统一构建环境，确保所有开发者使用相同的Maven版本
 - 自动下载Maven 3.9.5，无需本地安装Maven
 - 提供验证和初始化脚本，简化环境设置
 - 支持跨平台构建（Windows、Linux、macOS）
 
 ## 交互流程
+
+### 客户管理流程
+
+```
+1. 操作员通过customer-web界面登录系统
+   ↓
+2. 操作员管理客户信息、交易账户、资金账户等
+   ↓
+3. 调用customer-core服务执行客户管理操作
+   ↓
+4. 操作结果持久化到数据库
+   ↓
+5. 通过common-web提供的公共界面展示操作结果
+```
 
 ### 系统管理流程
 
