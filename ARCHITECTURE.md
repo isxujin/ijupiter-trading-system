@@ -233,7 +233,25 @@ ijupiter-trading-system (父模块)
   - 提供完整的系统设置界面
   - 支持操作员管理、角色权限管理、数据字典管理等功能
 
-### 8. Maven Wrapper集成
+### 8. 数据模型设计规范
+- **系统字段与业务字段分离**:
+  - createTime、updateTime和version这三个字段只表示数据库记录的新增时间、修改时间、记录乐观锁
+  - 这三个字段不包含其他业务含义，仅在Entity中保留
+  - 业务上有开户时间、销户时间等属性时，使用openDate、closeDate表示
+
+- **主键与业务标识分离**:
+  - 系统所有实体表都包含id主键属性，该属性无业务含义
+  - 如果业务实体需要一个具备业务含义的唯一标识，使用以code（编码/编号）为后缀的属性命名
+  - 例如：customerCode、accountCode、productCode等
+
+- **继承体系设计**:
+  - 系统数据实体对象单根继承自BaseEntity
+  - 系统数据传输对象单根继承自BaseDTO
+  - 系统服务接口单根继承自BaseService接口
+  - BaseEntity定义了公共方法convertFrom用于从其他类型对象复制属性到Entity对象
+  - BaseDTO定义了公共方法convertFrom用于从其他类型对象复制属性到DTO对象
+
+### 9. Maven Wrapper集成
 - 统一构建环境，确保所有开发者使用相同的Maven版本
 - 自动下载Maven 3.9.5，无需本地安装Maven
 - 提供验证和初始化脚本，简化环境设置
