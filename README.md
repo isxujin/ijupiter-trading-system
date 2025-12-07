@@ -42,24 +42,24 @@ ijupiter-trading-system (父模块)
 ├── securities-trading-common           # 公共工具和基础组件
 ├── securities-trading-api              # API接口定义层
 │   ├── business-api                 # 业务API
-│   │   ├── securities-api            # 账户API (原 account-api)
 │   │   ├── customer-api           # 客户管理API
-│   │   ├── funding-api            # 资金API（原 fund-api）
-│   │   ├── system-api             # 系统管理API
-│   │   ├── trading-engine-api      # 交易引擎API
-│   │   ├── settlement-api         # 结算API
-│   │   └── query-api             # 查询API
+│   │   ├── funding-api            # 资金API
+│   │   ├── securities-api         # 证券API
+│   │   ├── settlement-api         # 清/结算API
+│   │   ├── trading-engine-api     # 交易撮合API
+│   │   ├── query-api              # 通用查询API
+│   │   └── system-api             # 系统管理API
 │   └── middleware-spi              # 中间件SPI（服务提供者接口）
 │       ├── message-adapter-spi     # 消息适配器SPI
 │       └── cache-adapter-spi      # 缓存适配器SPI
 ├── securities-trading-core            # 核心业务实现层
-│   ├── securities-core                # 账户核心服务 (原 account-core)
 │   ├── customer-core               # 客户管理核心服务
-│   ├── funding-core                # 资金核心服务（原 fund-core）
-│   ├── system-core                 # 系统管理核心服务
-│   ├── trading-engine-core         # 交易引擎核心服务
-│   ├── settlement-core             # 结算核心服务
-│   └── query-core                  # 查询核心服务
+│   ├── funding-core                # 资金核心服务
+│   ├── securities-core             # 证券核心服务
+│   ├── settlement-core             # 清/结算核心服务
+│   ├── trading-engine-core         # 交易撮合核心服务
+│   ├── query-core                  # 通用查询核心服务
+│   └── system-core                 # 系统管理核心服务
 ├── securities-trading-middleware      # 中间件适配器层
 │   ├── rabbitmq-adapter            # RabbitMQ消息适配器
 │   └── redis-adapter             # Redis缓存适配器
@@ -100,8 +100,14 @@ ijupiter-trading-system (父模块)
 #### securities-trading-api
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
-  - **business-api**: 业务领域API，包括账户、客户管理、资金、产品、系统管理、交易、结算、查询等API
-    - **customer-api**: 客户管理API，提供客户、交易账户、资金账户等接口
+  - **business-api**: 业务领域API，包括客户管理、资金、证券、清/结算、交易撮合、通用查询、系统管理等API
+    - **customer-api**: 客户管理API，提供客户、客户资金账户、客户证券账户等接口
+    - **funding-api**: 资金API，提供资金余额、资金变动流水、交易所信息等接口
+    - **securities-api**: 证券API，提供证券持仓、持仓变动流水、银行信息等接口
+    - **settlement-api**: 清/结算API，提供日清/结算相关功能接口
+    - **trading-engine-api**: 交易撮合API，提供日间证券标的交易/撮合相关功能接口
+    - **query-api**: 通用查询API，提供所有上述模块的查询能力接口
+    - **system-api**: 系统管理API，提供系统操作员、角色、权限、数据字典等接口
   - **middleware-spi**: 中间件SPI（服务提供者接口），包括：
     - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
     - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口
@@ -109,17 +115,13 @@ ijupiter-trading-system (父模块)
 #### securities-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
-  - **securities-core**: 账户管理核心，处理用户账户、权限等（原 account-core）
-  - **customer-core**: 客户管理核心，处理客户信息、交易账户、资金账户等
-    - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
-    - 银行卡信息已合并到资金账户，交易所账号信息已合并到交易账户
-  - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
-
-  - **product-core**: (已删除) 产品管理核心，原来处理金融产品定义、规则等
-  - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
-  - **trading-engine-core**: 交易引擎核心，处理订单撮合、成交等
-  - **settlement-core**: 结算核心，处理资金结算、交收等
-  - **query-core**: 查询核心，处理各种查询请求
+  - **customer-core**: 客户管理核心，处理客户信息、客户资金账户、客户证券账户等
+  - **funding-core**: 资金管理核心，处理客户资金余额、资金变动流水、交易所信息、证券产品标的、证券交易日历等
+  - **securities-core**: 证券管理核心，处理客户证券持仓、持仓变动流水、银行信息等
+  - **settlement-core**: 清/结算核心，处理日清/结算相关功能
+  - **trading-engine-core**: 交易撮合核心，处理日间证券标的交易/撮合相关功能
+  - **query-core**: 通用查询核心，处理所有模块的查询请求，采用查询与事件分离架构
+  - **system-core**: 系统管理核心，采用传统MVC架构，处理系统操作员、角色、权限、数据字典、系统参数等，为管理终端提供标准的CRUD服务
 
 #### securities-trading-middleware
 - **职责**: 提供中间件技术适配器
@@ -248,57 +250,64 @@ Maven Wrapper会自动下载Maven 3.9.5版本到用户目录，确保所有开�
 
 ## 核心功能
 
-### 1. 客户管理
-- 客户注册与认证
-- 客户信息管理
-- 交易账户管理（基本信息、持仓信息）
-- 资金账户管理（基本信息、余额信息）
-- 银行卡绑定与管理（合并到资金账户）
-- 交易所账号绑定与管理（合并到交易账户）
+### 面向证券投资者域的功能模块
+
+#### 1. 客户管理模块 (customer)
+- 客户信息维护
+- 客户资金账户维护
+- 客户证券账户维护
 - 客户状态管理（正常、冻结、注销）
+- 银行卡绑定与管理
 - 事件溯源与数据审计
 
-### 2. 账户管理
-- 用户注册与认证
-- 账户信息管理
-- 权限角色管理
-- 密码安全策略
-
-### 2. 资金管理
-- 资金账户体系
+#### 2. 资金模块 (funding)
+- 客户资金余额维护
+- 客户资金变动流水维护
+- 证券交易所信息维护
+- 证券产品标的维护
+- 证券交易日历维护
 - 资金划拨操作
 - 资金冻结与解冻
-- 资金流水记录
 
-### 3. 产品管理
-- 金融产品定义
-- 交易规则配置
-- 产品状态管理
-- 产品风险控制
+#### 3. 证券模块 (securities)
+- 客户证券持仓维护
+- 客户持仓变动流水维护
+- 银行信息维护
+- 交易所账号绑定与管理
+- 持仓信息查询与分析
 
-### 4. 交易功能
-- 订单委托管理
-- 撮合引擎
-- 成交确认机制
-- 交易风控检查
-
-### 5. 结算功能
+#### 4. 清/结算模块 (settlement)
+- 日清/结算相关功能
 - T+1结算机制
 - 资金交收处理
 - 结算风险管理
 - 结算对账功能
 
-### 6. 查询功能
+#### 5. 交易撮合模块 (trading-engine)
+- 日间证券标的交易/撮合相关功能
+- 订单委托管理
+- 撮合引擎
+- 成交确认机制
+- 交易风控检查
+
+#### 6. 通用查询模块 (query)
+- 系统采用查询与事件分离架构
+- 承接所有上述模块为客户端提供的查询能力
 - 账户信息查询
 - 交易记录查询
 - 资金流水查询
 - 持仓信息查询
 
-### 7. 系统管理
-- 操作员管理
-- 角色权限管理
-- 数据字典管理
-- 系统参数配置
+### 面向管理员域的功能模块
+
+#### 1. 系统管理模块 (system)
+- 系统操作员维护
+- 系统角色维护
+- 系统权限维护
+- 系统数据字典维护
+- 系统参数维护
+- 系统配置管理
+- 系统监控与日志管理
 
 ## 架构特点
 
