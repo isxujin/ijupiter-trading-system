@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.allinone;
+package net.ijupiter.trading.boot.web.menagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "net.ijupiter.trading.api",
         "net.ijupiter.trading.core",
         "net.ijupiter.trading.web",
-        "net.ijupiter.trading.boot"
+        "net.ijupiter.trading.boot.web"
 })
 @EnableJpaRepositories(basePackages = "net.ijupiter.trading.core.*.repositories")
 @EntityScan(basePackages = "net.ijupiter.trading.core.*.entities")

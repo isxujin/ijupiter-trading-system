@@ -2,7 +2,7 @@
 spring:
   # 1.1 应用配置
   application:
-    name: securities-trading-service
+    name: service-boot-menagement
   # 1.2 数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai

@@ -24,7 +24,6 @@
         <module>trading-engine-web</module>
         <module>query-web</module>
         <module>system-web</module>
-        <module>management-web</module>
     </modules>
 
     <dependencies>

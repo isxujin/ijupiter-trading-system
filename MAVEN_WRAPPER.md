@@ -59,7 +59,7 @@ project-root/
 ./mvnw.sh clean compile
 
 # 运行测试
-./mvnw.sh test
+./mvnw.sh investor
 
 # 打包项目
 ./mvnw.sh package

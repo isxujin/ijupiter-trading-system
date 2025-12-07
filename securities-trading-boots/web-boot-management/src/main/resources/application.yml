@@ -2,7 +2,7 @@
 spring:
   # 1.1 应用配置
   application:
-    name: web-test-boot
+    name: web-boot-management
   # 1.2 视图模版配置（Thymeleaf）
   thymeleaf:
     prefix: classpath:/templates/  # 前缀（必须是templates，不能少s）

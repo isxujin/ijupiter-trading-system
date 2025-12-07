@@ -1,4 +1,4 @@
-package net.ijupiter.trading.web.management.configs;
+package net.ijupiter.trading.boot.web.menagement.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**", "/test-error").permitAll()
+                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**", "/investor-error").permitAll()
                         .requestMatchers("/management/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

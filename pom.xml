@@ -71,7 +71,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>trading-engine-api</artifactId>
+                <artifactId>funding-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -81,17 +81,12 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>funding-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>product-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
                 <artifactId>settlement-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>trading-engine-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -122,7 +117,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>trading-engine-core</artifactId>
+                <artifactId>funding-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -132,17 +127,12 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>funding-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>product-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
                 <artifactId>settlement-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>trading-engine-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -160,15 +150,34 @@
                 <artifactId>system-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!-- investor-web removed -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>management-web</artifactId>
+                <artifactId>customer-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>customer-web</artifactId>
+                <artifactId>funding-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>securities-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>settlement-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>trading-engine-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.ijupiter.trading</groupId>
+                <artifactId>query-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

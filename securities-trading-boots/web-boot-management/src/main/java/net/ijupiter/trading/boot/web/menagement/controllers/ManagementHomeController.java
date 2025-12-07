@@ -1,4 +1,4 @@
-package net.ijupiter.trading.web.management.controllers;
+package net.ijupiter.trading.boot.web.menagement.controllers;
 
 import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.security.core.Authentication;

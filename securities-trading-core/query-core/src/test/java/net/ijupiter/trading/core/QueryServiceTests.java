@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Slf4j
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("investor")
 public class QueryServiceTests {
     
     @Autowired

@@ -1,4 +1,4 @@
-package net.ijupiter.trading.web.management.controllers;
+package net.ijupiter.trading.boot.web.menagement.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

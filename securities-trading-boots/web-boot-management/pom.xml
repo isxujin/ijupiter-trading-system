@@ -16,12 +16,6 @@
 
     <dependencies>
         <!-- Web模块依赖 -->
-        <!-- 内部Web模块依赖 - 管理终端 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>management-web</artifactId>
-        </dependency>
-
         <!-- 系统管理模块依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
@@ -94,7 +88,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定主启动类（需在该模块中创建） -->
-                    <mainClass>net.ijupiter.trading.boot.web.allinone.WebApplication</mainClass>
+                    <mainClass>net.ijupiter.trading.boot.web.menagement.ManagementWebApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

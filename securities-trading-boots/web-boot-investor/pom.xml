@@ -40,11 +40,6 @@
         </dependency>
 
         <!-- 内部Web模块依赖 - 管理终端 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>management-web</artifactId>
-        </dependency>
-        
         <!-- 系统管理模块依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
@@ -113,7 +108,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定主启动类（需在该模块中创建） -->
-                    <mainClass>net.ijupiter.trading.boot.web.test.TestWebApplication</mainClass>
+                    <mainClass>net.ijupiter.trading.boot.web.investor.InvestorWebApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

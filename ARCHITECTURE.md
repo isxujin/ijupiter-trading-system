@@ -80,14 +80,16 @@ ijupiter-trading-system (父模块)
 ├── securities-trading-web             # Web表示层
 │   ├── common-web                 # 公共Web模块，提供视图层框架资源和控制层公共资源
 │   ├── customer-web               # 客户管理Web模块
-│   ├── management-web             # 管理端Web模块
-│   ├── investor-web               # 投资者端Web模块
+│   ├── funding-web                # 资金Web模块
+│   ├── securities-web             # 证券Web模块
+│   ├── settlement-web             # 清/结算Web模块
+│   ├── trading-engine-web         # 交易撮合Web模块
+│   ├── query-web                  # 通用查询Web模块
 │   └── system-web                 # 系统管理Web模块
 ├── securities-trading-boots            # 应用启动层
-│   ├── service-allinone-boot       # 服务单体启动器
-│   ├── service-test-boot          # 服务测试启动器
-│   ├── web-allinone-boot         # Web单体启动器
-│   └── web-test-boot            # Web测试启动器
+│   ├── service-boot-allinone     # 服务单体启动器
+│   ├── web-boot-investor          # 投资者Web启动器
+│   └── web-boot-management       # 管理员Web启动器
 ├── mvnw / mvnw.cmd / mvnw.sh       # Maven Wrapper脚本
 ├── init-trading-system.sh          # 项目初始化脚本
 ├── verify-mvnw.sh                 # Maven Wrapper验证脚本
@@ -175,18 +177,20 @@ ijupiter-trading-system (父模块)
     - 统一的页面模板结构
     - 包结构调整：控制器包名从/controller调整为/controllers，模型包名从/dto调整为/models
   - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源
-  - **management-web**: 管理端Web模块，提供后台管理界面，继承common-web的公共资源
-  - **investor-web**: 投资者端Web模块，提供交易界面，继承common-web的公共资源
+  - **funding-web**: 资金Web模块，提供资金管理界面，继承common-web的公共资源
+  - **securities-web**: 证券Web模块，提供证券管理界面，继承common-web的公共资源
+  - **settlement-web**: 清/结算Web模块，提供清/结算管理界面，继承common-web的公共资源
+  - **trading-engine-web**: 交易撮合Web模块，提供交易撮合管理界面，继承common-web的公共资源
+  - **query-web**: 通用查询Web模块，提供所有模块的查询界面，继承common-web的公共资源
   - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
 
 #### 7. securities-trading-boots
 - **职责**: 提供不同场景的应用启动入口
 - **子模块**:
-  - **service-allinone-boot**: 服务单体启动器，包含所有核心服务模块
-  - **service-test-boot**: 服务测试启动器，用于测试环境
-  - **web-allinone-boot**: Web单体启动器，包含所有Web界面模块
-  - **web-test-boot**: Web测试启动器，用于Web测试环境
-- **特点**: 支持单体启动和测试分离，方便不同场景部署
+  - **service-boot-allinone**: 服务单体启动器，包含所有核心服务模块
+  - **web-boot-investor**: 投资者Web启动器，面向证券投资者域的客户端
+  - **web-boot-management**: 管理员Web启动器，面向管理员域的管理终端
+- **特点**: 支持按业务域分离启动，方便不同角色使用
 
 ## 设计原则
 

@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.test;
+package net.ijupiter.trading.boot.web.investor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

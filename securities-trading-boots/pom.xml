@@ -16,10 +16,9 @@
     <description>证券交易系统 - 启动模块</description>
 
     <modules>
-        <module>service-test-boot</module>
-        <module>service-allinone-boot</module>
-        <module>web-test-boot</module>
-        <module>web-allinone-boot</module>
+        <module>service-boot-allinone</module>
+        <module>web-boot-investor</module>
+        <module>web-boot-management</module>
     </modules>
 
     <dependencies>
