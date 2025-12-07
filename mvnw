@@ -311,7 +311,25 @@ fi
 
 # Provide a "standardized" way to retrieve the CLI args that will
 # work with both Windows and non-Windows executions.
-MAVEN_CMD_LINE_ARGS="$MAVEN_CONFIG $@"
+## Standardize command-line args and correct common typos
+# Build an args string from provided CLI args, normalizing known mistakes
+NORMALIZED_ARGS=""
+for _a in "$@"; do
+  case "$_a" in
+    -DskipTest=*) _a="${_a/-DskipTest=/-DskipTests=}" ;;
+    -DskipTest) _a="-DskipTests" ;;
+  esac
+  if [ -z "$NORMALIZED_ARGS" ]; then
+    NORMALIZED_ARGS="$_a"
+  else
+    NORMALIZED_ARGS="$NORMALIZED_ARGS $_a"
+  fi
+done
+if [ -n "$MAVEN_CONFIG" ]; then
+  MAVEN_CMD_LINE_ARGS="$MAVEN_CONFIG $NORMALIZED_ARGS"
+else
+  MAVEN_CMD_LINE_ARGS="$NORMALIZED_ARGS"
+fi
 export MAVEN_CMD_LINE_ARGS
 
 WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
