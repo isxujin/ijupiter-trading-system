@@ -28,7 +28,6 @@ public class QueryServiceImpl implements QueryService {
     private final AccountViewRepository accountViewRepository;
     private final OrderViewRepository orderViewRepository;
     private final FundAccountViewRepository fundAccountViewRepository;
-    private final ProductViewRepository productViewRepository;
     private final TradeViewRepository tradeViewRepository;
     private final SettlementViewRepository settlementViewRepository;
     
@@ -61,11 +60,11 @@ public class QueryServiceImpl implements QueryService {
             int page = query.getPage() - 1; // Spring Data的页码从0开始
             int size = query.getSize();
             Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime"));
-            
+
             // 这里简化处理，实际应该在Repository层支持分页
             int startIndex = page * size;
             int endIndex = Math.min(startIndex + size, accountViews.size());
-            
+
             if (startIndex >= accountViews.size()) {
                 accountViews = List.of();
             } else {
@@ -215,74 +214,7 @@ public class QueryServiceImpl implements QueryService {
                 .orElse(null);
     }
     
-    @Override
-    public List<ProductQueryDTO> queryProducts(ProductQuery query) {
-        log.debug("查询产品信息: {}", query);
-        
-        List<ProductView> productViews;
-        
-        // 根据查询条件确定查询方法
-        if (query.getProductId() != null) {
-            productViews = productViewRepository.findById(query.getProductId())
-                    .map(List::of)
-                    .orElse(List.of());
-        } else if (query.getProductCode() != null) {
-            productViews = productViewRepository.findByProductCode(query.getProductCode())
-                    .map(List::of)
-                    .orElse(List.of());
-        } else if (query.getProductType() != null && query.getStatus() != null) {
-            productViews = productViewRepository.findByProductTypeAndStatus(query.getProductType(), query.getStatus());
-        } else if (query.getMarket() != null && query.getStatus() != null) {
-            productViews = productViewRepository.findByMarketAndStatus(query.getMarket(), query.getStatus());
-        } else if (query.getProductType() != null) {
-            productViews = productViewRepository.findByProductType(query.getProductType());
-        } else if (query.getStatus() != null) {
-            productViews = productViewRepository.findByStatus(query.getStatus());
-        } else if (query.getMarket() != null) {
-            productViews = productViewRepository.findByMarket(query.getMarket());
-        } else if (query.getCurrency() != null) {
-            productViews = productViewRepository.findByCurrency(query.getCurrency());
-        } else {
-            // 查询所有产品
-            productViews = productViewRepository.findAll();
-        }
-        
-        // 应用分页
-        if (query.getPage() != null && query.getSize() != null) {
-            int page = query.getPage() - 1;
-            int size = query.getSize();
-            int startIndex = page * size;
-            int endIndex = Math.min(startIndex + size, productViews.size());
-            
-            if (startIndex >= productViews.size()) {
-                productViews = List.of();
-            } else {
-                productViews = productViews.subList(startIndex, endIndex);
-            }
-        }
-        
-        return productViews.stream()
-                .map(this::convertToProductQueryDTO)
-                .collect(Collectors.toList());
-    }
     
-    @Override
-    public ProductQueryDTO getProduct(String productId) {
-        log.debug("查询单个产品信息: {}", productId);
-        
-        return productViewRepository.findById(productId)
-                .map(this::convertToProductQueryDTO)
-                .orElse(null);
-    }
-    
-    @Override
-    public ProductQueryDTO getProductByCode(String productCode) {
-        log.debug("根据产品代码查询产品信息: {}", productCode);
-        
-        return productViewRepository.findByProductCode(productCode)
-                .map(this::convertToProductQueryDTO)
-                .orElse(null);
-    }
     
     @Override
     public List<TradeQueryDTO> queryTrades(TradeQuery query) {
@@ -481,27 +413,7 @@ public class QueryServiceImpl implements QueryService {
                 .build();
     }
     
-    private ProductQueryDTO convertToProductQueryDTO(ProductView productView) {
-        return ProductQueryDTO.builder()
-                .productId(productView.getProductId())
-                .productCode(productView.getProductCode())
-                .productName(productView.getProductName())
-                .productType(productView.getProductType())
-                .status(productView.getStatus())
-                .market(productView.getMarket())
-                .currency(productView.getCurrency())
-                .minQuantity(productView.getMinQuantity())
-                .maxQuantity(productView.getMaxQuantity())
-                .quantityPrecision(productView.getQuantityPrecision())
-                .pricePrecision(productView.getPricePrecision())
-                .limitUpPrice(productView.getLimitUpPrice())
-                .limitDownPrice(productView.getLimitDownPrice())
-                .previousClose(productView.getPreviousClose())
-                .latestPrice(productView.getLatestPrice())
-                .createTime(productView.getCreateTime())
-                .updateTime(productView.getUpdateTime())
-                .build();
-    }
+    
     
     private TradeQueryDTO convertToTradeQueryDTO(TradeView tradeView) {
         return TradeQueryDTO.builder()

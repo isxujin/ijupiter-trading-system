@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.settlement.events.SettlementCompletedEvent;
 import net.ijupiter.trading.api.settlement.events.SettlementFailedEvent;
 import net.ijupiter.trading.core.query.repositories.OrderViewRepository;
-import net.ijupiter.trading.core.query.repositories.ProductViewRepository;
 import net.ijupiter.trading.core.query.repositories.SettlementViewRepository;
 import net.ijupiter.trading.core.query.repositories.TradeViewRepository;
 import org.axonframework.eventhandling.EventHandler;
@@ -26,7 +25,6 @@ public class SettlementEventHandler {
     private final SettlementViewRepository settlementViewRepository;
     private final TradeViewRepository tradeViewRepository;
     private final OrderViewRepository orderViewRepository;
-    private final ProductViewRepository productViewRepository;
     
 //    @EventHandler
 //    public void on(SettlementCreatedEvent event) {

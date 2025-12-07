@@ -99,35 +99,7 @@ public class QueryServiceTests {
         }
     }
     
-    @Test
-    public void testQueryProducts() {
-        log.info("测试产品查询功能");
-        
-        // 查询所有产品
-        ProductQuery queryAll = ProductQuery.all();
-        List<ProductQueryDTO> products = queryService.queryProducts(queryAll);
-        log.info("查询到{}个产品", products.size());
-        
-        // 按产品类型查询产品
-        if (!products.isEmpty()) {
-            String productType = products.get(0).getProductType();
-            ProductQuery queryByType = ProductQuery.byProductType(productType);
-            List<ProductQueryDTO> typeProducts = queryService.queryProducts(queryByType);
-            log.info("产品类型{}有{}个产品", productType, typeProducts.size());
-        }
-        
-        // 查询单个产品
-        if (!products.isEmpty()) {
-            String productId = products.get(0).getProductId();
-            ProductQueryDTO product = queryService.getProduct(productId);
-            log.info("产品信息: {}", product);
-            
-            // 按产品代码查询
-            String productCode = product.getProductCode();
-            ProductQueryDTO productByCode = queryService.getProductByCode(productCode);
-            log.info("按产品代码查询结果: {}", productByCode);
-        }
-    }
+    // Product-related tests removed because product module was deleted
     
     @Test
     public void testQueryTrades() {

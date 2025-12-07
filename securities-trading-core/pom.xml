@@ -19,7 +19,6 @@
         <module>trading-engine-core</module>
         <module>securities-core</module>
         <module>funding-core</module>
-        <module>product-core</module>
         <module>settlement-core</module>
         <module>query-core</module>
         <module>system-core</module>

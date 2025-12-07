@@ -30,10 +30,7 @@
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>funding-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>product-api</artifactId>
-        </dependency>
+        
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>settlement-api</artifactId>

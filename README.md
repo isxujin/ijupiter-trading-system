@@ -45,7 +45,6 @@ ijupiter-trading-system (父模块)
 │   │   ├── securities-api            # 账户API (原 account-api)
 │   │   ├── customer-api           # 客户管理API
 │   │   ├── funding-api            # 资金API（原 fund-api）
-│   │   ├── product-api            # 产品API
 │   │   ├── system-api             # 系统管理API
 │   │   ├── trading-engine-api      # 交易引擎API
 │   │   ├── settlement-api         # 结算API
@@ -57,7 +56,6 @@ ijupiter-trading-system (父模块)
 │   ├── securities-core                # 账户核心服务 (原 account-core)
 │   ├── customer-core               # 客户管理核心服务
 │   ├── funding-core                # 资金核心服务（原 fund-core）
-│   ├── product-core                # 产品核心服务
 │   ├── system-core                 # 系统管理核心服务
 │   ├── trading-engine-core         # 交易引擎核心服务
 │   ├── settlement-core             # 结算核心服务
@@ -116,7 +114,8 @@ ijupiter-trading-system (父模块)
     - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
     - 银行卡信息已合并到资金账户，交易所账号信息已合并到交易账户
   - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
-  - **product-core**: 产品管理核心，处理金融产品定义、规则等
+
+  - **product-core**: (已删除) 产品管理核心，原来处理金融产品定义、规则等
   - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
   - **trading-engine-core**: 交易引擎核心，处理订单撮合、成交等
   - **settlement-core**: 结算核心，处理资金结算、交收等

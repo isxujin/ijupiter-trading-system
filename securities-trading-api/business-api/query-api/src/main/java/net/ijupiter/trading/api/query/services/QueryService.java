@@ -74,23 +74,7 @@ public interface QueryService {
      * @param query 查询条件
      * @return 产品信息列表
      */
-    List<ProductQueryDTO> queryProducts(ProductQuery query);
-    
-    /**
-     * 查询单个产品信息
-     * 
-     * @param productId 产品ID
-     * @return 产品信息
-     */
-    ProductQueryDTO getProduct(String productId);
-    
-    /**
-     * 根据产品代码查询产品信息
-     * 
-     * @param productCode 产品代码
-     * @return 产品信息
-     */
-    ProductQueryDTO getProductByCode(String productCode);
+    // 产品功能已移除
     
     // ==================== 成交记录查询 ====================
     

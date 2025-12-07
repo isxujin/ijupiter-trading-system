@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.core.query.model.OrderView;
 import net.ijupiter.trading.core.query.repositories.AccountViewRepository;
 import net.ijupiter.trading.core.query.repositories.OrderViewRepository;
-import net.ijupiter.trading.core.query.repositories.ProductViewRepository;
 import net.ijupiter.trading.api.engine.events.OrderCancelledEvent;
 import net.ijupiter.trading.api.engine.events.OrderCreatedEvent;
 import org.axonframework.eventhandling.EventHandler;
@@ -25,41 +24,40 @@ public class OrderEventHandler {
     
     private final OrderViewRepository orderViewRepository;
     private final AccountViewRepository accountViewRepository;
-    private final ProductViewRepository productViewRepository;
     
     @EventHandler
     public void on(OrderCreatedEvent event) {
         log.debug("处理订单创建事件: {}", event.getOrderId());
         
-        // 获取账户和产品信息
+        // 获取账户信息，产品信息已不再从 product 模块获取
         accountViewRepository.findById(event.getAccountId())
-                .ifPresent(account -> {
-                    productViewRepository.findById(event.getProductId())
-                            .ifPresent(product -> {
-                                OrderView orderView = OrderView.builder()
-                                        .orderId(event.getOrderId())
-                                        .customerId(account.getCustomerId())
-                                        .accountId(event.getAccountId())
-                                        .orderNo(generateOrderNo(event.getOrderId()))
-                                        .productCode(product.getProductCode())
-                                        .productName(product.getProductName())
-                                        .orderType(event.getType().name())
-                                        .orderSide(event.getSide().name())
-                                        .status(event.getStatus().name())
-                                        .price(event.getPrice())
-                                        .quantity(event.getQuantity())
-                                        .executedQuantity(BigDecimal.ZERO)
-                                        .executedAmount(BigDecimal.ZERO)
-                                        .avgPrice(BigDecimal.ZERO)
-                                        .amount(event.getPrice().multiply(event.getQuantity()))
-                                        .orderTime(event.getCreateTime())
-                                        .createTime(event.getCreateTime())
-                                        .updateTime(event.getCreateTime())
-                                        .build();
-                                        
-                                orderViewRepository.save(orderView);
-                            });
-                });
+            .ifPresent(account -> {
+                String productCode = event.getProductId();
+                String productName = "";
+
+                OrderView orderView = OrderView.builder()
+                    .orderId(event.getOrderId())
+                    .customerId(account.getCustomerId())
+                    .accountId(event.getAccountId())
+                    .orderNo(generateOrderNo(event.getOrderId()))
+                    .productCode(productCode)
+                    .productName(productName)
+                    .orderType(event.getType().name())
+                    .orderSide(event.getSide().name())
+                    .status(event.getStatus().name())
+                    .price(event.getPrice())
+                    .quantity(event.getQuantity())
+                    .executedQuantity(BigDecimal.ZERO)
+                    .executedAmount(BigDecimal.ZERO)
+                    .avgPrice(BigDecimal.ZERO)
+                    .amount(event.getPrice().multiply(event.getQuantity()))
+                    .orderTime(event.getCreateTime())
+                    .createTime(event.getCreateTime())
+                    .updateTime(event.getCreateTime())
+                    .build();
+
+                orderViewRepository.save(orderView);
+            });
     }
     
     @EventHandler
