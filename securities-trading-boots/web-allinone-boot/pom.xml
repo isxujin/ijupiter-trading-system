@@ -16,10 +16,7 @@
 
     <dependencies>
         <!-- Web模块依赖 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>investor-web</artifactId>
-        </dependency>
+        <!-- investor-web removed -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>management-web</artifactId>

@@ -160,11 +160,7 @@
                 <artifactId>system-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>investor-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!-- investor-web removed -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>management-web</artifactId>

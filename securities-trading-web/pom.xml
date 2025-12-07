@@ -17,10 +17,14 @@
 
     <modules>
         <module>common-web</module>
-        <module>investor-web</module>
-        <module>management-web</module>
-        <module>system-web</module>
         <module>customer-web</module>
+        <module>securities-web</module>
+        <module>funding-web</module>
+        <module>settlement-web</module>
+        <module>trading-engine-web</module>
+        <module>query-web</module>
+        <module>system-web</module>
+        <module>management-web</module>
     </modules>
 
     <dependencies>
