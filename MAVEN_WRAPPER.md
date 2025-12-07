@@ -68,10 +68,10 @@ project-root/
 ./mvnw.sh install
 
 # 运行服务端
-./mvnw.sh -pl financial-trading-boots/service-boot spring-boot:run
+./mvnw.sh -pl securities-trading-boots/service-boot spring-boot:run
 
 # 运行Web端
-./mvnw.sh -pl financial-trading-boots/web-boot spring-boot:run
+./mvnw.sh -pl securities-trading-boots/web-boot spring-boot:run
 ```
 
 ## 验证和初始化

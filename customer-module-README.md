@@ -2,11 +2,11 @@
 
 ## 概述
 
-客户管理模块是金融交易系统的核心模块之一，负责管理投资者客户的全生命周期，包括客户信息管理、交易账户管理、资金账户管理、银行卡绑定和交易所账号绑定等功能。
+客户管理模块是证券交易系统的核心模块之一，负责管理投资者客户的全生命周期，包括客户信息管理、交易账户管理、资金账户管理、银行卡绑定和交易所账号绑定等功能。
 
 ## 模块结构
 
-### API层 (financial-trading-api/business-api/customer-api)
+### API层 (securities-trading-api/business-api/customer-api)
 - **枚举类**:
   - `CustomerStatus`: 客户状态枚举（正常、冻结、注销）
   - `TradingAccountType`: 交易账户类型枚举（股票、期货、期权、基金、债券）
@@ -30,7 +30,7 @@
 - **服务接口**:
   - `CustomerService`: 客户管理服务接口，定义了客户管理的所有操作
 
-### 核心层 (financial-trading-core/customer-core)
+### 核心层 (securities-trading-core/customer-core)
 - **聚合类**:
   - `CustomerAggregate`: 客户聚合，处理客户相关的命令和事件
   - `TradingAccountAggregate`: 交易账户聚合，处理交易账户相关的命令和事件
@@ -56,7 +56,7 @@
 - **配置类**:
   - `CustomerConfig`: 客户模块Axon配置，配置聚合的事件存储仓库
 
-### Web层 (financial-trading-web/customer-web)
+### Web层 (securities-trading-web/customer-web)
 - **控制器**:
   - `CustomerController`: 客户管理控制器，提供REST API和页面路由
 

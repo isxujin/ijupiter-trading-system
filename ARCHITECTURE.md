@@ -1,4 +1,4 @@
-# iJupiter 金融交易系统架构文档
+# iJupiter 证券交易系统架构文档
 
 ## 目录
 
@@ -11,7 +11,7 @@
 
 ## 系统概述
 
-iJupiter金融交易系统是一个基于事件引擎架构的通用金融交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot和Axon Framework构建，具备高可扩展性、高性能和高可用性特点。
+iJupiter证券交易系统是一个基于事件引擎架构的证券交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot和Axon Framework构建，具备高可扩展性、高性能和高可用性特点。
 
 系统以事件驱动为核心，通过领域事件解耦各业务模块，实现异步处理和数据最终一致性。
 
@@ -52,9 +52,9 @@ iJupiter金融交易系统是一个基于事件引擎架构的通用金融交易
 ijupiter-trading-system (父模块)
 ├── .mvn                           # Maven Wrapper配置
 │   └── wrapper                   # Wrapper脚本和配置
-├── financial-trading-boms            # 依赖版本统一管理
-├── financial-trading-common           # 公共工具和基础组件
-├── financial-trading-api              # API接口定义层
+├── securities-trading-boms            # 依赖版本统一管理
+├── securities-trading-common           # 公共工具和基础组件
+├── securities-trading-api              # API接口定义层
 │   ├── business-api                 # 业务API
 │   │   ├── account-api            # 账户API
 │   │   ├── customer-api           # 客户管理API
@@ -67,7 +67,7 @@ ijupiter-trading-system (父模块)
 │   └── middleware-spi              # 中间件SPI（服务提供者接口）
 │       ├── message-adapter-spi     # 消息适配器SPI
 │       └── cache-adapter-spi      # 缓存适配器SPI
-├── financial-trading-core            # 核心业务实现层
+├── securities-trading-core            # 核心业务实现层
 │   ├── account-core                # 账户核心服务
 │   ├── customer-core               # 客户管理核心服务
 │   ├── fund-core                   # 资金核心服务
@@ -76,16 +76,16 @@ ijupiter-trading-system (父模块)
 │   ├── trading-engine-core         # 交易引擎核心服务
 │   ├── settlement-core             # 结算核心服务
 │   └── query-core                  # 查询核心服务
-├── financial-trading-middleware      # 中间件适配器层
+├── securities-trading-middleware      # 中间件适配器层
 │   ├── rabbitmq-adapter            # RabbitMQ消息适配器
 │   └── redis-adapter             # Redis缓存适配器
-├── financial-trading-web             # Web表示层
+├── securities-trading-web             # Web表示层
 │   ├── common-web                 # 公共Web模块，提供视图层框架资源和控制层公共资源
 │   ├── customer-web               # 客户管理Web模块
 │   ├── management-web             # 管理端Web模块
 │   ├── investor-web               # 投资者端Web模块
 │   └── system-web                 # 系统管理Web模块
-├── financial-trading-boots            # 应用启动层
+├── securities-trading-boots            # 应用启动层
 │   ├── service-allinone-boot       # 服务单体启动器
 │   ├── service-test-boot          # 服务测试启动器
 │   ├── web-allinone-boot         # Web单体启动器
@@ -99,12 +99,12 @@ ijupiter-trading-system (父模块)
 
 ### 模块详细说明
 
-#### 1. financial-trading-boms
+#### 1. securities-trading-boms
 - **职责**: 统一管理所有模块的依赖版本
 - **核心组件**: Maven BOM文件
 - **特点**: 版本一致性、依赖传递控制
 
-#### 2. financial-trading-common
+#### 2. securities-trading-common
 - **职责**: 提供公共工具类、常量和基础组件
 - **核心组件**: 
   - 通用工具类
@@ -113,7 +113,7 @@ ijupiter-trading-system (父模块)
   - 通用枚举
 - **特点**: 可复用、轻量级
 
-#### 3. financial-trading-api
+#### 3. securities-trading-api
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
   - **business-api**: 业务领域API，包括账户、客户管理、资金、产品、系统管理、交易、结算、查询等API
@@ -123,7 +123,7 @@ ijupiter-trading-system (父模块)
     - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
     - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口
 
-#### 4. financial-trading-core
+#### 4. securities-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
   - **account-core**: 账户管理核心，处理用户账户、权限等
@@ -143,13 +143,13 @@ ijupiter-trading-system (父模块)
   - **settlement-core**: 结算核心，处理资金结算、交收等
   - **query-core**: 查询核心，处理各种查询请求
 
-#### 5. financial-trading-middleware
+#### 5. securities-trading-middleware
 - **职责**: 提供中间件技术适配器
 - **子模块**:
   - **rabbitmq-adapter**: RabbitMQ消息适配器，处理异步消息
   - **redis-adapter**: Redis缓存适配器，处理缓存和会话
 
-#### 6. financial-trading-web
+#### 6. securities-trading-web
 - **职责**: 提供Web界面和API入口
 - **子模块**:
   - **common-web**: 公共Web模块，提供视图层框架资源和控制层公共资源，包括：
@@ -163,7 +163,7 @@ ijupiter-trading-system (父模块)
   - **investor-web**: 投资者端Web模块，提供交易界面，继承common-web的公共资源
   - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
 
-#### 7. financial-trading-boots
+#### 7. securities-trading-boots
 - **职责**: 提供不同场景的应用启动入口
 - **子模块**:
   - **service-allinone-boot**: 服务单体启动器，包含所有核心服务模块

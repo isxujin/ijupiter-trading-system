@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.ijupiter.trading</groupId>
+        <artifactId>ijupiter-trading-system</artifactId>
+        <version>1.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>securities-trading-core</artifactId>
+    <packaging>pom</packaging>
+    <name>Securities Trading Core</name>
+    <description>证券交易系统 - 核心服务模块</description>
+
+    <modules>
+        <module>trading-engine-core</module>
+        <module>account-core</module>
+        <module>fund-core</module>
+        <module>product-core</module>
+        <module>settlement-core</module>
+        <module>query-core</module>
+        <module>system-core</module>
+        <module>customer-core</module>
+    </modules>
+
+    <dependencies>
+        <!-- Axon事件框架 -->
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <exclusions>
+                <!-- 排除更新检查模块 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-update-check</artifactId>
+                </exclusion>
+                <!-- 排除 Axon Server 依赖 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-axonserver-connector</artifactId>
+                </exclusion>
+                <!-- 排除 Axon 自动配置，避免重复 Bean -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <!-- 工具类 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# 初始化金融交易系统的脚本
+# 初始化证券交易系统的脚本
 
 echo "=========================================="
-echo "初始化iJupiter金融交易系统"
+echo "初始化iJupiter证券交易系统"
 echo "=========================================="
 
 # 检查Java版本
@@ -54,8 +54,8 @@ echo "✅ 项目初始化完成"
 echo "=========================================="
 echo ""
 echo "运行服务:"
-echo "  服务端: ./mvnw.sh -pl financial-trading-boots/service-boot spring-boot:run"
-echo "  Web端:  ./mvnw.sh -pl financial-trading-boots/web-boot spring-boot:run"
+echo "  服务端: ./mvnw.sh -pl securities-trading-boots/service-boot spring-boot:run"
+echo "  Web端:  ./mvnw.sh -pl securities-trading-boots/web-boot spring-boot:run"
 echo ""
 echo "构建项目:"
 echo "  打包:   ./mvnw.sh clean package"

@@ -8,17 +8,17 @@
     <artifactId>ijupiter-trading-system</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Financial Trading System</name>
-    <description>基于事件引擎的通用金融交易系统（支持证券/基金/期货等品类）</description>
+    <name>Securities Trading System</name>
+    <description>基于事件引擎的证券交易系统（支持证券/基金/期货等品类）</description>
 
     <modules>
-        <module>financial-trading-boms</module>
-        <module>financial-trading-common</module>
-        <module>financial-trading-api</module>
-        <module>financial-trading-middleware</module>
-        <module>financial-trading-core</module>
-        <module>financial-trading-web</module>
-        <module>financial-trading-boots</module>
+        <module>securities-trading-boms</module>
+        <module>securities-trading-common</module>
+        <module>securities-trading-api</module>
+        <module>securities-trading-middleware</module>
+        <module>securities-trading-core</module>
+        <module>securities-trading-web</module>
+        <module>securities-trading-boots</module>
     </modules>
 
     <properties>
@@ -35,7 +35,7 @@
             <!-- 引入项目BOM -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>financial-trading-boms</artifactId>
+                <artifactId>securities-trading-boms</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -45,7 +45,7 @@
             <!-- 公共模块 -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>financial-trading-common</artifactId>
+                <artifactId>securities-trading-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- 接口模块 -->
@@ -99,12 +99,6 @@
                 <artifactId>query-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>customer-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <!-- 实现模块 -->
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
@@ -154,11 +148,6 @@
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
                 <artifactId>query-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.ijupiter.trading</groupId>
-                <artifactId>customer-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
