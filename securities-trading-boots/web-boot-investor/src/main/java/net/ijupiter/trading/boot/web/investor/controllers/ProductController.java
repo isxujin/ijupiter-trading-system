@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.controllers;
+package net.ijupiter.trading.boot.web.investor.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/management")
-public class ProductController extends ManagementBaseController {
+@RequestMapping("/investor")
+public class ProductController extends InvestorBaseController {
 
     // 假设你的分页查询逻辑
     @GetMapping("/products/list")
@@ -31,6 +31,6 @@ public class ProductController extends ManagementBaseController {
         model.addAttribute("totalPages", 5); // 模拟总页数，实际应从分页查询结果获取
         model.addAttribute("pageSize", 10); // 每页显示条数
 
-        return "management/products";
+        return "investor/products";
     }
 }

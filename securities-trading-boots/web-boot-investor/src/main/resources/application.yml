@@ -49,7 +49,7 @@ spring:
 
 # 服务器配置
 server:
-  port: 9000  # 日志中显示端口是9000，保持一致
+  port: 9001  # 日志中显示端口是9000，保持一致
   # 错误页面配置
   error:
     whitelabel:

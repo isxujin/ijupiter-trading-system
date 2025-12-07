@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.controllers;
+package net.ijupiter.trading.boot.web.investor.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/management")
-public class TradeController extends ManagementBaseController {
+@RequestMapping("/investor")
+public class TradeController extends InvestorBaseController {
 
-    @Value("${management.terminal.title:金融交易系统管理平台}")
+    @Value("${investor.terminal.title:金融交易系统管理平台}")
     private String systemTitle;
 
     // 原路径：@GetMapping("/trades") → 改为唯一路径 /trades/list
@@ -25,7 +25,7 @@ public class TradeController extends ManagementBaseController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("totalPages", 8); // 模拟总页数，实际应从分页查询结果获取
         // 其他业务逻辑保持不变
-        return "management/trades"; // 对应 templates/management/trades.html 模板
+        return "investor/trades"; // 对应 templates/investor/trades.html 模板
     }
 
     // 若有其他交易相关方法（如详情/新增），需检查路径唯一性

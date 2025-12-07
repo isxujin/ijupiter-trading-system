@@ -50,7 +50,7 @@
     <!-- 导航栏 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/management/dashboard}">
+            <a class="navbar-brand" th:href="@{/investor/dashboard}">
                 <i class="bi bi-shield-check"></i>
                 <span th:text="${systemTitle}">金融交易系统管理平台</span>
             </a>
@@ -73,7 +73,7 @@
                             <span sec:authentication="name">用户</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" th:href="@{/management/settings}"><i class="bi bi-gear"></i> 系统设置</a></li>
+                            <li><a class="dropdown-item" th:href="@{/investor/settings}"><i class="bi bi-gear"></i> 系统设置</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> 个人设置</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" th:href="@{/logout}"><i class="bi bi-box-arrow-right"></i> 退出登录</a></li>

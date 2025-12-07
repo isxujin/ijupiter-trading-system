@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.configs;
+package net.ijupiter.trading.boot.web.investor.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,19 +41,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**").permitAll()
-                        .requestMatchers("/management/**").hasRole("ADMIN")
+                        .requestMatchers("/investor/login", "/webjars/**", "/static/**", "/error", "/common/**").permitAll()
+                        .requestMatchers("/investor/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/management/login")
-                        .defaultSuccessUrl("/management/dashboard", true)
-                        .failureUrl("/management/login?error=true")
+                        .loginPage("/investor/login")
+                        .defaultSuccessUrl("/investor/dashboard", true)
+                        .failureUrl("/investor/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/management/logout")
-                        .logoutSuccessUrl("/management/login?logout=true")
+                        .logoutUrl("/investor/logout")
+                        .logoutSuccessUrl("/investor/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()

@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.controllers;
+package net.ijupiter.trading.boot.web.investor.controllers;
 
 import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.security.core.Authentication;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/management")
-public class ManagementHomeController extends ManagementBaseController {
+@RequestMapping("/investor")
+public class InvestorHomeController extends InvestorBaseController {
 
     /**
      * 系统首页/仪表盘
@@ -31,7 +31,7 @@ public class ManagementHomeController extends ManagementBaseController {
         // 添加仪表盘数据
         model.addAttribute("dashboardStats", getDashboardStats());
         
-        return "management/dashboard";
+        return "investor/dashboard";
     }
 
     /**
@@ -39,7 +39,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/products")
     public String productsRedirect() {
-        return "redirect:/management/products/list";
+        return "redirect:/investor/products/list";
     }
 
     /**
@@ -47,7 +47,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/trades")
     public String tradesRedirect() {
-        return "redirect:/management/trades/list";
+        return "redirect:/investor/trades/list";
     }
 
     /**
@@ -55,7 +55,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/settings")
     public String settingsRedirect() {
-        return "redirect:/management/settings/manage";
+        return "redirect:/investor/settings/manage";
     }
     
     /**

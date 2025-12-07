@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.controllers;
+package net.ijupiter.trading.boot.web.investor.controllers;
 
 import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,12 +13,12 @@ import java.util.List;
  * 管理终端基础控制器
  * 继承common-terminal的BaseController，扩展管理端特有的功能
  */
-public abstract class ManagementBaseController extends BaseController {
+public abstract class InvestorBaseController extends BaseController {
 
-    @Value("${management.terminal.title:证券系统管理平台}")
+    @Value("${investor.terminal.title:证券系统管理平台}")
     protected String systemTitle;
 
-    @Value("${management.terminal.version:1.0.1-SNAPSHOT}")
+    @Value("${investor.terminal.version:1.0.1-SNAPSHOT}")
     protected String systemVersion;
 
     /**
@@ -47,11 +47,11 @@ public abstract class ManagementBaseController extends BaseController {
      */
     protected List<NavigationItem> getNavigationItems() {
         List<NavigationItem> items = new ArrayList<>();
-        items.add(new NavigationItem("首页", "/management/dashboard"));
-        items.add(new NavigationItem("产品", "/management/products"));
-        items.add(new NavigationItem("交易", "/management/trades"));
-        items.add(new NavigationItem("账户", "/management/accounts"));
-        items.add(new NavigationItem("系统", "/management/settings"));
+        items.add(new NavigationItem("首页", "/investor/dashboard"));
+        items.add(new NavigationItem("产品", "/investor/products"));
+        items.add(new NavigationItem("交易", "/investor/trades"));
+        items.add(new NavigationItem("账户", "/investor/accounts"));
+        items.add(new NavigationItem("系统", "/investor/settings"));
         return items;
     }
 
@@ -60,12 +60,12 @@ public abstract class ManagementBaseController extends BaseController {
      */
     protected List<MenuItem> getSidebarItems() {
         List<MenuItem> items = new ArrayList<>();
-        items.add(new MenuItem("仪表盘", "/management/dashboard", "bi bi-speedometer2", true));
-        items.add(new MenuItem("产品管理", "/management/products", "bi bi-box-seam"));
-        items.add(new MenuItem("交易管理", "/management/trades", "bi bi-cash-coin"));
-        items.add(new MenuItem("账户管理", "/management/accounts", "bi bi-people"));
-        items.add(new MenuItem("订单查询", "/management/orders", "bi bi-list-ul"));
-        items.add(new MenuItem("系统设置", "/management/settings", "bi bi-gear"));
+        items.add(new MenuItem("仪表盘", "/investor/dashboard", "bi bi-speedometer2", true));
+        items.add(new MenuItem("产品管理", "/investor/products", "bi bi-box-seam"));
+        items.add(new MenuItem("交易管理", "/investor/trades", "bi bi-cash-coin"));
+        items.add(new MenuItem("账户管理", "/investor/accounts", "bi bi-people"));
+        items.add(new MenuItem("订单查询", "/investor/orders", "bi bi-list-ul"));
+        items.add(new MenuItem("系统设置", "/investor/settings", "bi bi-gear"));
         return items;
     }
 

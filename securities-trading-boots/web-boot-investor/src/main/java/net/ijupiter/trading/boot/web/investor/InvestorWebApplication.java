@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "net.ijupiter.trading.api",
         "net.ijupiter.trading.core",
         "net.ijupiter.trading.web",
-        "net.ijupiter.trading.boot"
+        "net.ijupiter.trading.boot.web"
 })
 @EnableJpaRepositories(basePackages = "net.ijupiter.trading.core.*.repositories")
 @EntityScan(basePackages = "net.ijupiter.trading.core.*.entities")
@@ -25,7 +25,7 @@ public class InvestorWebApplication {
 
         System.out.println("==================================================================");
         System.out.println("[OK] Securities Trading System terminal started successfully!");
-        System.out.println("[OK] Investor terminal:         http://localhost:9000/investor");
+        System.out.println("[OK] Investor terminal:         http://localhost:9001/investor");
         System.out.println("==================================================================");
     }
 }
