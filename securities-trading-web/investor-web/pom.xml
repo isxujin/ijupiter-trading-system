@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>fund-api</artifactId>
+            <artifactId>funding-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>

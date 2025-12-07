@@ -58,7 +58,7 @@ ijupiter-trading-system (父模块)
 │   ├── business-api                 # 业务API
 │   │   ├── securities-api            # 账户API (原 account-api)
 │   │   ├── customer-api           # 客户管理API
-│   │   ├── fund-api               # 资金API
+│   │   ├── funding-api            # 资金API（原 fund-api）
 │   │   ├── product-api            # 产品API
 │   │   ├── system-api             # 系统管理API
 │   │   ├── trading-engine-api      # 交易引擎API
@@ -70,7 +70,7 @@ ijupiter-trading-system (父模块)
 ├── securities-trading-core            # 核心业务实现层
 │   ├── securities-core                # 账户核心服务 (原 account-core)
 │   ├── customer-core               # 客户管理核心服务
-│   ├── fund-core                   # 资金核心服务
+│   ├── funding-core                # 资金核心服务（原 fund-core）
 │   ├── product-core                # 产品核心服务
 │   ├── system-core                 # 系统管理核心服务
 │   ├── trading-engine-core         # 交易引擎核心服务
@@ -133,7 +133,7 @@ ijupiter-trading-system (父模块)
     - 实体层：客户、交易账户基本信息、交易账户持仓、资金账户基本信息、资金账户余额等实体
     - 仓储层：各实体的Repository接口
     - 服务层：客户管理相关Service实现
-  - **fund-core**: 资金管理核心，处理资金划拨、冻结、解冻等
+  - **funding-core**: 资金管理核心，处理资金划拨、冻结、解冻等（原 fund-core）
   - **product-core**: 产品管理核心，处理金融产品定义、规则等
   - **system-core**: 系统管理核心，处理操作员、角色、权限、数据字典等
     - **实体层**: 操作员、角色、权限、数据字典等实体定义

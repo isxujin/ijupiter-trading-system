@@ -44,7 +44,7 @@ ijupiter-trading-system (父模块)
 │   ├── business-api                 # 业务API
 │   │   ├── securities-api            # 账户API (原 account-api)
 │   │   ├── customer-api           # 客户管理API
-│   │   ├── fund-api               # 资金API
+│   │   ├── funding-api            # 资金API（原 fund-api）
 │   │   ├── product-api            # 产品API
 │   │   ├── system-api             # 系统管理API
 │   │   ├── trading-engine-api      # 交易引擎API
@@ -56,7 +56,7 @@ ijupiter-trading-system (父模块)
 ├── securities-trading-core            # 核心业务实现层
 │   ├── securities-core                # 账户核心服务 (原 account-core)
 │   ├── customer-core               # 客户管理核心服务
-│   ├── fund-core                   # 资金核心服务
+│   ├── funding-core                # 资金核心服务（原 fund-core）
 │   ├── product-core                # 产品核心服务
 │   ├── system-core                 # 系统管理核心服务
 │   ├── trading-engine-core         # 交易引擎核心服务

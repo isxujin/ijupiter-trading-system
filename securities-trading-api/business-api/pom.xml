@@ -18,7 +18,7 @@
     <modules>
         <module>trading-engine-api</module>
         <module>securities-api</module>
-        <module>fund-api</module>
+        <module>funding-api</module>
         <module>product-api</module>
         <module>settlement-api</module>
         <module>query-api</module>

@@ -81,7 +81,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>fund-api</artifactId>
+                <artifactId>funding-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -132,7 +132,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>fund-core</artifactId>
+                <artifactId>funding-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

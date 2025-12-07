@@ -10,10 +10,10 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fund-api</artifactId>
+    <artifactId>funding-api</artifactId>
     <packaging>jar</packaging>
-    <name>Fund API</name>
-    <description>资金处理API接口定义</description>
+    <name>Funding API</name>
+    <description>资金处理 API 接口定义（原 fund-api）</description>
 
     <dependencies>
 

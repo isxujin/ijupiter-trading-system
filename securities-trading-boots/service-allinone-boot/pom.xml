@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>fund-core</artifactId>
+            <artifactId>funding-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>

@@ -171,8 +171,8 @@ String exchangeAccountId = customerService.bindExchangeAccount("TA10001", exchan
 - `POST /customer/api/exchange-account/unbind`: 解绑交易所账号
 
 ### 资金账户相关API
-- `GET /customer/api/fund-account/list/{customerId}`: 查询客户的资金账户列表
-- `POST /customer/api/fund-account/create`: 创建资金账户
+-- `GET /customer/api/fund-account/list/{customerId}`: 查询客户的资金账户列表
+-- `POST /customer/api/fund-account/create`: 创建资金账户
 - `POST /customer/api/fund-account/freeze`: 冻结资金账户
 - `POST /customer/api/fund-account/unfreeze`: 解冻资金账户
 - `POST /customer/api/fund-account/close`: 注销资金账户

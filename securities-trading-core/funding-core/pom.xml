@@ -10,16 +10,16 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fund-core</artifactId>
+    <artifactId>funding-core</artifactId>
     <packaging>jar</packaging>
-    <name>Fund Core</name>
-    <description>资金处理核心实现</description>
+    <name>Funding Core</name>
+    <description>资金处理核心实现（原 fund-core）</description>
 
     <dependencies>
         <!-- API依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>fund-api</artifactId>
+                <artifactId>funding-api</artifactId>
         </dependency>
 
         <dependency>
