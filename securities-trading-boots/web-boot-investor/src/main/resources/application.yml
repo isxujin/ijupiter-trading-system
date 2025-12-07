@@ -1,0 +1,75 @@
+# Spring 基础配置
+spring:
+  # 1.1 应用配置
+  application:
+    name: web-test-boot
+  # 1.2 视图模版配置（Thymeleaf）
+  thymeleaf:
+    prefix: classpath:/templates/  # 前缀（必须是templates，不能少s）
+    suffix: .html                  # 后缀
+    mode: HTML                     # 模板模式
+    encoding: UTF-8
+    cache: false                   # 开发环境关闭缓存（避免修改模板不生效）
+  # 1.3 静态资源配置
+  web:
+    resources:
+      static-locations: classpath:/static/management/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+  # 1.4 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root              # 数据库账号
+    password: xujin@110418      # 数据库密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接池配置（生产环境必配）
+    hikari:
+      maximum-pool-size: 10  # 最大连接数
+      minimum-idle: 5        # 最小空闲连接
+      idle-timeout: 300000   # 连接空闲超时
+      connection-timeout: 20000 # 连接超时
+  # 1.5 JPA/Hibernate 配置
+  jpa:
+    # 数据库方言（MySQL 8.x 用这个，PostgreSQL 替换为 org.hibernate.dialect.PostgreSQLDialect）
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    # 显式指定实体扫描（兜底，与启动类 @EntityScan 配合）
+    packages-to-scan:
+      - net.ijupiter.trading.core
+      - org.axonframework.eventhandling.tokenstore.jpa
+      - org.axonframework.eventsourcing.eventstore.jpa
+    hibernate:
+      ddl-auto: update  # 开发环境：update（自动创建/更新表）；生产环境：none（手动建表，避免误删）
+    show-sql: true     # 显示 SQL（开发环境开启，生产关闭）
+    properties:
+      hibernate:
+        #id:
+        #  db_structure_naming_strategy: IDENTITY #sequence  #legacy-hilo
+        format_sql: true                  # 格式化 SQL 日志
+        use_sql_comments: true            # 显示 SQL 注释
+        globally_quoted_identifiers: true # 允许 Hibernate 识别非应用包下的实体
+    open-in-view: false
+
+# 服务器配置
+server:
+  port: 9000  # 日志中显示端口是9000，保持一致
+  # 错误页面配置
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+  # 自定义错误页面映射
+  servlet:
+    error:
+      include-message: always
+      include-binding-errors: always
+
+# 管理员终端自定义配置（补全缺失的属性）
+admin:
+  terminal:
+    title: 证券交易系统管理平台  # 缺失的配置项
+    version: 1.0.1-SNAPSHOT     # 缺失的配置项
+
+# 日志配置（便于调试）
+logging:
+  level:
+    org.springframework.security: INFO
+    net.ijupiter.trading.web.admin: DEBUG
+    org.springframework.beans.factory: DEBUG
