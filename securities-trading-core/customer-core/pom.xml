@@ -25,7 +25,7 @@
         <!-- Account API 依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>account-api</artifactId>
+            <artifactId>securities-api</artifactId>
         </dependency>
         
         <!-- Common模块依赖 -->

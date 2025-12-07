@@ -56,7 +56,7 @@ ijupiter-trading-system (父模块)
 ├── securities-trading-common           # 公共工具和基础组件
 ├── securities-trading-api              # API接口定义层
 │   ├── business-api                 # 业务API
-│   │   ├── account-api            # 账户API
+│   │   ├── securities-api            # 账户API (原 account-api)
 │   │   ├── customer-api           # 客户管理API
 │   │   ├── fund-api               # 资金API
 │   │   ├── product-api            # 产品API
@@ -68,7 +68,7 @@ ijupiter-trading-system (父模块)
 │       ├── message-adapter-spi     # 消息适配器SPI
 │       └── cache-adapter-spi      # 缓存适配器SPI
 ├── securities-trading-core            # 核心业务实现层
-│   ├── account-core                # 账户核心服务
+│   ├── securities-core                # 账户核心服务 (原 account-core)
 │   ├── customer-core               # 客户管理核心服务
 │   ├── fund-core                   # 资金核心服务
 │   ├── product-core                # 产品核心服务
@@ -126,7 +126,7 @@ ijupiter-trading-system (父模块)
 #### 4. securities-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
-  - **account-core**: 账户管理核心，处理用户账户、权限等
+  - **securities-core**: 账户管理核心，处理用户账户、权限等（原 account-core）
   - **customer-core**: 客户管理核心，处理客户信息、交易账户、资金账户等
     - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
     - 银行卡信息已合并到资金账户，交易所账号信息已合并到交易账户

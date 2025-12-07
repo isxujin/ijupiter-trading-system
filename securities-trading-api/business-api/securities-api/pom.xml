@@ -10,10 +10,10 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>customer-api</artifactId>
+    <artifactId>securities-api</artifactId>
     <packaging>jar</packaging>
-    <name>Customer API</name>
-    <description>客户管理API接口定义</description>
+    <name>Securities API</name>
+    <description>账户/证券相关 API 接口定义（原 account-api）</description>
 
     <dependencies>
         <!-- Common模块依赖 -->
@@ -21,10 +21,6 @@
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>securities-trading-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>securities-api</artifactId>
         </dependency>
     </dependencies>
 </project>

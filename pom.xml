@@ -76,7 +76,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>account-api</artifactId>
+                <artifactId>securities-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -127,7 +127,7 @@
             </dependency>
             <dependency>
                 <groupId>net.ijupiter.trading</groupId>
-                <artifactId>account-core</artifactId>
+                <artifactId>securities-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>account-core</artifactId>
+            <artifactId>securities-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>

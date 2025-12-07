@@ -17,7 +17,7 @@
 
     <modules>
         <module>trading-engine-core</module>
-        <module>account-core</module>
+        <module>securities-core</module>
         <module>fund-core</module>
         <module>product-core</module>
         <module>settlement-core</module>
