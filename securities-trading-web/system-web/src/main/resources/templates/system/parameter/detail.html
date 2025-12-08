@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/base :: layout(
+      title = '系统参数详情',
+      css = ~{::css},
+      content = ~{::content},
+      js = ~{::js}
+    )}">
+      
+<th:block th:fragment="css">
+    <style>
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+        .badge-status {
+            padding: 0.35rem 0.65rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .param-type-badge {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 0.25rem;
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .is-system-badge {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.65rem;
+            border-radius: 0.25rem;
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .json-viewer {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content">
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">系统参数详情</h1>
+        <div>
+            <a href="/system/parameter/list" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>返回列表
+            </a>
+            <a th:href="'/system/parameter/edit/' + ${parameter.id}" class="btn btn-primary" th:if="${parameter.isEditable == 1}">
+                <i class="fas fa-edit me-1"></i>编辑
+            </a>
+            <button type="button" class="btn btn-warning" id="resetBtn" th:if="${parameter.isEditable == 1 and parameter.defaultValue != null}">
+                <i class="fas fa-undo me-1"></i>重置为默认值
+            </button>
+            <button type="button" class="btn btn-success" id="enableBtn" th:if="${parameter.status == 0 and parameter.isSystem != 1}">
+                <i class="fas fa-check me-1"></i>启用
+            </button>
+            <button type="button" class="btn btn-secondary" id="disableBtn" th:if="${parameter.status == 1 and parameter.isSystem != 1}">
+                <i class="fas fa-ban me-1"></i>禁用
+            </button>
+        </div>
+    </div>
+
+    <!-- 参数基本信息 -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">基本信息</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">参数编码:</div>
+                        <div class="col-sm-8" th:text="${parameter.paramCode}">-</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">参数名称:</div>
+                        <div class="col-sm-8" th:text="${parameter.paramName}">-</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">参数类型:</div>
+                        <div class="col-sm-8">
+                            <span class="param-type-badge" th:text="${parameter.paramType}">-</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">参数分组:</div>
+                        <div class="col-sm-8" th:text="${parameter.paramGroup ?: '-'}">-</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">状态:</div>
+                        <div class="col-sm-8">
+                            <span class="badge-status" th:classappend="${parameter.status == 1 ? 'status-active' : 'status-inactive'}" th:text="${parameter.status == 1 ? '启用' : '禁用'}">-</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">系统参数:</div>
+                        <div class="col-sm-8">
+                            <span class="is-system-badge" th:if="${parameter.isSystem == 1}">系统参数</span>
+                            <span th:if="${parameter.isSystem != 1}">业务参数</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">是否可编辑:</div>
+                        <div class="col-sm-8" th:text="${parameter.isEditable == 1 ? '是' : '否'}">-</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">排序号:</div>
+                        <div class="col-sm-8" th:text="${parameter.sortOrder ?: 0}">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-2 detail-label">参数描述:</div>
+                <div class="col-sm-10" th:text="${parameter.description ?: '-'}">-</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 参数值 -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">参数值</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-sm-2 detail-label">当前值:</div>
+                <div class="col-sm-10">
+                    <div th:if="${parameter.paramType != 'JSON'}" th:text="${parameter.paramValue ?: '-'}" class="form-control-plaintext"></div>
+                    <div th:if="${parameter.paramType == 'JSON'}" class="json-viewer" th:text="${parameter.paramValue ?: '{}'}"></div>
+                </div>
+            </div>
+            <div class="row mb-3" th:if="${parameter.defaultValue != null}">
+                <div class="col-sm-2 detail-label">默认值:</div>
+                <div class="col-sm-10">
+                    <div th:if="${parameter.paramType != 'JSON'}" th:text="${parameter.defaultValue}" class="form-control-plaintext"></div>
+                    <div th:if="${parameter.paramType == 'JSON'}" class="json-viewer" th:text="${parameter.defaultValue}"></div>
+                </div>
+            </div>
+            <div class="row mb-3" th:if="${parameter.validationRule != null}">
+                <div class="col-sm-2 detail-label">验证规则:</div>
+                <div class="col-sm-10">
+                    <code th:text="${parameter.validationRule}"></code>
+                </div>
+            </div>
+            <div class="row mb-3" th:if="${parameter.options != null}">
+                <div class="col-sm-2 detail-label">参数选项:</div>
+                <div class="col-sm-10">
+                    <div th:if="${parameter.paramType != 'JSON'}" th:text="${parameter.options}" class="form-control-plaintext"></div>
+                    <div th:if="${parameter.paramType == 'JSON'}" class="json-viewer" th:text="${parameter.options}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他信息 -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">其他信息</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">创建时间:</div>
+                        <div class="col-sm-8" th:text="${#temporals.format(parameter.createTime, 'yyyy-MM-dd HH:mm:ss')}">-</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">最后修改人:</div>
+                        <div class="col-sm-8" th:text="${parameter.lastModifier ?: '-'}">-</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">更新时间:</div>
+                        <div class="col-sm-8" th:text="${#temporals.format(parameter.updateTime, 'yyyy-MM-dd HH:mm:ss')}">-</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4 detail-label">版本号:</div>
+                        <div class="col-sm-8" th:text="${parameter.version ?: 1}">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</th:block>
+
+<th:block th:fragment="js">
+<script>
+$(document).ready(function() {
+    const paramId = $('#parameterId').val() || /*[[${parameter.id}]]*/ 0;
+    
+    // 显示消息
+    function showMessage(message, type) {
+        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+        const alert = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        $('.container-fluid').prepend(alert);
+        
+        // 自动关闭
+        setTimeout(function() {
+            $('.alert').fadeOut();
+        }, 3000);
+    }
+    
+    // 启用参数
+    $('#enableBtn').click(function() {
+        $.ajax({
+            url: '/system/parameter/status/' + paramId,
+            type: 'PUT',
+            data: { status: 1 },
+            success: function(res) {
+                if (res.code === 200) {
+                    showMessage('参数启用成功', 'success');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showMessage('启用失败: ' + res.message, 'error');
+                }
+            },
+            error: function() {
+                showMessage('启用失败', 'error');
+            }
+        });
+    });
+    
+    // 禁用参数
+    $('#disableBtn').click(function() {
+        if (!confirm('确定要禁用此参数吗？')) {
+            return;
+        }
+        
+        $.ajax({
+            url: '/system/parameter/status/' + paramId,
+            type: 'PUT',
+            data: { status: 0 },
+            success: function(res) {
+                if (res.code === 200) {
+                    showMessage('参数禁用成功', 'success');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showMessage('禁用失败: ' + res.message, 'error');
+                }
+            },
+            error: function() {
+                showMessage('禁用失败', 'error');
+            }
+        });
+    });
+    
+    // 重置参数
+    $('#resetBtn').click(function() {
+        if (!confirm('确定要重置此参数为默认值吗？')) {
+            return;
+        }
+        
+        $.ajax({
+            url: '/system/parameter/reset/' + paramId,
+            type: 'PUT',
+            success: function(res) {
+                if (res.code === 200) {
+                    showMessage('参数重置成功', 'success');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showMessage('重置失败: ' + res.message, 'error');
+                }
+            },
+            error: function() {
+                showMessage('重置失败', 'error');
+            }
+        });
+    });
+});
+</script>
+
+<!-- 隐藏的参数ID -->
+<input type="hidden" id="parameterId" th:value="${parameter.id}" />
+</th:block>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/base :: layout(
+      title = '系统参数管理',
+      css = ~{::css},
+      content = ~{::content},
+      js = ~{::js}
+    )}">
+      
+<th:block th:fragment="css">
+    <style>
+        .table-actions {
+            white-space: nowrap;
+        }
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .param-type-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .is-system-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content">
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">系统参数管理</h1>
+        <div>
+            <button type="button" class="btn btn-outline-primary" id="exportBtn">
+                <i class="fas fa-download me-1"></i>导出配置
+            </button>
+            <button type="button" class="btn btn-outline-success" id="importBtn">
+                <i class="fas fa-upload me-1"></i>导入配置
+            </button>
+            <a href="/system/parameter/add" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>新增参数
+            </a>
+        </div>
+    </div>
+
+    <!-- 搜索条件 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="searchForm">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="keyword" class="form-label">关键词</label>
+                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="参数编码/名称">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="paramGroup" class="form-label">参数分组</label>
+                        <select class="form-select" id="paramGroup" name="paramGroup">
+                            <option value="">全部分组</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="paramType" class="form-label">参数类型</label>
+                        <select class="form-select" id="paramType" name="paramType">
+                            <option value="">全部类型</option>
+                            <option value="STRING">字符串</option>
+                            <option value="NUMBER">数字</option>
+                            <option value="BOOLEAN">布尔值</option>
+                            <option value="JSON">JSON对象</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">状态</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">全部状态</option>
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" id="searchBtn">
+                            <i class="fas fa-search me-1"></i>搜索
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="resetBtn">
+                            <i class="fas fa-redo me-1"></i>重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="parameterTable">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>参数编码</th>
+                            <th>参数名称</th>
+                            <th>参数值</th>
+                            <th>参数类型</th>
+                            <th>分组</th>
+                            <th>状态</th>
+                            <th>系统参数</th>
+                            <th class="table-actions">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 数据将通过AJAX加载 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 分页 -->
+            <nav>
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- 分页将通过JavaScript生成 -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- 批量操作模态框 -->
+<div class="modal fade" id="batchModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">批量操作确认</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>确定要执行选中的批量操作吗？此操作不可恢复。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="confirmBatchBtn">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 导入配置模态框 -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">导入参数配置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="importForm">
+                    <div class="mb-3">
+                        <label for="configJson" class="form-label">配置JSON</label>
+                        <textarea class="form-control" id="configJson" rows="10" placeholder="请粘贴导出的JSON配置..."></textarea>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="isOverride" name="isOverride">
+                        <label class="form-check-label" for="isOverride">覆盖已存在的参数</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" id="confirmImportBtn">导入</button>
+            </div>
+        </div>
+    </div>
+</div>
+</th:block>
+
+<th:block th:fragment="js">
+<script>
+$(document).ready(function() {
+    // 全局变量
+    let currentPage = 1;
+    let pageSize = 10;
+    let batchOperationType = '';
+    let selectedIds = [];
+    
+    // 加载参数分组
+    function loadParamGroups() {
+        $.ajax({
+            url: '/system/parameter/groups',
+            type: 'GET',
+            success: function(res) {
+                if (res.code === 200) {
+                    let options = '<option value="">全部分组</option>';
+                    res.data.forEach(function(group) {
+                        options += '<option value="' + group + '">' + group + '</option>';
+                    });
+                    $('#paramGroup').html(options);
+                }
+            }
+        });
+    }
+    
+    // 加载参数数据
+    function loadParameters() {
+        const keyword = $('#keyword').val();
+        const paramGroup = $('#paramGroup').val();
+        const paramType = $('#paramType').val();
+        const status = $('#status').val();
+        
+        $.ajax({
+            url: '/system/parameter/data',
+            type: 'GET',
+            data: {
+                keyword: keyword,
+                paramGroup: paramGroup,
+                paramType: paramType,
+                status: status,
+                pageNum: currentPage,
+                pageSize: pageSize
+            },
+            success: function(res) {
+                if (res.code === 200) {
+                    renderTable(res.data.records);
+                    renderPagination(res.data);
+                } else {
+                    showMessage('加载数据失败: ' + res.message, 'error');
+                }
+            },
+            error: function() {
+                showMessage('加载数据失败', 'error');
+            }
+        });
+    }
+    
+    // 渲染表格
+    function renderTable(parameters) {
+        const tbody = $('#parameterTable tbody');
+        tbody.empty();
+        
+        if (parameters.length === 0) {
+            tbody.append('<tr><td colspan="9" class="text-center">暂无数据</td></tr>');
+            return;
+        }
+        
+        parameters.forEach(function(param) {
+            const row = `
+                <tr>
+                    <td><input type="checkbox" class="param-checkbox" data-id="${param.id}" ${param.isSystem === 1 ? 'disabled' : ''}></td>
+                    <td>${param.paramCode}</td>
+                    <td>${param.paramName}</td>
+                    <td title="${param.paramValue}">${truncateText(param.paramValue, 20)}</td>
+                    <td><span class="param-type-badge">${param.paramType}</span></td>
+                    <td>${param.paramGroup || '-'}</td>
+                    <td>${param.status === 1 ? '<span class="status-badge status-active">启用</span>' : '<span class="status-badge status-inactive">禁用</span>'}</td>
+                    <td>${param.isSystem === 1 ? '<span class="is-system-badge">系统</span>' : '业务'}</td>
+                    <td class="table-actions">
+                        <a href="/system/parameter/detail/${param.id}" class="btn btn-sm btn-outline-info" title="详情">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="/system/parameter/edit/${param.id}" class="btn btn-sm btn-outline-primary" title="编辑" ${param.isEditable === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-warning reset-btn" data-id="${param.id}" title="重置" ${param.isEditable === 0 || !param.defaultValue ? 'disabled' : ''}>
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        <button class="btn btn-sm ${param.status === 1 ? 'btn-outline-secondary' : 'btn-outline-success'} status-btn" data-id="${param.id}" data-status="${param.status === 1 ? 0 : 1}" title="${param.status === 1 ? '禁用' : '启用'}" ${param.isSystem === 1 && param.status === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-${param.status === 1 ? 'ban' : 'check'}"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${param.id}" title="删除" ${param.isSystem === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+    }
+    
+    // 渲染分页
+    function renderPagination(pageData) {
+        const pagination = $('#pagination');
+        pagination.empty();
+        
+        if (pageData.totalPages <= 1) return;
+        
+        // 上一页
+        const prevDisabled = pageData.pageNum === 1 ? 'disabled' : '';
+        pagination.append(`
+            <li class="page-item ${prevDisabled}">
+                <a class="page-link" href="#" data-page="${pageData.pageNum - 1}">上一页</a>
+            </li>
+        `);
+        
+        // 页码
+        for (let i = 1; i <= pageData.totalPages; i++) {
+            const active = i === pageData.pageNum ? 'active' : '';
+            pagination.append(`
+                <li class="page-item ${active}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `);
+        }
+        
+        // 下一页
+        const nextDisabled = pageData.pageNum === pageData.totalPages ? 'disabled' : '';
+        pagination.append(`
+            <li class="page-item ${nextDisabled}">
+                <a class="page-link" href="#" data-page="${pageData.pageNum + 1}">下一页</a>
+            </li>
+        `);
+    }
+    
+    // 截断文本
+    function truncateText(text, maxLength) {
+        if (!text) return '-';
+        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+    }
+    
+    // 显示消息
+    function showMessage(message, type) {
+        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
+        const alert = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        $('.container-fluid').prepend(alert);
+        
+        // 自动关闭
+        setTimeout(function() {
+            $('.alert').fadeOut();
+        }, 3000);
+    }
+    
+    // 获取选中的参数ID
+    function getSelectedIds() {
+        const ids = [];
+        $('.param-checkbox:checked').each(function() {
+            ids.push($(this).data('id'));
+        });
+        return ids;
+    }
+    
+    // 初始化事件
+    function initEvents() {
+        // 搜索按钮
+        $('#searchBtn').click(function() {
+            currentPage = 1;
+            loadParameters();
+        });
+        
+        // 重置按钮
+        $('#resetBtn').click(function() {
+            $('#searchForm')[0].reset();
+            currentPage = 1;
+            loadParameters();
+        });
+        
+        // 全选/取消全选
+        $('#selectAll').change(function() {
+            const isChecked = $(this).prop('checked');
+            $('.param-checkbox:not(:disabled)').prop('checked', isChecked);
+        });
+        
+        // 分页点击
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (page && page !== currentPage) {
+                currentPage = page;
+                loadParameters();
+            }
+        });
+        
+        // 状态按钮
+        $(document).on('click', '.status-btn', function() {
+            const id = $(this).data('id');
+            const status = $(this).data('status');
+            
+            $.ajax({
+                url: '/system/parameter/status/' + id,
+                type: 'PUT',
+                data: { status: status },
+                success: function(res) {
+                    if (res.code === 200) {
+                        showMessage('状态更新成功', 'success');
+                        loadParameters();
+                    } else {
+                        showMessage('状态更新失败: ' + res.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('状态更新失败', 'error');
+                }
+            });
+        });
+        
+        // 重置按钮
+        $(document).on('click', '.reset-btn', function() {
+            const id = $(this).data('id');
+            
+            if (!confirm('确定要重置此参数为默认值吗？')) {
+                return;
+            }
+            
+            $.ajax({
+                url: '/system/parameter/reset/' + id,
+                type: 'PUT',
+                success: function(res) {
+                    if (res.code === 200) {
+                        showMessage('参数重置成功', 'success');
+                        loadParameters();
+                    } else {
+                        showMessage('参数重置失败: ' + res.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('参数重置失败', 'error');
+                }
+            });
+        });
+        
+        // 删除按钮
+        $(document).on('click', '.delete-btn', function() {
+            const id = $(this).data('id');
+            
+            if (!confirm('确定要删除此参数吗？此操作不可恢复。')) {
+                return;
+            }
+            
+            $.ajax({
+                url: '/system/parameter/delete/' + id,
+                type: 'DELETE',
+                success: function(res) {
+                    if (res.code === 200) {
+                        showMessage('参数删除成功', 'success');
+                        loadParameters();
+                    } else {
+                        showMessage('参数删除失败: ' + res.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('参数删除失败', 'error');
+                }
+            });
+        });
+        
+        // 导出按钮
+        $('#exportBtn').click(function() {
+            const paramGroup = $('#paramGroup').val();
+            
+            $.ajax({
+                url: '/system/parameter/export',
+                type: 'GET',
+                data: { paramGroup: paramGroup },
+                success: function(res) {
+                    if (res.code === 200) {
+                        // 创建下载链接
+                        const dataStr = JSON.stringify(res.data, null, 2);
+                        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                        
+                        const exportFileDefaultName = 'parameters_' + new Date().getTime() + '.json';
+                        
+                        const linkElement = document.createElement('a');
+                        linkElement.setAttribute('href', dataUri);
+                        linkElement.setAttribute('download', exportFileDefaultName);
+                        linkElement.click();
+                        
+                        showMessage('导出成功', 'success');
+                    } else {
+                        showMessage('导出失败: ' + res.message, 'error');
+                    }
+                },
+                error: function() {
+                    showMessage('导出失败', 'error');
+                }
+            });
+        });
+        
+        // 导入按钮
+        $('#importBtn').click(function() {
+            $('#importModal').modal('show');
+        });
+        
+        // 确认导入
+        $('#confirmImportBtn').click(function() {
+            const configJson = $('#configJson').val();
+            const isOverride = $('#isOverride').prop('checked');
+            
+            if (!configJson.trim()) {
+                alert('请输入配置JSON');
+                return;
+            }
+            
+            try {
+                // 验证JSON格式
+                JSON.parse(configJson);
+                
+                $.ajax({
+                    url: '/system/parameter/import',
+                    type: 'POST',
+                    data: {
+                        configJson: configJson,
+                        isOverride: isOverride
+                    },
+                    success: function(res) {
+                        if (res.code === 200) {
+                            showMessage(res.message, 'success');
+                            $('#importModal').modal('hide');
+                            loadParameters();
+                        } else {
+                            showMessage('导入失败: ' + res.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        showMessage('导入失败', 'error');
+                    }
+                });
+            } catch (e) {
+                alert('JSON格式不正确，请检查');
+            }
+        });
+    }
+    
+    // 页面加载完成后初始化
+    loadParamGroups();
+    loadParameters();
+    initEvents();
+});
+</script>
+</th:block>
+</html>

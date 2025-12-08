@@ -4,11 +4,13 @@ import net.ijupiter.trading.api.system.services.UserService;
 import net.ijupiter.trading.api.system.services.RoleService;
 import net.ijupiter.trading.api.system.services.PermissionService;
 import net.ijupiter.trading.api.system.services.DictionaryService;
+import net.ijupiter.trading.api.system.services.ParameterService;
 import net.ijupiter.trading.web.system.controllers.SystemController;
 import net.ijupiter.trading.web.system.controllers.UserManageController;
 import net.ijupiter.trading.web.system.controllers.RoleManageController;
 import net.ijupiter.trading.web.system.controllers.PermissionManageController;
 import net.ijupiter.trading.web.system.controllers.DictionaryManageController;
+import net.ijupiter.trading.web.system.controllers.ParameterManageController;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,6 +85,21 @@ public class SystemAutoConfiguration {
             java.lang.reflect.Field field = DictionaryManageController.class.getDeclaredField("dictionaryService");
             field.setAccessible(true);
             field.set(controller, dictionaryService);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return controller;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ParameterManageController parameterManageController(ParameterService parameterService) {
+        ParameterManageController controller = new ParameterManageController();
+        // 通过反射设置service字段
+        try {
+            java.lang.reflect.Field field = ParameterManageController.class.getDeclaredField("parameterService");
+            field.setAccessible(true);
+            field.set(controller, parameterService);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
