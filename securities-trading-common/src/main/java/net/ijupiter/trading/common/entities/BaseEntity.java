@@ -28,10 +28,10 @@ public abstract class BaseEntity<T extends BaseEntity<T>> implements Serializabl
      * 实体ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     @Column(name = "id", length = 36, nullable = false, unique = true)
-    protected String id;
+    protected Long id;
 
     /**
      * 公共创建时间

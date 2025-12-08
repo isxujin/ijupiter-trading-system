@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/base :: layout(
+      title = '编辑用户',
+      css = ~{::css},
+      content = ~{::content},
+      js = ~{::js}
+    )}">
+      
+<th:block th:fragment="css">
+    <style>
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content">
+    <div class="container-fluid main-content">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">编辑用户</h1>
+            <a href="/system/user/list" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+                <i class="bi bi-list"></i> 返回列表
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">用户信息</h6>
+            </div>
+            <div class="card-body">
+                <form id="userForm" onsubmit="return updateUser(event)">
+                    <input type="hidden" id="id" name="id" th:value="${user?.id}">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="username" class="form-label required">用户名</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       th:value="${user?.username}" readonly>
+                                <div class="form-text">用户名不可修改</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="realName" class="form-label">真实姓名</label>
+                                <input type="text" class="form-control" id="realName" name="realName" 
+                                       th:value="${user?.realName}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="form-label required">邮箱</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       th:value="${user?.email}" required>
+                                <div class="invalid-feedback">邮箱格式不正确或不能为空</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber" class="form-label">手机号</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" 
+                                       th:value="${user?.phoneNumber}" pattern="[0-9]{11}" title="请输入11位手机号码">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">新密码</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword">
+                                <small class="form-text text-muted">留空表示不修改密码</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">确认新密码</label>
+                                <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword">
+                                <div class="invalid-feedback">两次输入的密码不一致</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="status" class="form-label required">状态</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active" th:selected="${user?.status == 'active'}">激活</option>
+                                    <option value="inactive" th:selected="${user?.status == 'inactive'}">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="department" class="form-label">部门</label>
+                                <input type="text" class="form-control" id="department" name="department" 
+                                       th:value="${user?.department}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="roles" class="form-label">角色</label>
+                                <div id="roleCheckboxes">
+                                    <!-- 角色复选框将通过JavaScript动态加载 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="description" class="form-label">备注</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"
+                                          th:text="${user?.description}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> 保存
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="location.href='/system/user/list'">
+                                <i class="bi bi-x-circle"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="js">
+    <script>
+        let userId = null;
+        let currentUserRoles = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取用户ID
+            userId = document.getElementById('id').value;
+            
+            // 加载角色列表
+            loadRoles();
+            
+            // 邮箱唯一性检查（排除当前用户）
+            document.getElementById('email').addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    checkEmailExists(this.value, userId);
+                }
+            });
+            
+            // 确认密码验证
+            document.getElementById('confirmNewPassword').addEventListener('input', function() {
+                const password = document.getElementById('newPassword').value;
+                const confirmPassword = this.value;
+                
+                if (password && password !== confirmPassword) {
+                    this.setCustomValidity('两次输入的密码不一致');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+
+        // 加载角色列表
+        function loadRoles() {
+            fetch('/system/role/data?pageSize=1000')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 0) {
+                        // 获取用户当前角色
+                        getCurrentUserRoles().then(() => {
+                            renderRoleCheckboxes(data.data);
+                        });
+                    } else {
+                        showError('加载角色列表失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('加载角色列表失败，请检查网络连接');
+                });
+        }
+
+        // 获取用户当前角色
+        function getCurrentUserRoles() {
+            if (!userId) {
+                currentUserRoles = [];
+                return Promise.resolve();
+            }
+            
+            return fetch(`/system/user/${userId}/roles`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        currentUserRoles = data.data || [];
+                    } else {
+                        currentUserRoles = [];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    currentUserRoles = [];
+                });
+        }
+
+        // 渲染角色复选框
+        function renderRoleCheckboxes(roles) {
+            const container = document.getElementById('roleCheckboxes');
+            container.innerHTML = '';
+            
+            if (!roles || roles.length === 0) {
+                container.innerHTML = '<p class="text-muted">暂无可用角色</p>';
+                return;
+            }
+            
+            // 将角色按状态分组显示
+            const activeRoles = roles.filter(role => role.status === 'active');
+            const inactiveRoles = roles.filter(role => role.status === 'inactive');
+            
+            if (activeRoles.length > 0) {
+                const activeDiv = document.createElement('div');
+                activeDiv.className = 'mb-3';
+                activeDiv.innerHTML = '<h6>激活角色</h6>';
+                
+                activeRoles.forEach(role => {
+                    const isSelected = currentUserRoles.some(userRole => userRole.id === role.id);
+                    const formCheck = document.createElement('div');
+                    formCheck.className = 'form-check';
+                    formCheck.innerHTML = `
+                        <input class="form-check-input" type="checkbox" value="${role.id}" id="role${role.id}" name="roles"
+                               ${isSelected ? 'checked' : ''}>
+                        <label class="form-check-label" for="role${role.id}">
+                            ${role.roleName} (${role.description || '无描述'})
+                        </label>
+                    `;
+                    activeDiv.appendChild(formCheck);
+                });
+                
+                container.appendChild(activeDiv);
+            }
+            
+            if (inactiveRoles.length > 0) {
+                const inactiveDiv = document.createElement('div');
+                inactiveDiv.className = 'mb-3';
+                inactiveDiv.innerHTML = '<h6 class="text-muted">禁用角色</h6>';
+                
+                inactiveRoles.forEach(role => {
+                    const isSelected = currentUserRoles.some(userRole => userRole.id === role.id);
+                    const formCheck = document.createElement('div');
+                    formCheck.className = 'form-check';
+                    formCheck.innerHTML = `
+                        <input class="form-check-input" type="checkbox" value="${role.id}" id="role${role.id}" name="roles"
+                               ${isSelected ? 'checked' : ''} disabled>
+                        <label class="form-check-label text-muted" for="role${role.id}">
+                            ${role.roleName} (${role.description || '无描述'})
+                        </label>
+                    `;
+                    inactiveDiv.appendChild(formCheck);
+                });
+                
+                container.appendChild(inactiveDiv);
+            }
+        }
+
+        // 检查邮箱是否存在（排除当前用户）
+        function checkEmailExists(email, currentUserId) {
+            fetch(`/system/user/check/email?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 这里API应该支持排除当前用户的检查
+                    // 如果不支持，需要在后端处理排除逻辑
+                    if (data.code === 200 && data.data) {
+                        // 如果检查到邮箱存在，需要判断是否是当前用户的邮箱
+                        // 这需要后端API支持或前端获取当前用户信息
+                        // 暂时不做唯一性检查
+                    } else {
+                        document.getElementById('email').setCustomValidity('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // 更新用户
+        function updateUser(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('userForm');
+            
+            // 验证表单
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return false;
+            }
+            
+            // 获取表单数据
+            const formData = new FormData(form);
+            const user = {};
+            
+            // 转换表单数据为对象
+            for (let [key, value] of formData.entries()) {
+                if (key === 'roles') {
+                    // 处理角色数组
+                    if (!user.roles) user.roles = [];
+                    user.roles.push(value);
+                } else if (key === 'newPassword') {
+                    // 只有输入了新密码才更新密码
+                    if (value) user.password = value;
+                } else {
+                    user[key] = value;
+                }
+            }
+            
+            // 如果没有选择角色，设置为空数组
+            if (!user.roles) {
+                user.roles = [];
+            }
+            
+            // 确认密码和新密码不需要发送
+            delete user.confirmNewPassword;
+            delete user.newPassword;
+            
+            // 发送请求
+            fetch(`/system/user/update/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    showSuccess('用户更新成功');
+                    setTimeout(() => {
+                        location.href = '/system/user/list';
+                    }, 1500);
+                } else {
+                    showError('用户更新失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('用户更新失败，请检查网络连接');
+            });
+            
+            return false;
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            alert(message);
+        }
+
+        // 显示错误消息
+        function showError(message) {
+            alert('错误: ' + message);
+        }
+    </script>
+</th:block>
+</html>

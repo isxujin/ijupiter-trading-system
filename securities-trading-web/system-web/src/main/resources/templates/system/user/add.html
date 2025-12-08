@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/base :: layout(
+      title = '添加用户',
+      css = ~{::css},
+      content = ~{::content},
+      js = ~{::js}
+    )}">
+      
+<th:block th:fragment="css">
+    <style>
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content">
+    <div class="container-fluid main-content">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">添加用户</h1>
+            <a href="/system/user/list" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+                <i class="bi bi-list"></i> 返回列表
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">用户信息</h6>
+            </div>
+            <div class="card-body">
+                <form id="userForm" onsubmit="return saveUser(event)">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="username" class="form-label required">用户名</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                                <div class="invalid-feedback">用户名不能为空</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="realName" class="form-label">真实姓名</label>
+                                <input type="text" class="form-control" id="realName" name="realName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="form-label required">邮箱</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">邮箱格式不正确或不能为空</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber" class="form-label">手机号</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" 
+                                       pattern="[0-9]{11}" title="请输入11位手机号码">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="password" class="form-label required">密码</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <div class="invalid-feedback">密码不能为空</div>
+                                <small class="form-text text-muted">密码长度至少6位</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="confirmPassword" class="form-label required">确认密码</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                <div class="invalid-feedback">两次输入的密码不一致</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="status" class="form-label required">状态</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active" selected>激活</option>
+                                    <option value="inactive">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="department" class="form-label">部门</label>
+                                <input type="text" class="form-control" id="department" name="department">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="roles" class="form-label">角色</label>
+                                <div id="roleCheckboxes">
+                                    <!-- 角色复选框将通过JavaScript动态加载 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="description" class="form-label">备注</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> 保存
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="location.href='/system/user/list'">
+                                <i class="bi bi-x-circle"></i> 取消
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="js">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载角色列表
+            loadRoles();
+            
+            // 表单验证
+            const form = document.getElementById('userForm');
+            const inputs = form.querySelectorAll('input[required]');
+            
+            // 用户名唯一性检查
+            document.getElementById('username').addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    checkUsernameExists(this.value);
+                }
+            });
+            
+            // 邮箱唯一性检查
+            document.getElementById('email').addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    checkEmailExists(this.value);
+                }
+            });
+            
+            // 确认密码验证
+            document.getElementById('confirmPassword').addEventListener('input', function() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = this.value;
+                
+                if (password !== confirmPassword) {
+                    this.setCustomValidity('两次输入的密码不一致');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+
+        // 加载角色列表
+        function loadRoles() {
+            fetch('/system/role/data?pageSize=1000')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 0) {
+                        renderRoleCheckboxes(data.data);
+                    } else {
+                        showError('加载角色列表失败: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('加载角色列表失败，请检查网络连接');
+                });
+        }
+
+        // 渲染角色复选框
+        function renderRoleCheckboxes(roles) {
+            const container = document.getElementById('roleCheckboxes');
+            container.innerHTML = '';
+            
+            if (!roles || roles.length === 0) {
+                container.innerHTML = '<p class="text-muted">暂无可用角色</p>';
+                return;
+            }
+            
+            // 将角色按状态分组显示
+            const activeRoles = roles.filter(role => role.status === 'active');
+            const inactiveRoles = roles.filter(role => role.status === 'inactive');
+            
+            if (activeRoles.length > 0) {
+                const activeDiv = document.createElement('div');
+                activeDiv.className = 'mb-3';
+                activeDiv.innerHTML = '<h6>激活角色</h6>';
+                
+                activeRoles.forEach(role => {
+                    const formCheck = document.createElement('div');
+                    formCheck.className = 'form-check';
+                    formCheck.innerHTML = `
+                        <input class="form-check-input" type="checkbox" value="${role.id}" id="role${role.id}" name="roles">
+                        <label class="form-check-label" for="role${role.id}">
+                            ${role.roleName} (${role.description || '无描述'})
+                        </label>
+                    `;
+                    activeDiv.appendChild(formCheck);
+                });
+                
+                container.appendChild(activeDiv);
+            }
+            
+            if (inactiveRoles.length > 0) {
+                const inactiveDiv = document.createElement('div');
+                inactiveDiv.className = 'mb-3';
+                inactiveDiv.innerHTML = '<h6 class="text-muted">禁用角色</h6>';
+                
+                inactiveRoles.forEach(role => {
+                    const formCheck = document.createElement('div');
+                    formCheck.className = 'form-check';
+                    formCheck.innerHTML = `
+                        <input class="form-check-input" type="checkbox" value="${role.id}" id="role${role.id}" name="roles" disabled>
+                        <label class="form-check-label text-muted" for="role${role.id}">
+                            ${role.roleName} (${role.description || '无描述'})
+                        </label>
+                    `;
+                    inactiveDiv.appendChild(formCheck);
+                });
+                
+                container.appendChild(inactiveDiv);
+            }
+        }
+
+        // 检查用户名是否存在
+        function checkUsernameExists(username) {
+            fetch(`/system/user/check/username?username=${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200 && data.data) {
+                        document.getElementById('username').setCustomValidity('用户名已存在');
+                        showError('用户名已存在，请更换其他用户名');
+                    } else {
+                        document.getElementById('username').setCustomValidity('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // 检查邮箱是否存在
+        function checkEmailExists(email) {
+            fetch(`/system/user/check/email?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200 && data.data) {
+                        document.getElementById('email').setCustomValidity('邮箱已存在');
+                        showError('邮箱已存在，请更换其他邮箱');
+                    } else {
+                        document.getElementById('email').setCustomValidity('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // 保存用户
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('userForm');
+            
+            // 验证表单
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return false;
+            }
+            
+            // 获取表单数据
+            const formData = new FormData(form);
+            const user = {};
+            
+            // 转换表单数据为对象
+            for (let [key, value] of formData.entries()) {
+                if (key === 'roles') {
+                    // 处理角色数组
+                    if (!user.roles) user.roles = [];
+                    user.roles.push(value);
+                } else {
+                    user[key] = value;
+                }
+            }
+            
+            // 如果没有选择角色，设置为空数组
+            if (!user.roles) {
+                user.roles = [];
+            }
+            
+            // 确认密码不需要发送
+            delete user.confirmPassword;
+            
+            // 发送请求
+            fetch('/system/user/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    showSuccess('用户保存成功');
+                    setTimeout(() => {
+                        location.href = '/system/user/list';
+                    }, 1500);
+                } else {
+                    showError('用户保存失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('用户保存失败，请检查网络连接');
+            });
+            
+            return false;
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            alert(message);
+        }
+
+        // 显示错误消息
+        function showError(message) {
+            alert('错误: ' + message);
+        }
+    </script>
+</th:block>
+</html>

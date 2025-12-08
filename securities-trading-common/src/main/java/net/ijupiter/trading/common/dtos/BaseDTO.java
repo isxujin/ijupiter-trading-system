@@ -21,7 +21,7 @@ public abstract class BaseDTO<T extends BaseDTO<T>> implements Serializable {
     /**
      * 主键ID
      */
-    protected String id;
+    protected Long id;
 
     /**
      * 将源对象转换为当前 DTO 子类实例

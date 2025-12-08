@@ -20,6 +20,7 @@
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>

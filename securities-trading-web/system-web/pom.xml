@@ -27,16 +27,17 @@
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>system-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Spring Security 扩展 -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{common/base :: layout(
+      title = '系统管理',
+      css = ~{::css},
+      content = ~{::content},
+      js = ~{::js}
+    )}">
+      
+<th:block th:fragment="css">
+    <style>
+        .dashboard-card {
+            transition: transform 0.3s;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        .stats-card {
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</th:block>
+
+<th:block th:fragment="content">
+    <div class="container-fluid main-content">
+        <div class="row">
+            <div class="col-12">
+                <h2>系统管理</h2>
+                <p class="text-muted">管理系统用户、角色、权限和字典数据</p>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <!-- 统计卡片 -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stats-card shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    用户总数
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="userCount">--</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/system/user/list" class="text-primary">查看详情</a>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stats-card shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    角色总数
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="roleCount">--</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-shield-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/system/role/list" class="text-success">查看详情</a>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stats-card shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    权限总数
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="permissionCount">--</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-key fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/system/permission/list" class="text-info">查看详情</a>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stats-card shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    字典总数
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="dictionaryCount">--</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-book fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/system/dictionary/list" class="text-warning">查看详情</a>
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">快速导航</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card dashboard-card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-person-plus fa-3x text-primary mb-2"></i>
+                                        <h6 class="font-weight-bold">添加用户</h6>
+                                        <a href="/system/user/add" class="btn btn-primary btn-sm">前往</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card dashboard-card border-left-success shadow h-100 py-2">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-shield-plus fa-3x text-success mb-2"></i>
+                                        <h6 class="font-weight-bold">添加角色</h6>
+                                        <a href="/system/role/add" class="btn btn-success btn-sm">前往</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card dashboard-card border-left-info shadow h-100 py-2">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-key fa-3x text-info mb-2"></i>
+                                        <h6 class="font-weight-bold">权限管理</h6>
+                                        <a href="/system/permission/list" class="btn btn-info btn-sm">前往</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card dashboard-card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body text-center">
+                                        <i class="bi bi-book fa-3x text-warning mb-2"></i>
+                                        <h6 class="font-weight-bold">字典管理</h6>
+                                        <a href="/system/dictionary/list" class="btn btn-warning btn-sm">前往</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">最近活动</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">用户管理</h6>
+                                    <small class="text-muted">最近访问</small>
+                                </div>
+                                <p class="mb-1">管理系统用户、角色和权限</p>
+                            </div>
+                            <div class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">系统配置</h6>
+                                    <small class="text-muted">昨天</small>
+                                </div>
+                                <p class="mb-1">系统字典数据维护</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">系统信息</h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th>系统版本</th>
+                                    <td th:text="${appVersion}">1.0.1-SNAPSHOT</td>
+                                </tr>
+                                <tr>
+                                    <th>框架版本</th>
+                                    <td>Spring Boot 2.7.x</td>
+                                </tr>
+                                <tr>
+                                    <th>运行环境</th>
+                                    <td th:text="${#strings.substring(#request.serverName, 0, 3)}">Java 11</td>
+                                </tr>
+                                <tr>
+                                    <th>数据库</th>
+                                    <td>MySQL 8.0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="js">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载统计数据
+            loadStatistics();
+        });
+
+        function loadStatistics() {
+            // 这里可以使用AJAX调用获取统计数据
+            // 模拟数据
+            setTimeout(function() {
+                document.getElementById('userCount').textContent = '42';
+                document.getElementById('roleCount').textContent = '12';
+                document.getElementById('permissionCount').textContent = '68';
+                document.getElementById('dictionaryCount').textContent = '15';
+            }, 500);
+        }
+    </script>
+</th:block>
+</html>
