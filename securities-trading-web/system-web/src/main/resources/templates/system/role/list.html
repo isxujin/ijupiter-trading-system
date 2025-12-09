@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>角色管理 - iJupiter Trading System</title>
+    <th:block th:fragment="css">
+        <style>
+            .table-actions { white-space: nowrap; }
+        </style>
+    </th:block>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">角色管理</h1>
+            <a href="/system/role/add" class="btn btn-primary">新增角色</a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <form id="searchForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="keyword" class="form-label">关键词</label>
+                            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="角色名称/编码">
+                        </div>
+                        <div class="col-md-4 align-self-end">
+                            <button type="button" class="btn btn-primary" id="searchBtn">搜索</button>
+                            <button type="button" class="btn btn-secondary" id="resetBtn">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="roleTable">
+                        <thead>
+                            <tr>
+                                <th>名称</th>
+                                <th>编码</th>
+                                <th>描述</th>
+                                <th class="table-actions">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <nav><ul class="pagination" id="pagination"></ul></nav>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="js">
+    <script src="/js/system-ui.js"></script>
+    <script src="/js/system-management.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initListPage({
+                endpoint: '/system/role/data',
+                tableId: 'roleTable',
+                paginationId: 'pagination',
+                searchFormId: 'searchForm',
+                columns: ['name','code','description'],
+                idField: 'id',
+                basePath: '/system/role'
+            });
+        });
+    </script>
+    </th:block>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+</body>
+</html>

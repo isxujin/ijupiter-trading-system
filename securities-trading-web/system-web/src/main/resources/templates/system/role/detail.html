@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>角色详情 - iJupiter Trading System</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
+        <h1 class="h3 mb-4">角色详情</h1>
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-2">名称</dt>
+                    <dd class="col-sm-10" th:text="${role.name}"></dd>
+
+                    <dt class="col-sm-2">编码</dt>
+                    <dd class="col-sm-10" th:text="${role.code}"></dd>
+
+                    <dt class="col-sm-2">描述</dt>
+                    <dd class="col-sm-10" th:text="${role.description}"></dd>
+
+                    <dt class="col-sm-2">权限</dt>
+                    <dd class="col-sm-10">
+                        <ul>
+                            <li th:each="p : ${role.permissions}" th:text="${p.name}"></li>
+                        </ul>
+                    </dd>
+                </dl>
+                <a href="/system/role" class="btn btn-secondary">返回</a>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+</body>
+</html>

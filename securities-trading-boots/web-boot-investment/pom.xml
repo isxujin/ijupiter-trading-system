@@ -3,33 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父模块：securities-trading-boots -->
     <parent>
         <groupId>net.ijupiter.trading</groupId>
         <artifactId>securities-trading-boots</artifactId>
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>web-boot-management</artifactId>
+    <!-- 模块基本信息 -->
+    <artifactId>web-boot-investment</artifactId>
     <packaging>jar</packaging>
-    <name>Web All-in-One Boot</name>
-    <description>Web交互启动器(单体)</description>
+    <name>Web Investment Boot</name>
+    <description>Web层投资终端启动器 - 集成投资相关Web模块并提供运行环境</description>
 
+    <!-- 依赖配置 -->
     <dependencies>
-        <!-- Web模块依赖 -->
-        <!-- 系统管理模块依赖 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>system-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>system-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>system-core</artifactId>
-        </dependency>
-
         <!-- 1. 核心Web启动依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,11 +36,28 @@
         <!-- 2. Thymeleaf Spring Security扩展 -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!-- 4. 测试依赖 -->
+        <!-- 内部Web模块依赖 - 管理终端 -->
+        <!-- 系统管理模块依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>system-web</artifactId>
+        </dependency>
+
+        <!-- 4. 数据库相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- 5. 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -63,39 +69,38 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 5. WebJars依赖（通过admin-terminal已传递依赖，此处显式声明确保版本一致） -->
+        <!-- 5. WebJars依赖 -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>5.2.3</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars</groupId>
+            <groupId>org.webjars.npm</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>bootstrap-icons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>chart.js</artifactId>
         </dependency>
 
-        <!-- 6. 可选：日志增强（便于测试调试） -->
+        <!-- 7. 可选：日志增强（便于测试调试） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-        
-        <!-- H2数据库（用于测试） -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
     <!-- 构建配置 -->
     <build>
-        <finalName>web-allinone-boot-${project.version}</finalName>
+        <finalName>web-test-boot-${project.version}</finalName>
         <plugins>
             <!-- Spring Boot打包插件（生成可执行JAR） -->
             <plugin>
@@ -103,7 +108,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!-- 指定主启动类（需在该模块中创建） -->
-                    <mainClass>net.ijupiter.trading.boot.web.menagement.ManagementWebApplication</mainClass>
+                    <mainClass>net.ijupiter.trading.boot.web.investment.InvestmentWebApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

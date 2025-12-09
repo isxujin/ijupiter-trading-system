@@ -1,351 +1,179 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{common/base :: layout(
-      title = '新增系统参数',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
-      
-<th:block th:fragment="css">
-    <style>
-        .form-label {
-            font-weight: 600;
-        }
-        .required::after {
-            content: "*";
-            color: #dc3545;
-            margin-left: 4px;
-        }
-    </style>
-</th:block>
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>新增系统参数 - iJupiter Trading System</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
+		<h1 class="h3 mb-4">新增系统参数</h1>
+		<div class="card">
+			<div class="card-body">
+				<form id="parameterForm">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label for="paramCode" class="form-label required">参数编码</label>
+								<input type="text" class="form-control" id="paramCode" name="paramCode" required>
+							</div>
+							<div class="mb-3">
+								<label for="paramName" class="form-label required">参数名称</label>
+								<input type="text" class="form-control" id="paramName" name="paramName" required>
+							</div>
+							<div class="mb-3">
+								<label for="paramType" class="form-label required">参数类型</label>
+								<select class="form-select" id="paramType" name="paramType">
+									<option value="STRING">STRING</option>
+									<option value="NUMBER">NUMBER</option>
+									<option value="BOOLEAN">BOOLEAN</option>
+									<option value="JSON">JSON</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="paramValue" class="form-label">参数值</label>
+								<textarea class="form-control" id="paramValue" name="paramValue" rows="3"></textarea>
+								<div class="form-text">参数的具体值</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="mb-3">
+								<label for="defaultValue" class="form-label">默认值</label>
+								<textarea class="form-control" id="defaultValue" name="defaultValue" rows="3"></textarea>
+								<div class="form-text">参数的默认值，用于重置时使用</div>
+							</div>
+							<div class="mb-3">
+								<label for="validationRule" class="form-label">验证规则</label>
+								<input type="text" class="form-control" id="validationRule" name="validationRule">
+								<div class="form-text">正则表达式，用于验证参数值，如：^\\d+$（只允许数字）</div>
+							</div>
+							<div class="mb-3">
+								<label for="options" class="form-label">参数选项</label>
+								<textarea class="form-control" id="options" name="options" rows="4"></textarea>
+								<div class="form-text">用于下拉选择的选项，JSON格式，如：[{'value':'1','label':'选项1'}]</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="mb-3">
+										<label for="isSystem" class="form-label">系统参数</label>
+										<select class="form-select" id="isSystem" name="isSystem">
+											<option value="0">否</option>
+											<option value="1">是</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="mb-3">
+										<label for="isEditable" class="form-label">是否可编辑</label>
+										<select class="form-select" id="isEditable" name="isEditable">
+											<option value="1">是</option>
+											<option value="0">否</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="mb-3">
+										<label for="sortOrder" class="form-label">排序号</label>
+										<input type="number" class="form-control" id="sortOrder" name="sortOrder" value="0">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-<th:block th:fragment="content">
-<div class="container-fluid">
-    <!-- 页面标题 -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">新增系统参数</h1>
-        <div>
-            <a href="/system/parameter/list" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-1"></i>返回列表
-            </a>
-        </div>
-    </div>
+					<div class="mb-3">
+						<label for="description" class="form-label">参数描述</label>
+						<textarea class="form-control" id="description" name="description" rows="3"></textarea>
+						<div class="form-text">参数的功能说明</div>
+					</div>
 
-    <!-- 表单 -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">参数信息</h5>
-        </div>
-        <div class="card-body">
-            <form id="parameterForm">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="paramCode" class="form-label required">参数编码</label>
-                            <input type="text" class="form-control" id="paramCode" name="paramCode" required>
-                            <div class="form-text">用于程序中获取参数的唯一标识，如：system.max.pageSize</div>
-                            <div class="invalid-feedback">请输入参数编码</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="paramName" class="form-label required">参数名称</label>
-                            <input type="text" class="form-control" id="paramName" name="paramName" required>
-                            <div class="form-text">参数的显示名称</div>
-                            <div class="invalid-feedback">请输入参数名称</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="paramType" class="form-label required">参数类型</label>
-                            <select class="form-select" id="paramType" name="paramType" required>
-                                <option value="">请选择参数类型</option>
-                                <option value="STRING">字符串</option>
-                                <option value="NUMBER">数字</option>
-                                <option value="BOOLEAN">布尔值</option>
-                                <option value="JSON">JSON对象</option>
-                            </select>
-                            <div class="invalid-feedback">请选择参数类型</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="paramGroup" class="form-label">参数分组</label>
-                            <input type="text" class="form-control" id="paramGroup" name="paramGroup" list="paramGroupList">
-                            <datalist id="paramGroupList">
-                                <option th:each="group : ${paramGroups}" th:value="${group}" th:text="${group}"></option>
-                            </datalist>
-                            <div class="form-text">用于分类管理参数，如：system、security、business等</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="paramValue" class="form-label">参数值</label>
-                            <textarea class="form-control" id="paramValue" name="paramValue" rows="3"></textarea>
-                            <div class="form-text">参数的具体值</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="defaultValue" class="form-label">默认值</label>
-                            <textarea class="form-control" id="defaultValue" name="defaultValue" rows="3"></textarea>
-                            <div class="form-text">参数的默认值，用于重置时使用</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="validationRule" class="form-label">验证规则</label>
-                            <input type="text" class="form-control" id="validationRule" name="validationRule">
-                            <div class="form-text">正则表达式，用于验证参数值，如：^\\d+$（只允许数字）</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="options" class="form-label">参数选项</label>
-                            <textarea class="form-control" id="options" name="options" rows="4"></textarea>
-                            <div class="form-text">用于下拉选择的选项，JSON格式，如：[{"value":"1","label":"选项1"}]</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="isSystem" class="form-label">系统参数</label>
-                                    <select class="form-select" id="isSystem" name="isSystem">
-                                        <option value="0">否</option>
-                                        <option value="1">是</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="isEditable" class="form-label">是否可编辑</label>
-                                    <select class="form-select" id="isEditable" name="isEditable">
-                                        <option value="1">是</option>
-                                        <option value="0">否</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="sortOrder" class="form-label">排序号</label>
-                                    <input type="number" class="form-control" id="sortOrder" name="sortOrder" value="0">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">参数描述</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    <div class="form-text">参数的功能说明</div>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-outline-secondary me-2" id="cancelBtn">
-                        <i class="fas fa-times me-1"></i>取消
-                    </button>
-                    <button type="button" class="btn btn-outline-primary me-2" id="validateBtn">
-                        <i class="fas fa-check me-1"></i>验证编码
-                    </button>
-                    <button type="submit" class="btn btn-primary" id="saveBtn">
-                        <i class="fas fa-save me-1"></i>保存
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+					<div class="d-flex justify-content-end">
+						<button type="button" class="btn btn-outline-secondary me-2" id="cancelBtn">
+							<i class="fas fa-times me-1"></i>取消
+						</button>
+						<button type="button" class="btn btn-outline-primary me-2" id="validateBtn">
+							<i class="fas fa-check me-1"></i>验证编码
+						</button>
+						<button type="button" class="btn btn-primary" id="saveBtn">
+							<i class="fas fa-save me-1"></i>保存
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </th:block>
 
 <th:block th:fragment="js">
-<script>
-$(document).ready(function() {
-    // 显示消息
-    function showMessage(message, type) {
-        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
-        const alert = `
-            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-        $('.container-fluid').prepend(alert);
-        
-        // 自动关闭
-        setTimeout(function() {
-            $('.alert').fadeOut();
-        }, 3000);
-    }
-    
-    // 表单验证
-    function validateForm() {
-        let isValid = true;
-        
-        // 验证必填字段
-        const requiredFields = ['paramCode', 'paramName', 'paramType'];
-        requiredFields.forEach(function(fieldId) {
-            const field = $('#' + fieldId);
-            const value = field.val().trim();
-            
-            if (!value) {
-                field.addClass('is-invalid');
-                isValid = false;
-            } else {
-                field.removeClass('is-invalid');
-            }
-        });
-        
-        // 验证参数值是否为空
-        const paramType = $('#paramType').val();
-        const paramValue = $('#paramValue').val().trim();
-        if (!paramValue) {
-            $('#paramValue').addClass('is-invalid');
-            isValid = false;
-        } else {
-            $('#paramValue').removeClass('is-invalid');
-        }
-        
-        // 根据参数类型验证参数值
-        if (paramType === 'NUMBER' && paramValue && isNaN(Number(paramValue))) {
-            $('#paramValue').addClass('is-invalid');
-            $('#paramValue').next('.form-text').after('<div class="invalid-feedback">请输入有效的数字</div>');
-            isValid = false;
-        }
-        
-        if (paramType === 'BOOLEAN' && paramValue && !['true', 'false', '1', '0'].includes(paramValue.toLowerCase())) {
-            $('#paramValue').addClass('is-invalid');
-            $('#paramValue').next('.form-text').after('<div class="invalid-feedback">布尔值只能为 true/false 或 1/0</div>');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-    
-    // 验证参数编码是否已存在
-    function validateParamCode() {
-        const paramCode = $('#paramCode').val().trim();
-        
-        if (!paramCode) {
-            showMessage('请输入参数编码', 'error');
-            return;
-        }
-        
-        $.ajax({
-            url: '/system/parameter/check/paramcode',
-            type: 'GET',
-            data: { paramCode: paramCode },
-            success: function(res) {
-                if (res.code === 200) {
-                    if (res.data) {
-                        showMessage('参数编码已存在，请使用其他编码', 'error');
-                        $('#paramCode').addClass('is-invalid');
-                    } else {
-                        showMessage('参数编码可用', 'success');
-                        $('#paramCode').removeClass('is-invalid');
-                    }
-                } else {
-                    showMessage('验证失败: ' + res.message, 'error');
-                }
-            },
-            error: function() {
-                showMessage('验证失败', 'error');
-            }
-        });
-    }
-    
-    // 保存参数
-    function saveParameter() {
-        if (!validateForm()) {
-            return;
-        }
-        
-        // 收集表单数据
-        const formData = {
-            paramCode: $('#paramCode').val().trim(),
-            paramName: $('#paramName').val().trim(),
-            paramValue: $('#paramValue').val().trim(),
-            paramType: $('#paramType').val(),
-            paramGroup: $('#paramGroup').val().trim(),
-            defaultValue: $('#defaultValue').val().trim(),
-            validationRule: $('#validationRule').val().trim(),
-            options: $('#options').val().trim(),
-            description: $('#description').val().trim(),
-            isSystem: parseInt($('#isSystem').val()),
-            isEditable: parseInt($('#isEditable').val()),
-            sortOrder: parseInt($('#sortOrder').val()) || 0,
-            status: 1 // 新增参数默认启用
-        };
-        
-        // 如果是布尔值，统一转换为true/false
-        if (formData.paramType === 'BOOLEAN') {
-            const lowerValue = formData.paramValue.toLowerCase();
-            if (lowerValue === '1') {
-                formData.paramValue = 'true';
-            } else if (lowerValue === '0') {
-                formData.paramValue = 'false';
-            }
-            
-            const defaultLowerValue = formData.defaultValue.toLowerCase();
-            if (defaultLowerValue === '1') {
-                formData.defaultValue = 'true';
-            } else if (defaultLowerValue === '0') {
-                formData.defaultValue = 'false';
-            }
-        }
-        
-        // 禁用提交按钮
-        $('#saveBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>保存中...');
-        
-        $.ajax({
-            url: '/system/parameter/save',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function(res) {
-                if (res.code === 200) {
-                    showMessage('参数保存成功', 'success');
-                    setTimeout(function() {
-                        window.location.href = '/system/parameter/list';
-                    }, 1000);
-                } else {
-                    showMessage('保存失败: ' + res.message, 'error');
-                }
-            },
-            error: function() {
-                showMessage('保存失败', 'error');
-            },
-            complete: function() {
-                // 恢复提交按钮
-                $('#saveBtn').prop('disabled', false).html('<i class="fas fa-save me-1"></i>保存');
-            }
-        });
-    }
-    
-    // 初始化事件
-    function initEvents() {
-        // 表单提交
-        $('#parameterForm').submit(function(e) {
-            e.preventDefault();
-            saveParameter();
-        });
-        
-        // 取消按钮
-        $('#cancelBtn').click(function() {
-            if (confirm('确定要取消吗？未保存的数据将丢失。')) {
-                window.location.href = '/system/parameter/list';
-            }
-        });
-        
-        // 验证编码按钮
-        $('#validateBtn').click(function() {
-            validateParamCode();
-        });
-        
-        // 参数编码失焦验证
-        $('#paramCode').blur(function() {
-            if ($(this).val().trim()) {
-                validateParamCode();
-            }
-        });
-        
-        // 清除验证状态
-        $('input, select, textarea').focus(function() {
-            $(this).removeClass('is-invalid');
-            $(this).siblings('.invalid-feedback').remove();
-        });
-    }
-    
-    // 初始化
-    initEvents();
-});
-</script>
-</th:block>
+	<script src="/js/system-ui.js"></script>
+	<script src="/js/system-management.js"></script>
+	<script>
+	(function(){
+		function showMessage(message, type){ if(window.showToast){ window.showToast(type==='error'?'error':'success', message);} else console.log(message); }
+
+		async function validateParamCode(){
+			const paramCode = document.getElementById('paramCode').value.trim();
+			if(!paramCode){ showMessage('请输入参数编码','error'); return false; }
+			try{
+				const resp = await fetch(`/system/parameter/check/paramcode?paramCode=${encodeURIComponent(paramCode)}`);
+				const res = await resp.json();
+				if(res.code===200 && res.data){
+					showMessage('参数编码已存在','error');
+					document.getElementById('paramCode').classList.add('is-invalid');
+					return false;
+				}
+				document.getElementById('paramCode').classList.remove('is-invalid');
+				return true;
+			} catch(e){ console.error(e); showMessage('验证失败','error'); return false; }
+		}
+
+		function validateForm(){
+			let ok = true;
+			['paramCode','paramName','paramType'].forEach(id=>{ const el=document.getElementById(id); if(!el || !el.value.trim()){ if(el) el.classList.add('is-invalid'); ok=false; } else { if(el) el.classList.remove('is-invalid'); } });
+			return ok;
+		}
+
+		document.getElementById('validateBtn').addEventListener('click', function(){ validateParamCode(); });
+		document.getElementById('cancelBtn').addEventListener('click', function(){ if(confirm('确定要取消吗？未保存的数据将丢失。')) window.location.href='/system/parameter/list'; });
+
+		document.getElementById('saveBtn').addEventListener('click', async function(){
+			if(!validateForm()) return;
+			if(!await validateParamCode()) return;
+			const payload = {
+				paramCode: document.getElementById('paramCode').value.trim(),
+				paramName: document.getElementById('paramName').value.trim(),
+				paramValue: document.getElementById('paramValue').value.trim(),
+				paramType: document.getElementById('paramType').value,
+				paramGroup: document.getElementById('paramGroup') ? document.getElementById('paramGroup').value.trim() : '',
+				defaultValue: document.getElementById('defaultValue').value.trim(),
+				validationRule: document.getElementById('validationRule').value.trim(),
+				options: document.getElementById('options').value.trim(),
+				description: document.getElementById('description').value.trim(),
+				isSystem: parseInt(document.getElementById('isSystem').value||0),
+				isEditable: parseInt(document.getElementById('isEditable').value||1),
+				sortOrder: parseInt(document.getElementById('sortOrder').value) || 0
+			};
+			if(window.submitJson){ submitJson(payload, '/system/parameter/save', 'POST', '/system/parameter/list'); }
+			else {
+				try{
+					const resp = await fetch('/system/parameter/save',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+					const res = await resp.json();
+					if(res.code===200){ showMessage('保存成功','success'); window.location.href='/system/parameter/list'; }
+					else showMessage('保存失败: '+res.message,'error');
+				} catch(e){ showMessage('保存失败','error'); }
+			}
+		});
+	})();
+    </script>
+    </th:block>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
 </html>

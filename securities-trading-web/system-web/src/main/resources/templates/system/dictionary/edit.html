@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>编辑字典 - iJupiter Trading System</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
+        <h1 class="h3 mb-4">编辑字典</h1>
+        <div class="card">
+            <div class="card-body">
+                <form id="dictForm">
+                    <input type="hidden" name="id" th:value="${dictionary.id}">
+                    <div class="mb-3">
+                        <label class="form-label">编码</label>
+                        <input type="text" class="form-control" name="code" th:value="${dictionary.code}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">名称</label>
+                        <input type="text" class="form-control" name="name" th:value="${dictionary.name}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">类型</label>
+                        <input type="text" class="form-control" name="type" th:value="${dictionary.type}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">描述</label>
+                        <textarea class="form-control" name="description" rows="3" th:text="${dictionary.description}"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+                    <a href="/system/dictionary" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+    
+    <th:block th:fragment="js">
+        <script src="/js/system-ui.js"></script>
+        <script src="/js/system-management.js"></script>
+        <script>
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            const id = document.querySelector('#dictForm input[name="id"]').value;
+            if (!id) { if(window.showToast) window.showToast('error','缺少ID，无法保存'); else alert('缺少ID，无法保存'); return; }
+            submitForm('dictForm', '/system/dictionary/' + id, 'PUT', '/system/dictionary');
+        });
+    </script>
+    </th:block>
+</body>
+</html>

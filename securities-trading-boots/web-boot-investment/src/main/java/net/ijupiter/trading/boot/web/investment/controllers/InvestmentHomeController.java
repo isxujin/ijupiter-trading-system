@@ -1,6 +1,5 @@
-package net.ijupiter.trading.boot.web.menagement.controllers;
+package net.ijupiter.trading.boot.web.investment.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,10 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Controller
-@RequestMapping("/management")
-public class ManagementHomeController extends ManagementBaseController {
+@RequestMapping("/investment")
+public class InvestmentHomeController extends InvestmentBaseController {
 
     /**
      * 系统首页/仪表盘
@@ -30,26 +28,10 @@ public class ManagementHomeController extends ManagementBaseController {
         // 设置活跃菜单项
         model.addAttribute("activeMenu", "dashboard");
         
-        // 添加当前用户信息到模型
-        // 由于使用内存用户，直接使用认证信息
-        if (authentication != null && authentication.isAuthenticated()) {
-            // 创建一个简单的用户对象供模板使用
-            java.util.Map<String, Object> currentUser = new java.util.HashMap<>();
-            currentUser.put("username", authentication.getName());
-            currentUser.put("userCode", "ADMIN");
-            currentUser.put("realName", "系统管理员");
-            currentUser.put("email", "admin@example.com");
-            currentUser.put("phone", "13800138000");
-            currentUser.put("status", 1);
-            
-            model.addAttribute("currentUser", currentUser);
-            log.info("用户 {} 访问仪表盘", authentication.getName());
-        }
-        
         // 添加仪表盘数据
         model.addAttribute("dashboardStats", getDashboardStats());
         
-        return "management/dashboard";
+        return "investment/dashboard";
     }
 
     /**
@@ -57,7 +39,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/products")
     public String productsRedirect() {
-        return "redirect:/management/products/list";
+        return "redirect:/investment/products/list";
     }
 
     /**
@@ -65,7 +47,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/trades")
     public String tradesRedirect() {
-        return "redirect:/management/trades/list";
+        return "redirect:/investment/trades/list";
     }
 
     /**
@@ -73,7 +55,7 @@ public class ManagementHomeController extends ManagementBaseController {
      */
     @GetMapping("/settings")
     public String settingsRedirect() {
-        return "redirect:/management/settings/manage";
+        return "redirect:/investor/settings/manage";
     }
     
     /**

@@ -33,7 +33,8 @@ spring:
         #  db_structure_naming_strategy: IDENTITY #sequence  #legacy-hilo
         format_sql: true                  # 格式化 SQL 日志
         use_sql_comments: true            # 显示 SQL 注释
-        globally_quoted_identifiers: true # 允许 Hibernate 识别非应用包下的实体
+        globally_quoted_identifiers: false # 关闭全局引用标识符，避免生成带双引号的标识符
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 使用标准物理命名策略
     open-in-view: false
   # 1.4 消息队列配置
   rabbitmq:

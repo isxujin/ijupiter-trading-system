@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{common/base :: layout(
-      title = '添加用户',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
-      
-<th:block th:fragment="css">
-    <style>
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .required:after {
-            content: " *";
-            color: red;
-        }
-    </style>
-</th:block>
-
-<th:block th:fragment="content">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>添加用户 - iJupiter Trading System</title>
+    <th:block th:fragment="css">
+        <style>
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            .required:after {
+                content: " *";
+                color: red;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
     <div class="container-fluid main-content">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">添加用户</h1>
@@ -137,11 +137,18 @@
                 </form>
             </div>
         </div>
+                </div>
+            </main>
+        </div>
     </div>
-</th:block>
-
-<th:block th:fragment="js">
-    <script>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+    
+    <th:block th:fragment="js">
+        <script src="/js/system-ui.js"></script>
+        <script src="/js/system-management.js"></script>
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 加载角色列表
             loadRoles();
@@ -318,42 +325,24 @@
             // 确认密码不需要发送
             delete user.confirmPassword;
             
-            // 发送请求
-            fetch('/system/user/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code === 200) {
-                    showSuccess('用户保存成功');
-                    setTimeout(() => {
-                        location.href = '/system/user/list';
-                    }, 1500);
-                } else {
-                    showError('用户保存失败: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('用户保存失败，请检查网络连接');
-            });
+            // 使用 submitJson 发送预处理后的 JSON
+            submitJson(user, '/system/user/save', 'POST', '/system/user/list');
             
             return false;
         }
 
         // 显示成功消息
         function showSuccess(message) {
-            alert(message);
+            if (window.showToast) window.showToast('success', message);
+            else alert(message);
         }
 
         // 显示错误消息
         function showError(message) {
-            alert('错误: ' + message);
+            if (window.showToast) window.showToast('error', '错误: ' + message);
+            else alert('错误: ' + message);
         }
     </script>
-</th:block>
+    </th:block>
+</body>
 </html>

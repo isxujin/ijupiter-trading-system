@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>编辑权限 - iJupiter Trading System</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+    <div class="container-fluid">
+        <h1 class="h3 mb-4">编辑权限</h1>
+        <div class="card">
+            <div class="card-body">
+                <form id="permForm">
+                    <input type="hidden" name="id">
+                    <div class="mb-3">
+                        <label class="form-label">编码</label>
+                        <input type="text" class="form-control" name="code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">名称</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">描述</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+                    <a href="/system/permission" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+    
+    <th:block th:fragment="js">
+        <script src="/js/system-ui.js"></script>
+        <script src="/js/system-management.js"></script>
+        <script>
+        // save updates
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            const id = document.querySelector('#permForm input[name="id"]').value;
+            if (!id) {
+                if (window.showToast) window.showToast('error', '缺少ID，无法保存');
+                else alert('缺少ID，无法保存');
+                return;
+            }
+            submitForm('permForm', '/system/permission/' + id, 'PUT', '/system/permission');
+        });
+    </script>
+    </th:block>
+</body>
+</html>

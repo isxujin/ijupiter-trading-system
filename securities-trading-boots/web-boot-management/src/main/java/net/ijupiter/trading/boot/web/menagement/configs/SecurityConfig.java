@@ -4,14 +4,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+/**
+ * Spring Security配置类
+ * 配置基于RBAC3模型的认证和授权
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,32 +26,43 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+    
     /**
-     * 内存用户配置（替代yml中的用户配置，避免配置不生效）
+     * 临时用户详情服务（用于测试）
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        // 明文密码：management@123，加密后存储（也可直接用加密串）
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("admin@123")) // 动态加密，避免串不匹配
-                .roles("ADMIN") // 角色名，会自动拼接 ROLE_ 前缀
-                .build();
-        return new InMemoryUserDetailsManager(admin);
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("admin")
+                .password(passwordEncoder().encode("admin123"))
+                .roles("ADMIN")
+                .build());
+        return manager;
     }
 
+    /**
+     * 安全过滤器链配置
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        // 允许访问的路径
                         .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**").permitAll()
-                        .requestMatchers("/management/**").hasRole("ADMIN")
+                        
+                        // 管理页面需要认证
+                        .requestMatchers("/management/**").authenticated()
+                        
+                        // 其他请求都需要认证
                         .anyRequest().authenticated()
                 )
+                .userDetailsService(userDetailsService())
                 .formLogin(form -> form
                         .loginPage("/management/login")
                         .defaultSuccessUrl("/management/dashboard", true)
                         .failureUrl("/management/login?error=true")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -58,8 +72,40 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.disable()); // 测试环境禁用CSRF
+
+                .sessionManagement(session -> session
+                        .maximumSessions(1) // 限制用户同时登录的会话数
+                        .maxSessionsPreventsLogin(false) // 不阻止新登录，而是使旧会话失效
+                        .sessionRegistry(sessionRegistry())
+                )
+                .rememberMe(remember -> remember
+                        .key("ijupiter-trading-remember-me")
+                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7天
+                        .rememberMeParameter("remember-me")
+                        .userDetailsService(userDetailsService())
+                )
+                // 在开发环境可以禁用CSRF，生产环境建议启用
+                .csrf(csrf -> {
+                    // 只对特定的API禁用CSRF保护
+                    csrf.ignoringRequestMatchers("/api/**");
+                });
 
         return http.build();
+    }
+    
+    /**
+     * 会话注册表，用于管理用户会话
+     */
+    @Bean
+    public org.springframework.security.core.session.SessionRegistry sessionRegistry() {
+        return new org.springframework.security.core.session.SessionRegistryImpl();
+    }
+    
+    /**
+     * HTTP会话事件发布器，用于监听会话事件
+     */
+    @Bean
+    public org.springframework.security.web.session.HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new org.springframework.security.web.session.HttpSessionEventPublisher();
     }
 }

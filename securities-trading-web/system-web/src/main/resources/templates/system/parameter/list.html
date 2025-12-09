@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{common/base :: layout(
-      title = '系统参数管理',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
-      
-<th:block th:fragment="css">
-    <style>
-        .table-actions {
-            white-space: nowrap;
-        }
-        .status-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-        }
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .status-inactive {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        .param-type-badge {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            background-color: #e2e3e5;
-            color: #383d41;
-        }
-        .is-system-badge {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            background-color: #fff3cd;
-            color: #856404;
-        }
-    </style>
-</th:block>
-
-<th:block th:fragment="content">
-<div class="container-fluid">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>系统参数管理 - iJupiter Trading System</title>
+    <th:block th:fragment="css">
+        <style>
+            .table-actions {
+                white-space: nowrap;
+            }
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+            }
+            .status-active {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .status-inactive {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            .param-type-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                background-color: #e2e3e5;
+                color: #383d41;
+            }
+            .is-system-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                background-color: #fff3cd;
+                color: #856404;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
     <!-- 页面标题 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3">系统参数管理</h1>
@@ -190,359 +190,186 @@
 </th:block>
 
 <th:block th:fragment="js">
-<script>
-$(document).ready(function() {
-    // 全局变量
-    let currentPage = 1;
-    let pageSize = 10;
-    let batchOperationType = '';
-    let selectedIds = [];
-    
-    // 加载参数分组
-    function loadParamGroups() {
-        $.ajax({
-            url: '/system/parameter/groups',
-            type: 'GET',
-            success: function(res) {
-                if (res.code === 200) {
-                    let options = '<option value="">全部分组</option>';
-                    res.data.forEach(function(group) {
-                        options += '<option value="' + group + '">' + group + '</option>';
-                    });
-                    $('#paramGroup').html(options);
-                }
+    <script src="/js/system-ui.js"></script>
+    <script src="/js/system-management.js"></script>
+    <script>
+    (function(){
+        let currentPage = 1;
+        const pageSize = 10;
+
+        function showMessage(message, type) {
+            if (window.showToast) {
+                window.showToast(type === 'error' ? 'error' : 'success', message);
+            } else {
+                alert(message);
             }
-        });
-    }
-    
-    // 加载参数数据
-    function loadParameters() {
-        const keyword = $('#keyword').val();
-        const paramGroup = $('#paramGroup').val();
-        const paramType = $('#paramType').val();
-        const status = $('#status').val();
-        
-        $.ajax({
-            url: '/system/parameter/data',
-            type: 'GET',
-            data: {
-                keyword: keyword,
-                paramGroup: paramGroup,
-                paramType: paramType,
-                status: status,
-                pageNum: currentPage,
-                pageSize: pageSize
-            },
-            success: function(res) {
+        }
+
+        function truncateText(text, maxLength) {
+            if (!text) return '-';
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+
+        async function loadParamGroups() {
+            try {
+                const res = await fetch('/system/parameter/groups');
+                const data = await res.json();
+                if (data.code === 200) {
+                    const select = document.getElementById('paramGroup');
+                    select.innerHTML = '<option value="">全部分组</option>' + (data.data || []).map(g => `<option value="${g}">${g}</option>`).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function loadParameters() {
+            const keyword = document.getElementById('keyword').value;
+            const paramGroup = document.getElementById('paramGroup').value;
+            const paramType = document.getElementById('paramType').value;
+            const status = document.getElementById('status').value;
+
+            const params = new URLSearchParams({ pageNum: currentPage, pageSize });
+            if (keyword) params.append('keyword', keyword);
+            if (paramGroup) params.append('paramGroup', paramGroup);
+            if (paramType) params.append('paramType', paramType);
+            if (status) params.append('status', status);
+
+            try {
+                const resp = await fetch(`/system/parameter/data?${params.toString()}`);
+                const res = await resp.json();
                 if (res.code === 200) {
-                    renderTable(res.data.records);
+                    const records = res.data.records || [];
+                    renderTable(records);
                     renderPagination(res.data);
                 } else {
                     showMessage('加载数据失败: ' + res.message, 'error');
                 }
-            },
-            error: function() {
+            } catch (e) {
+                console.error(e);
                 showMessage('加载数据失败', 'error');
             }
-        });
-    }
-    
-    // 渲染表格
-    function renderTable(parameters) {
-        const tbody = $('#parameterTable tbody');
-        tbody.empty();
-        
-        if (parameters.length === 0) {
-            tbody.append('<tr><td colspan="9" class="text-center">暂无数据</td></tr>');
-            return;
         }
-        
-        parameters.forEach(function(param) {
-            const row = `
-                <tr>
+
+        function renderTable(parameters) {
+            const tbody = document.querySelector('#parameterTable tbody');
+            tbody.innerHTML = '';
+            if (!parameters || parameters.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center">暂无数据</td></tr>';
+                return;
+            }
+            parameters.forEach(param => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
                     <td><input type="checkbox" class="param-checkbox" data-id="${param.id}" ${param.isSystem === 1 ? 'disabled' : ''}></td>
                     <td>${param.paramCode}</td>
                     <td>${param.paramName}</td>
-                    <td title="${param.paramValue}">${truncateText(param.paramValue, 20)}</td>
+                    <td title="${param.paramValue}">${truncateText(param.paramValue,20)}</td>
                     <td><span class="param-type-badge">${param.paramType}</span></td>
                     <td>${param.paramGroup || '-'}</td>
                     <td>${param.status === 1 ? '<span class="status-badge status-active">启用</span>' : '<span class="status-badge status-inactive">禁用</span>'}</td>
                     <td>${param.isSystem === 1 ? '<span class="is-system-badge">系统</span>' : '业务'}</td>
-                    <td class="table-actions">
-                        <a href="/system/parameter/detail/${param.id}" class="btn btn-sm btn-outline-info" title="详情">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="/system/parameter/edit/${param.id}" class="btn btn-sm btn-outline-primary" title="编辑" ${param.isEditable === 0 ? 'disabled' : ''}>
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <button class="btn btn-sm btn-outline-warning reset-btn" data-id="${param.id}" title="重置" ${param.isEditable === 0 || !param.defaultValue ? 'disabled' : ''}>
-                            <i class="fas fa-undo"></i>
-                        </button>
-                        <button class="btn btn-sm ${param.status === 1 ? 'btn-outline-secondary' : 'btn-outline-success'} status-btn" data-id="${param.id}" data-status="${param.status === 1 ? 0 : 1}" title="${param.status === 1 ? '禁用' : '启用'}" ${param.isSystem === 1 && param.status === 1 ? 'disabled' : ''}>
-                            <i class="fas fa-${param.status === 1 ? 'ban' : 'check'}"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${param.id}" title="删除" ${param.isSystem === 1 ? 'disabled' : ''}>
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-            tbody.append(row);
-        });
-    }
-    
-    // 渲染分页
-    function renderPagination(pageData) {
-        const pagination = $('#pagination');
-        pagination.empty();
-        
-        if (pageData.totalPages <= 1) return;
-        
-        // 上一页
-        const prevDisabled = pageData.pageNum === 1 ? 'disabled' : '';
-        pagination.append(`
-            <li class="page-item ${prevDisabled}">
-                <a class="page-link" href="#" data-page="${pageData.pageNum - 1}">上一页</a>
-            </li>
-        `);
-        
-        // 页码
-        for (let i = 1; i <= pageData.totalPages; i++) {
-            const active = i === pageData.pageNum ? 'active' : '';
-            pagination.append(`
-                <li class="page-item ${active}">
-                    <a class="page-link" href="#" data-page="${i}">${i}</a>
-                </li>
-            `);
-        }
-        
-        // 下一页
-        const nextDisabled = pageData.pageNum === pageData.totalPages ? 'disabled' : '';
-        pagination.append(`
-            <li class="page-item ${nextDisabled}">
-                <a class="page-link" href="#" data-page="${pageData.pageNum + 1}">下一页</a>
-            </li>
-        `);
-    }
-    
-    // 截断文本
-    function truncateText(text, maxLength) {
-        if (!text) return '-';
-        return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-    }
-    
-    // 显示消息
-    function showMessage(message, type) {
-        const alertClass = type === 'error' ? 'alert-danger' : 'alert-success';
-        const alert = `
-            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-        $('.container-fluid').prepend(alert);
-        
-        // 自动关闭
-        setTimeout(function() {
-            $('.alert').fadeOut();
-        }, 3000);
-    }
-    
-    // 获取选中的参数ID
-    function getSelectedIds() {
-        const ids = [];
-        $('.param-checkbox:checked').each(function() {
-            ids.push($(this).data('id'));
-        });
-        return ids;
-    }
-    
-    // 初始化事件
-    function initEvents() {
-        // 搜索按钮
-        $('#searchBtn').click(function() {
-            currentPage = 1;
-            loadParameters();
-        });
-        
-        // 重置按钮
-        $('#resetBtn').click(function() {
-            $('#searchForm')[0].reset();
-            currentPage = 1;
-            loadParameters();
-        });
-        
-        // 全选/取消全选
-        $('#selectAll').change(function() {
-            const isChecked = $(this).prop('checked');
-            $('.param-checkbox:not(:disabled)').prop('checked', isChecked);
-        });
-        
-        // 分页点击
-        $(document).on('click', '.page-link', function(e) {
-            e.preventDefault();
-            const page = $(this).data('page');
-            if (page && page !== currentPage) {
-                currentPage = page;
-                loadParameters();
-            }
-        });
-        
-        // 状态按钮
-        $(document).on('click', '.status-btn', function() {
-            const id = $(this).data('id');
-            const status = $(this).data('status');
-            
-            $.ajax({
-                url: '/system/parameter/status/' + id,
-                type: 'PUT',
-                data: { status: status },
-                success: function(res) {
-                    if (res.code === 200) {
-                        showMessage('状态更新成功', 'success');
-                        loadParameters();
-                    } else {
-                        showMessage('状态更新失败: ' + res.message, 'error');
-                    }
-                },
-                error: function() {
-                    showMessage('状态更新失败', 'error');
-                }
-            });
-        });
-        
-        // 重置按钮
-        $(document).on('click', '.reset-btn', function() {
-            const id = $(this).data('id');
-            
-            if (!confirm('确定要重置此参数为默认值吗？')) {
-                return;
-            }
-            
-            $.ajax({
-                url: '/system/parameter/reset/' + id,
-                type: 'PUT',
-                success: function(res) {
-                    if (res.code === 200) {
-                        showMessage('参数重置成功', 'success');
-                        loadParameters();
-                    } else {
-                        showMessage('参数重置失败: ' + res.message, 'error');
-                    }
-                },
-                error: function() {
-                    showMessage('参数重置失败', 'error');
-                }
-            });
-        });
-        
-        // 删除按钮
-        $(document).on('click', '.delete-btn', function() {
-            const id = $(this).data('id');
-            
-            if (!confirm('确定要删除此参数吗？此操作不可恢复。')) {
-                return;
-            }
-            
-            $.ajax({
-                url: '/system/parameter/delete/' + id,
-                type: 'DELETE',
-                success: function(res) {
-                    if (res.code === 200) {
-                        showMessage('参数删除成功', 'success');
-                        loadParameters();
-                    } else {
-                        showMessage('参数删除失败: ' + res.message, 'error');
-                    }
-                },
-                error: function() {
-                    showMessage('参数删除失败', 'error');
-                }
-            });
-        });
-        
-        // 导出按钮
-        $('#exportBtn').click(function() {
-            const paramGroup = $('#paramGroup').val();
-            
-            $.ajax({
-                url: '/system/parameter/export',
-                type: 'GET',
-                data: { paramGroup: paramGroup },
-                success: function(res) {
-                    if (res.code === 200) {
-                        // 创建下载链接
-                        const dataStr = JSON.stringify(res.data, null, 2);
-                        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                        
-                        const exportFileDefaultName = 'parameters_' + new Date().getTime() + '.json';
-                        
-                        const linkElement = document.createElement('a');
-                        linkElement.setAttribute('href', dataUri);
-                        linkElement.setAttribute('download', exportFileDefaultName);
-                        linkElement.click();
-                        
-                        showMessage('导出成功', 'success');
-                    } else {
-                        showMessage('导出失败: ' + res.message, 'error');
-                    }
-                },
-                error: function() {
-                    showMessage('导出失败', 'error');
-                }
-            });
-        });
-        
-        // 导入按钮
-        $('#importBtn').click(function() {
-            $('#importModal').modal('show');
-        });
-        
-        // 确认导入
-        $('#confirmImportBtn').click(function() {
-            const configJson = $('#configJson').val();
-            const isOverride = $('#isOverride').prop('checked');
-            
-            if (!configJson.trim()) {
-                alert('请输入配置JSON');
-                return;
-            }
-            
-            try {
-                // 验证JSON格式
-                JSON.parse(configJson);
-                
-                $.ajax({
-                    url: '/system/parameter/import',
-                    type: 'POST',
-                    data: {
-                        configJson: configJson,
-                        isOverride: isOverride
-                    },
-                    success: function(res) {
-                        if (res.code === 200) {
-                            showMessage(res.message, 'success');
-                            $('#importModal').modal('hide');
-                            loadParameters();
-                        } else {
-                            showMessage('导入失败: ' + res.message, 'error');
-                        }
-                    },
-                    error: function() {
-                        showMessage('导入失败', 'error');
-                    }
+                    <td class="table-actions"></td>
+                `;
+                const actionsTd = tr.querySelector('.table-actions');
+                // details
+                const aDetail = document.createElement('a');
+                aDetail.href = `/system/parameter/detail/${param.id}`;
+                aDetail.className = 'btn btn-sm btn-outline-info';
+                aDetail.title = '详情';
+                aDetail.innerHTML = '<i class="fas fa-eye"></i>';
+                actionsTd.appendChild(aDetail);
+
+                // edit
+                const aEdit = document.createElement('a');
+                aEdit.href = `/system/parameter/edit/${param.id}`;
+                aEdit.className = 'btn btn-sm btn-outline-primary ms-1';
+                aEdit.title = '编辑';
+                if (param.isEditable === 0) aEdit.setAttribute('disabled','');
+                aEdit.innerHTML = '<i class="fas fa-edit"></i>';
+                actionsTd.appendChild(aEdit);
+
+                // reset
+                const btnReset = document.createElement('button');
+                btnReset.className = 'btn btn-sm btn-outline-warning ms-1';
+                btnReset.title = '重置';
+                btnReset.innerHTML = '<i class="fas fa-undo"></i>';
+                if (param.isEditable === 0 || !param.defaultValue) btnReset.disabled = true;
+                btnReset.addEventListener('click', function(){
+                    if (!confirm('确定要重置此参数为默认值吗？')) return;
+                    fetch(`/system/parameter/reset/${param.id}`, { method: 'PUT' }).then(r=>r.json()).then(res=>{
+                        if (res.code === 200) { showMessage('参数重置成功','success'); loadParameters(); }
+                        else showMessage('参数重置失败: '+res.message,'error');
+                    }).catch(()=>showMessage('参数重置失败','error'));
                 });
-            } catch (e) {
-                alert('JSON格式不正确，请检查');
-            }
-        });
-    }
-    
-    // 页面加载完成后初始化
-    loadParamGroups();
-    loadParameters();
-    initEvents();
-});
-</script>
-</th:block>
+                actionsTd.appendChild(btnReset);
+
+                // status toggle
+                const btnStatus = document.createElement('button');
+                btnStatus.className = 'btn btn-sm ms-1';
+                btnStatus.innerHTML = `<i class="fas fa-${param.status === 1 ? 'ban' : 'check'}"></i>`;
+                if (param.status === 1) btnStatus.classList.add('btn-outline-secondary'); else btnStatus.classList.add('btn-outline-success');
+                if (param.isSystem === 1 && param.status === 1) btnStatus.disabled = true;
+                btnStatus.addEventListener('click', function(){
+                    const newStatus = param.status === 1 ? 0 : 1;
+                    fetch(`/system/parameter/status/${param.id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status:newStatus}) })
+                        .then(r=>r.json()).then(res=>{ if(res.code===200){ showMessage('状态更新成功','success'); loadParameters(); } else showMessage('状态更新失败: '+res.message,'error'); }).catch(()=>showMessage('状态更新失败','error'));
+                });
+                actionsTd.appendChild(btnStatus);
+
+                // delete
+                const btnDelete = document.createElement('button');
+                btnDelete.className = 'btn btn-sm btn-outline-danger ms-1';
+                btnDelete.innerHTML = '<i class="fas fa-trash"></i>';
+                if (param.isSystem === 1) btnDelete.disabled = true;
+                btnDelete.addEventListener('click', function(){
+                    if (!confirm('确定要删除此参数吗？此操作不可恢复。')) return;
+                    fetch(`/system/parameter/delete/${param.id}`, { method: 'DELETE' }).then(r=>r.json()).then(res=>{ if(res.code===200){ showMessage('参数删除成功','success'); loadParameters(); } else showMessage('参数删除失败: '+res.message,'error'); }).catch(()=>showMessage('参数删除失败','error'));
+                });
+                actionsTd.appendChild(btnDelete);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderPagination(pageData) {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            if (!pageData || pageData.totalPages <= 1) return;
+            const ulFrag = document.createDocumentFragment();
+            const prevLi = document.createElement('li'); prevLi.className = 'page-item' + (pageData.pageNum===1?' disabled':'');
+            prevLi.innerHTML = `<a class="page-link" href="#" data-page="${pageData.pageNum-1}">上一页</a>`;
+            ulFrag.appendChild(prevLi);
+            for (let i=1;i<=pageData.totalPages;i++){ const li=document.createElement('li'); li.className='page-item'+(i===pageData.pageNum?' active':''); li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`; ulFrag.appendChild(li);}            
+            const nextLi = document.createElement('li'); nextLi.className='page-item'+(pageData.pageNum===pageData.totalPages?' disabled':''); nextLi.innerHTML=`<a class="page-link" href="#" data-page="${pageData.pageNum+1}">下一页</a>`; ulFrag.appendChild(nextLi);
+            pagination.appendChild(ulFrag);
+        }
+
+        function getSelectedIds(){ return Array.from(document.querySelectorAll('.param-checkbox:checked')).map(cb=>cb.dataset.id); }
+
+        function initEvents(){
+            document.getElementById('searchBtn').addEventListener('click', function(){ currentPage=1; loadParameters(); });
+            document.getElementById('resetBtn').addEventListener('click', function(){ document.getElementById('searchForm').reset(); currentPage=1; loadParameters(); });
+            document.getElementById('selectAll').addEventListener('change', function(){ const checked=this.checked; document.querySelectorAll('.param-checkbox:not(:disabled)').forEach(cb=>cb.checked=checked); });
+            document.getElementById('pagination').addEventListener('click', function(e){ const a=e.target.closest('a.page-link'); if(a){ e.preventDefault(); const page=a.dataset.page; if(page && parseInt(page)!==currentPage){ currentPage = parseInt(page); loadParameters(); } } });
+
+            document.getElementById('exportBtn').addEventListener('click', async function(){ const paramGroup = document.getElementById('paramGroup').value; try{ const resp = await fetch(`/system/parameter/export?paramGroup=${encodeURIComponent(paramGroup)}`); const res = await resp.json(); if(res.code===200){ const dataStr = JSON.stringify(res.data,null,2); const dataUri = 'data:application/json;charset=utf-8,'+encodeURIComponent(dataStr); const link=document.createElement('a'); link.setAttribute('href',dataUri); link.setAttribute('download','parameters_'+Date.now()+'.json'); link.click(); showMessage('导出成功','success'); } else showMessage('导出失败: '+res.message,'error'); } catch(e){ showMessage('导出失败','error'); } });
+
+            document.getElementById('importBtn').addEventListener('click', function(){ const modal = new bootstrap.Modal(document.getElementById('importModal')); modal.show(); });
+            document.getElementById('confirmImportBtn').addEventListener('click', async function(){ const configJson = document.getElementById('configJson').value; const isOverride = document.getElementById('isOverride').checked; if(!configJson.trim()){ alert('请输入配置JSON'); return; } try{ JSON.parse(configJson); const resp = await fetch('/system/parameter/import',{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({configJson, isOverride}) }); const res = await resp.json(); if(res.code===200){ showMessage(res.message,'success'); const modal = bootstrap.Modal.getInstance(document.getElementById('importModal')); if(modal) modal.hide(); loadParameters(); } else showMessage('导入失败: '+res.message,'error'); } catch(e){ alert('JSON格式不正确，请检查'); } });
+        }
+
+        // init
+        loadParamGroups();
+        loadParameters();
+        initEvents();
+    })();
+    </script>
+    </th:block>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
 </html>

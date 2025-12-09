@@ -147,6 +147,8 @@
 </th:block>
 
 <th:block th:fragment="js">
+    <script src="/js/system-ui.js"></script>
+    <script src="/js/system-management.js"></script>
     <script>
         let userId = null;
         let currentUserRoles = [];
@@ -338,41 +340,22 @@
             delete user.confirmNewPassword;
             delete user.newPassword;
             
-            // 发送请求
-            fetch(`/system/user/update/${userId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code === 200) {
-                    showSuccess('用户更新成功');
-                    setTimeout(() => {
-                        location.href = '/system/user/list';
-                    }, 1500);
-                } else {
-                    showError('用户更新失败: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('用户更新失败，请检查网络连接');
-            });
+            // 使用 submitJson 发送预处理后的 JSON
+            submitJson(user, `/system/user/update/${userId}`, 'PUT', '/system/user/list');
             
             return false;
         }
 
         // 显示成功消息
         function showSuccess(message) {
-            alert(message);
+            if (window.showToast) window.showToast('success', message);
+            else alert(message);
         }
 
         // 显示错误消息
         function showError(message) {
-            alert('错误: ' + message);
+            if (window.showToast) window.showToast('error', '错误: ' + message);
+            else alert('错误: ' + message);
         }
     </script>
 </th:block>

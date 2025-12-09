@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{common/base :: layout(
-      title = '用户管理',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
-      
-<th:block th:fragment="css">
-    <style>
-        .table-actions {
-            white-space: nowrap;
-        }
-        .status-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-        }
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .status-inactive {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    </style>
-</th:block>
-
-<th:block th:fragment="content">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>用户管理 - iJupiter Trading System</title>
+    <th:block th:fragment="css">
+        <style>
+            .table-actions {
+                white-space: nowrap;
+            }
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem;
+                font-size: 0.75rem;
+            }
+            .status-active {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .status-inactive {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
     <div class="container-fluid main-content">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">用户管理</h1>
@@ -162,11 +162,18 @@
                 </div>
             </div>
         </div>
+                </div>
+            </main>
+        </div>
     </div>
-</th:block>
-
-<th:block th:fragment="js">
-    <script>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+    
+    <th:block th:fragment="js">
+        <script src="/js/system-ui.js"></script>
+        <script src="/js/system-management.js"></script>
+        <script>
         let currentPage = 1;
         let pageSize = 10;
         let deleteUserId = null;
@@ -439,23 +446,19 @@
             return date.toLocaleString();
         }
 
-        // 显示成功消息
+        // 显示成功/错误/警告消息，使用统一 Toast（如不可用则回退到 console）
         function showSuccess(message) {
-            // 这里可以使用Toast或其他方式显示成功消息
-            console.log(message);
+            if (window.showToast) window.showToast('success', message); else console.log(message);
         }
 
-        // 显示错误消息
         function showError(message) {
-            // 这里可以使用Toast或其他方式显示错误消息
-            console.error(message);
+            if (window.showToast) window.showToast('error', message); else console.error(message);
         }
 
-        // 显示警告消息
         function showWarning(message) {
-            // 这里可以使用Toast或其他方式显示警告消息
-            console.warn(message);
+            if (window.showToast) window.showToast('info', message); else console.warn(message);
         }
     </script>
-</th:block>
+    </th:block>
+</body>
 </html>

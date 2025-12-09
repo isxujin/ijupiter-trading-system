@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{common/base :: head}">
+    <title>字典详情 - iJupiter Trading System</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div th:fragment="content">
+                    <div class="container-fluid">
+        <h1 class="h3 mb-4">字典详情</h1>
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-2">编码</dt>
+                    <dd class="col-sm-10" th:text="${dictionary.code}"></dd>
+
+                    <dt class="col-sm-2">名称</dt>
+                    <dd class="col-sm-10" th:text="${dictionary.name}"></dd>
+
+                    <dt class="col-sm-2">类型</dt>
+                    <dd class="col-sm-10" th:text="${dictionary.type}"></dd>
+
+                    <dt class="col-sm-2">描述</dt>
+                    <dd class="col-sm-10" th:text="${dictionary.description}"></dd>
+                </dl>
+                <a href="/system/dictionary" class="btn btn-secondary">返回</a>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+</body>
+</html>
