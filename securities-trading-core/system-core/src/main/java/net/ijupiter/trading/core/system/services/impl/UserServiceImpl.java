@@ -370,6 +370,12 @@ public class UserServiceImpl implements UserService {
         // 暂时返回基础用户信息
         return findUserWithRoles(userCode);
     }
+    
+    @Override
+    public Optional<UserDTO> findByUsernameWithPassword(String username) {
+        return userRepository.findByUsername(username)
+                .map(this::convertToDTOWithPassword);
+    }
 
     /**
      * 将实体转换为DTO
@@ -394,6 +400,33 @@ public class UserServiceImpl implements UserService {
 
         // 设置密码为null，避免在传输中泄露
         userDTO.setPassword(null);
+
+        return userDTO;
+    }
+    
+    /**
+     * 将实体转换为DTO（保留密码）
+     *
+     * @param user 用户实体
+     * @return 用户DTO
+     */
+    private UserDTO convertToDTOWithPassword(User user) {
+        UserDTO userDTO = new UserDTO().convertFrom(user);
+
+        // 填充角色信息
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            List<Long> roleIds = new ArrayList<>();
+            List<String> roleNames = new ArrayList<>();
+            for (Role role : user.getRoles()) {
+                roleIds.add(role.getId());
+                roleNames.add(role.getRoleName());
+            }
+            userDTO.setRoleIds(roleIds);
+            userDTO.setRoleNames(roleNames);
+        }
+
+        // 保留密码，用于认证
+        // 注意：这个方法只应在认证过程中使用
 
         return userDTO;
     }

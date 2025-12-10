@@ -1,4 +1,4 @@
-package net.ijupiter.trading.boot.web.menagement.security;
+package net.ijupiter.trading.boot.web.investment.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import net.ijupiter.trading.api.system.dtos.PermissionDTO;
 import net.ijupiter.trading.api.system.services.UserService;
 import net.ijupiter.trading.api.system.services.PermissionService;
 import net.ijupiter.trading.api.system.services.RoleService;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class InvestmentUserDetailsService implements UserDetailsService {
     
     private final UserService userService;
     private final RoleService roleService;
@@ -37,8 +37,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("正在加载用户信息，用户名: {}", username);
         
-        // 从数据库查找用户（包含密码）
-        UserDTO userDTO = userService.findByUsernameWithPassword(username)
+        // 从数据库查找用户
+        UserDTO userDTO = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("用户不存在: " + username));
         
         // 使用用户编码获取用户角色信息
@@ -53,27 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 roles.size(), 
                 permissions.size());
         
-        // 添加密码调试信息
-        log.debug("用户密码信息: {}", userDTO.getPassword() != null ? "已获取" : "为空");
-        if (userDTO.getPassword() != null) {
-            log.debug("密码长度: {}", userDTO.getPassword().length());
-            log.debug("密码前缀: {}", userDTO.getPassword().substring(0, Math.min(10, userDTO.getPassword().length())));
-        }
-        
-        // 临时添加密码测试
-        if ("admin".equals(username) && userDTO.getPassword() != null) {
-            log.debug("尝试手动验证密码: {}", userDTO.getPassword().startsWith("$2"));
-            
-            // 检查密码是否匹配存储的哈希值
-            String storedHash = "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW";
-            if (storedHash.equals(userDTO.getPassword())) {
-                log.debug("密码哈希匹配存储值");
-            } else {
-                log.debug("密码哈希不匹配存储值，实际: {}", userDTO.getPassword().substring(0, Math.min(10, userDTO.getPassword().length())));
-            }
-        }
-        
         // 转换为UserPrincipal
-        return UserPrincipal.create(userDTO, permissions, roles);
+        return InvestmentUserPrincipal.create(userDTO, permissions, roles);
     }
 }

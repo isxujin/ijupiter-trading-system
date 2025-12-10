@@ -36,7 +36,7 @@ spring:
       - org.axonframework.eventhandling.tokenstore.jpa
       - org.axonframework.eventsourcing.eventstore.jpa
     hibernate:
-      ddl-auto: update  # 开发环境：update（自动创建/更新表）；生产环境：none（手动建表，避免误删）
+      ddl-auto: none  # 开发环境：update（自动创建/更新表）；生产环境：none（手动建表，避免误删）
     show-sql: true     # 显示 SQL（开发环境开启，生产关闭）
     properties:
       hibernate:

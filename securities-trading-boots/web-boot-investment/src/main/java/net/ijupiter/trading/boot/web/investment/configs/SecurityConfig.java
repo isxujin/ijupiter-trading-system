@@ -2,19 +2,25 @@ package net.ijupiter.trading.boot.web.investment.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import net.ijupiter.trading.boot.web.investment.security.InvestmentUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final InvestmentUserDetailsService investmentUserDetailsService;
+
+    public SecurityConfig(@Lazy InvestmentUserDetailsService investmentUserDetailsService) {
+        this.investmentUserDetailsService = investmentUserDetailsService;
+    }
 
     /**
      * 密码编码器（必须显式配置，6.x 强制要求）
@@ -25,16 +31,11 @@ public class SecurityConfig {
     }
 
     /**
-     * 内存用户配置（替代yml中的用户配置，避免配置不生效）
+     * 认证管理器
      */
     @Bean
-    public UserDetailsService userDetailsService() {
-        // 明文密码：management@123，加密后存储（也可直接用加密串）
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("admin@123")) // 动态加密，避免串不匹配
-                .roles("ADMIN") // 角色名，会自动拼接 ROLE_ 前缀
-                .build();
-        return new InMemoryUserDetailsManager(admin);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -42,13 +43,16 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/investment/login", "/webjars/**", "/static/**", "/error", "/common/**").permitAll()
-                        .requestMatchers("/investment/**").hasRole("ADMIN")
+                        .requestMatchers("/investment/**").authenticated()
                         .anyRequest().authenticated()
                 )
+                .userDetailsService(investmentUserDetailsService)
                 .formLogin(form -> form
                         .loginPage("/investment/login")
                         .defaultSuccessUrl("/investment/dashboard", true)
                         .failureUrl("/investment/login?error=true")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .permitAll()
                 )
                 .logout(logout -> logout

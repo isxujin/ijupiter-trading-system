@@ -2,14 +2,15 @@ package net.ijupiter.trading.boot.web.menagement.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import net.ijupiter.trading.boot.web.menagement.security.CustomUserDetailsService;
 
 /**
  * Spring Security配置类
@@ -19,6 +20,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(@Lazy CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
     /**
      * 密码编码器（必须显式配置，6.x 强制要求）
      */
@@ -26,18 +33,24 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     /**
-     * 临时用户详情服务（用于测试）
+     * 认证管理器
      */
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin")
-                .password(passwordEncoder().encode("admin123"))
-                .roles("ADMIN")
-                .build());
-        return manager;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+    
+    /**
+     * 认证提供者，确保使用正确的密码编码器
+     */
+    @Bean
+    public org.springframework.security.authentication.dao.DaoAuthenticationProvider authenticationProvider() {
+        org.springframework.security.authentication.dao.DaoAuthenticationProvider authProvider = new org.springframework.security.authentication.dao.DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     /**
@@ -56,7 +69,7 @@ public class SecurityConfig {
                         // 其他请求都需要认证
                         .anyRequest().authenticated()
                 )
-                .userDetailsService(userDetailsService())
+                .authenticationProvider(authenticationProvider())
                 .formLogin(form -> form
                         .loginPage("/management/login")
                         .defaultSuccessUrl("/management/dashboard", true)
@@ -82,13 +95,10 @@ public class SecurityConfig {
                         .key("ijupiter-trading-remember-me")
                         .tokenValiditySeconds(7 * 24 * 60 * 60) // 7天
                         .rememberMeParameter("remember-me")
-                        .userDetailsService(userDetailsService())
+                        .userDetailsService(customUserDetailsService)
                 )
-                // 在开发环境可以禁用CSRF，生产环境建议启用
-                .csrf(csrf -> {
-                    // 只对特定的API禁用CSRF保护
-                    csrf.ignoringRequestMatchers("/api/**");
-                });
+                // 在开发环境完全禁用CSRF，生产环境建议启用
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

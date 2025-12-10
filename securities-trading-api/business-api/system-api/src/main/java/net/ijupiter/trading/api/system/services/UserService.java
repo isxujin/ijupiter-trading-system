@@ -213,4 +213,12 @@ public interface UserService extends BaseService<UserDTO, Long> {
      * @return 用户DTO（包含权限信息）
      */
     Optional<UserDTO> findUserWithPermissions(String userCode);
+    
+    /**
+     * 根据用户名查找用户及其密码（用于认证）
+     *
+     * @param username 用户名
+     * @return 用户DTO（包含密码）
+     */
+    Optional<UserDTO> findByUsernameWithPassword(String username);
 }
