@@ -41,7 +41,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public List<PermissionDTO> findAll() {
-        return permissionRepository.findAll().stream()
+        return permissionRepository.findAllWithRoles().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

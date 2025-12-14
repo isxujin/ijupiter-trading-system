@@ -60,19 +60,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             log.debug("密码前缀: {}", userDTO.getPassword().substring(0, Math.min(10, userDTO.getPassword().length())));
         }
         
-        // 临时添加密码测试
-        if ("admin".equals(username) && userDTO.getPassword() != null) {
-            log.debug("尝试手动验证密码: {}", userDTO.getPassword().startsWith("$2"));
-            
-            // 检查密码是否匹配存储的哈希值
-            String storedHash = "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW";
-            if (storedHash.equals(userDTO.getPassword())) {
-                log.debug("密码哈希匹配存储值");
-            } else {
-                log.debug("密码哈希不匹配存储值，实际: {}", userDTO.getPassword().substring(0, Math.min(10, userDTO.getPassword().length())));
-            }
-        }
-        
         // 转换为UserPrincipal
         return UserPrincipal.create(userDTO, permissions, roles);
     }

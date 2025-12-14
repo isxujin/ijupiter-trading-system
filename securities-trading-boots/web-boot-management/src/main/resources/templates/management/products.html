@@ -7,11 +7,9 @@
     <title th:text="${title + ' - ' + systemTitle}">产品管理 - 金融交易系统管理平台</title>
 
     <!-- Bootstrap CSS -->
-    <!--    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">-->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
 
     <!-- Bootstrap Icons -->
-    <!--    <link th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css}" rel="stylesheet">-->
     <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
 
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
@@ -284,11 +282,9 @@
     </div>
 
     <!-- WebJars - jQuery -->
-    <!--    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>-->
     <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
 
     <!-- WebJars - Bootstrap JS -->
-    <!--    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>-->
     <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
     
     <script>

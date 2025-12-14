@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:with="webjarsVersion=${#objects.getWebJarsVersion()}">
+      th:fragment="layout(title, css, content, js)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title} + ' - 金融交易系统管理平台'">金融交易系统管理平台</title>
+    <title th:text="${title} + ' - ' + ${appName != null ? appName : 'iJupiter Trading System'}">iJupiter Trading System</title>
     
     <!-- Bootstrap CSS -->
+<!--    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">-->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
     
     <!-- Bootstrap Icons CSS -->
-    <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.min.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
+<!--    <link th:href="@{/webjars/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css}" rel="stylesheet">-->
+    <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
     
-    <!-- 自定义CSS -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    
+    <!-- 通用自定义CSS -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -51,6 +55,12 @@
             border-radius: 50%;
             object-fit: cover;
         }
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        .main-content {
+            padding-top: 20px;
+        }
     </style>
     
     <!-- 页面特定CSS -->
@@ -63,38 +73,47 @@
             <div class="text-center mb-4">
                 <a class="navbar-brand text-decoration-none" href="#">
                     <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
-                    <span class="d-block text-primary">金融交易系统</span>
+                    <span class="d-block text-primary" th:text="${appName != null ? appName : 'iJupiter Trading System'}">iJupiter Trading System</span>
                 </a>
             </div>
             
             <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/management/dashboard}" th:classappend="${#strings.equals(activeMenu, 'dashboard')} ? 'active' : ''">
+                <!-- 动态侧边栏菜单项 -->
+                <li class="nav-item" th:each="item : ${sidebarItems}">
+                    <a class="nav-link" th:href="${item.url}" th:classappend="${item.active ? 'active' : ''}">
+                        <i th:class="${item.icon}" class="me-2"></i>
+                        <span th:text="${item.name}">菜单项</span>
+                    </a>
+                </li>
+                
+                <!-- 默认菜单项（如果没有提供sidebarItems） -->
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/dashboard}" th:classappend="${#strings.equals(activeMenu, 'dashboard')} ? 'active' : ''">
                         <i class="bi bi-speedometer2 me-2"></i>控制台
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/system/user/list}" th:classappend="${#strings.equals(activeMenu, 'users')} ? 'active' : ''">
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/user/list}" th:classappend="${#strings.equals(activeMenu, 'users')} ? 'active' : ''">
                         <i class="bi bi-people me-2"></i>用户管理
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/system/role/list}" th:classappend="${#strings.equals(activeMenu, 'roles')} ? 'active' : ''">
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/role/list}" th:classappend="${#strings.equals(activeMenu, 'roles')} ? 'active' : ''">
                         <i class="bi bi-shield-check me-2"></i>角色管理
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/system/permission/list}" th:classappend="${#strings.equals(activeMenu, 'permissions')} ? 'active' : ''">
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/permission/list}" th:classappend="${#strings.equals(activeMenu, 'permissions')} ? 'active' : ''">
                         <i class="bi bi-key me-2"></i>权限管理
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/system/dictionary/list}" th:classappend="${#strings.equals(activeMenu, 'dictionaries')} ? 'active' : ''">
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/dictionary/list}" th:classappend="${#strings.equals(activeMenu, 'dictionaries')} ? 'active' : ''">
                         <i class="bi bi-book me-2"></i>字典管理
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/system/parameter/list}" th:classappend="${#strings.equals(activeMenu, 'parameters')} ? 'active' : ''">
+                <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+                    <a class="nav-link" th:href="@{/parameter/list}" th:classappend="${#strings.equals(activeMenu, 'parameters')} ? 'active' : ''">
                         <i class="bi bi-gear me-2"></i>参数管理
                     </a>
                 </li>
@@ -123,7 +142,7 @@
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form class="dropdown-item" th:action="@{/management/logout}" method="post">
+                            <form class="dropdown-item" th:action="@{/logout}" method="post">
                                 <button class="btn btn-link text-decoration-none p-0 m-0" type="submit">
                                     <i class="bi bi-box-arrow-right me-2"></i>退出登录
                                 </button>
@@ -141,8 +160,11 @@
     </main>
 </body>
 
-<!-- Bootstrap JS -->
+<!-- jQuery -->
+<!--<script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>-->
 <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+<!-- Bootstrap JS -->
+<!--<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>-->
 <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
 
 <!-- 页面特定JS -->

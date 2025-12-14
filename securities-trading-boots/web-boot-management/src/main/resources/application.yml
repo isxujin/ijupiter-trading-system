@@ -47,10 +47,13 @@ spring:
         globally_quoted_identifiers: false # 关闭全局引用标识符，避免生成带双引号的标识符
         physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 使用标准物理命名策略
     open-in-view: false
+  # 1.6 允许循环依赖
+  main:
+    allow-circular-references: true
 
 # 服务器配置
 server:
-  port: 9000  # 日志中显示端口是9000，保持一致
+  port: 9000  # 修改端口避免冲突
   # 错误页面配置
   error:
     whitelabel:
@@ -71,6 +74,7 @@ admin:
 # 日志配置（便于调试）
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
     net.ijupiter.trading.web.admin: DEBUG
+    net.ijupiter.trading: DEBUG
     org.springframework.beans.factory: DEBUG

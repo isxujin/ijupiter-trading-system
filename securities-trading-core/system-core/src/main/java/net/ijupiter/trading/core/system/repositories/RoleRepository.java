@@ -112,4 +112,12 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
      */
     @Query("SELECT r FROM Role r WHERE r.sortOrder BETWEEN :minSortOrder AND :maxSortOrder ORDER BY r.sortOrder")
     List<Role> findBySortOrderBetween(@Param("minSortOrder") Integer minSortOrder, @Param("maxSortOrder") Integer maxSortOrder);
+    
+    /**
+     * 查找所有角色并预加载用户关联
+     *
+     * @return 角色列表
+     */
+    @Query("SELECT DISTINCT r FROM Role r LEFT JOIN FETCH r.users LEFT JOIN FETCH r.permissions")
+    List<Role> findAllWithUsersAndPermissions();
 }

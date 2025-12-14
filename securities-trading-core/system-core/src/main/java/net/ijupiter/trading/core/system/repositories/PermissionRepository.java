@@ -161,4 +161,12 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
      */
     @Query("SELECT p FROM Permission p WHERE p.permissionType = 'api' AND p.status = 1 ORDER BY p.sortOrder")
     List<Permission> findApiPermissions();
+    
+    /**
+     * 查找所有权限并预加载角色关联
+     *
+     * @return 权限列表
+     */
+    @Query("SELECT DISTINCT p FROM Permission p LEFT JOIN FETCH p.roles")
+    List<Permission> findAllWithRoles();
 }

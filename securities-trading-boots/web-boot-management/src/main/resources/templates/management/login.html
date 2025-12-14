@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员登录 - 金融交易系统管理平台</title>
+    <title>管理员登录 - 证券交易系统管理平台</title>
 
     <!-- Bootstrap CSS -->
-    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
 
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <!-- 自定义样式 -->
@@ -52,7 +52,7 @@
                 <!-- 品牌标志 -->
                 <div class="brand-logo">
                     <i class="bi bi-shield-check"></i>
-                    <span>金融交易系统</span>
+                    <span>证券交易系统</span>
                 </div>
                 
                 <!-- 登录表单 -->
@@ -110,10 +110,10 @@
     </div>
 
     <!-- WebJars - jQuery -->
-    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
 
     <!-- WebJars - Bootstrap JS -->
-    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
     
     <script>
         // 获取URL中的错误参数
