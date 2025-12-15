@@ -16,11 +16,15 @@
 
     <dependencies>
         <!-- Web模块依赖 -->
-        <!-- 系统管理模块依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>common-web</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-web</artifactId>
         </dependency>
+        <!-- 系统管理模块依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-api</artifactId>

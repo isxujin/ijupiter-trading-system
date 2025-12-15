@@ -234,7 +234,11 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
+                    <encoding>UTF-8</encoding> <!-- 编译编码 -->
+                    <compilerArgs>
+                        <arg>-encoding</arg>
+                        <arg>UTF-8</arg> <!-- javac编译器编码 -->
+                    </compilerArgs>
                     <!-- 关键：启用Lombok注解处理器 -->
                     <annotationProcessorPaths>
                         <path>
@@ -243,6 +247,18 @@
                             <version>1.18.30</version> <!-- 与BOM中版本一致 -->
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
                 </configuration>
             </plugin>
         </plugins>

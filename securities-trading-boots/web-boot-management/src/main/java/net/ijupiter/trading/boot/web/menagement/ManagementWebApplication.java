@@ -24,7 +24,6 @@ public class ManagementWebApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(ManagementWebApplication.class, args);
-
         System.out.println("==================================================================");
         System.out.println("[OK] Securities Trading System terminal started successfully!");
         System.out.println("[OK] Administrator terminal:    http://localhost:9000/management");
