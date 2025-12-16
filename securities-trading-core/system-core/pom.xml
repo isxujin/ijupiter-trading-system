@@ -16,31 +16,46 @@
     <description>系统管理核心实现</description>
 
     <dependencies>
-        <!-- 内部API依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 三方依赖 -->
         <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>securities-trading-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <exclusions>
+                <!-- 排除更新检查模块 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-update-check</artifactId>
+                </exclusion>
+                <!-- 排除 Axon Server 依赖 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-axonserver-connector</artifactId>
+                </exclusion>
+                <!-- 排除 Axon 自动配置，避免重复 Bean -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
-        <!-- Spring Boot Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- MySQL Driver -->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
         </dependency>
-
-        <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -48,12 +63,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- 测试依赖 -->

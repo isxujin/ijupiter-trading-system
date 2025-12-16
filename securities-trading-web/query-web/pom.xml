@@ -11,4 +11,23 @@
     <artifactId>query-web</artifactId>
     <packaging>jar</packaging>
     <name>Query Web Module</name>
+
+    <dependencies>
+        <!-- 二方依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>common-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>query-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 三方依赖 -->
+
+        <!-- 测试依赖 -->
+
+    </dependencies>
 </project>

@@ -16,6 +16,13 @@
     <description>交易引擎API接口定义</description>
 
     <dependencies>
+        <!-- 二方依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>securities-trading-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
+        <!-- 三方依赖 -->
     </dependencies>
 </project>

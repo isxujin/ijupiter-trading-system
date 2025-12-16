@@ -19,26 +19,4 @@
         <module>business-api</module>
         <module>middleware-spi</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>securities-trading-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-    </dependencies>
 </project>

@@ -11,4 +11,22 @@
     <artifactId>securities-web</artifactId>
     <packaging>jar</packaging>
     <name>Securities Web Module</name>
+    <dependencies>
+        <!-- 二方依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>common-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>securities-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 三方依赖 -->
+
+        <!-- 测试依赖 -->
+
+    </dependencies>
 </project>

@@ -4,7 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Web测试启动器主类
@@ -17,7 +16,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "net.ijupiter.trading.web",
         "net.ijupiter.trading.boot.web"
 })
-@EnableJpaRepositories(basePackages = "net.ijupiter.trading.core.*.repositories")
 @EntityScan(basePackages = "net.ijupiter.trading.core.*.entities")
 public class InvestmentWebApplication {
     public static void main(String[] args) {

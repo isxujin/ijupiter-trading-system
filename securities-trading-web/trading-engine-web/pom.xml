@@ -11,4 +11,23 @@
     <artifactId>trading-engine-web</artifactId>
     <packaging>jar</packaging>
     <name>Trading Engine Web Module</name>
+
+    <dependencies>
+        <!-- 二方依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>common-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>trading-engine-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 三方依赖 -->
+
+        <!-- 测试依赖 -->
+
+    </dependencies>
 </project>

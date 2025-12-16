@@ -2,7 +2,6 @@ package net.ijupiter.trading.boot.web.investment.controllers;
 
 import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -25,15 +24,13 @@ public abstract class InvestmentBaseController extends BaseController {
      * 添加管理员页面通用模型属性
      */
     @ModelAttribute
-    public void addAdminAttributes(Model model, Authentication authentication) {
+    public void addAdminAttributes(Model model) {
         // 系统信息
         model.addAttribute("systemTitle", systemTitle);
         model.addAttribute("systemVersion", systemVersion);
         
         // 当前用户信息
-        if (authentication != null) {
-            model.addAttribute("currentUser", authentication.getName());
-        }
+        model.addAttribute("currentUser", "admin");
         
         // 导航菜单
         model.addAttribute("navigationItems", getNavigationItems());

@@ -16,46 +16,21 @@
     <description>客户管理Web模块</description>
 
     <dependencies>
-        <!-- Customer Core 依赖 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>customer-core</artifactId>
-        </dependency>
-        
-        <!-- Customer API 依赖 -->
-        <dependency>
-            <groupId>net.ijupiter.trading</groupId>
-            <artifactId>customer-api</artifactId>
-        </dependency>
-        
-        <!-- Common Web 依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>common-web</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        
-        <!-- Spring Boot Web 依赖 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>customer-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        
-        <!-- Spring Boot Security 依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        
-        <!-- Thymeleaf 模板引擎依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        
-        <!-- Validation 依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
+
+        <!-- 三方依赖 -->
+
+        <!-- 测试依赖 -->
+
     </dependencies>
 </project>

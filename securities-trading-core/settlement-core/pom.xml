@@ -16,10 +16,49 @@
     <description>日终清/结算核心实现</description>
 
     <dependencies>
-        <!-- API依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>settlement-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 三方依赖 -->
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <exclusions>
+                <!-- 排除更新检查模块 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-update-check</artifactId>
+                </exclusion>
+                <!-- 排除 Axon Server 依赖 -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-axonserver-connector</artifactId>
+                </exclusion>
+                <!-- 排除 Axon 自动配置，避免重复 Bean -->
+                <exclusion>
+                    <groupId>org.axonframework</groupId>
+                    <artifactId>axon-spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

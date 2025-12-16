@@ -3,6 +3,7 @@ package net.ijupiter.trading.web.common.configs;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.WebJarsResourceResolver;
 
 /**
  * Web MVC 核心配置类

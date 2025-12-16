@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title : '交易管理系统'}">交易管理系统</title>
+    
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link th:href="@{/webjars/bootstrap-icons/1.10.0/font/bootstrap-icons.css}" rel="stylesheet">
+    
+    <!-- 页面特定CSS -->
+    <th:block th:fragment="css"></th:block>
+</head>
+<body th:fragment="layout">
+    <!-- 顶部导航栏 -->
+    <header th:replace="~{layout/header :: header}">顶部导航栏</header>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav th:replace="~{layout/sidebar :: sidebar}">侧边栏</nav>
+            
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <!-- 导航菜单栏 -->
+                <div th:replace="~{layout/navigation :: navigation}">导航菜单栏</div>
+                
+                <!-- 内容区域 -->
+                <div th:fragment="content">
+                    <th:block th:replace="~{::content}"></th:block>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer th:replace="~{layout/footer :: footer}">页脚</footer>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <!-- jQuery -->
+    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>
+    
+    <!-- 页面特定JS -->
+    <th:block th:fragment="js"></th:block>
+</body>
+</html>

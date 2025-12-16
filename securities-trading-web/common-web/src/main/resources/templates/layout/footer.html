@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>页脚栏</title>
+</head>
+<body>
+<footer th:fragment="footer" class="footer text-center text-lg-start">
+    <div class="text-center p-2">
+        <span class="me-3">
+            <i class="bi bi-clock me-1"></i>
+            系统时间：<span id="currentTime" th:text="${systemTime} != null ? ${systemTime} : #dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm:ss')">2023-12-15 10:30:45</span>
+        </span>
+        
+        <span class="me-3">
+            <i class="bi bi-speedometer2 me-1"></i>
+            系统状态：<span class="badge bg-success" th:text="${systemStatus} != null ? ${systemStatus} : '运行中'">运行中</span>
+        </span>
+        
+        <span th:text="${licenseInfo}" th:if="${licenseInfo}">
+            © 2023 交易管理系统. All rights reserved.
+        </span>
+        <span th:unless="${licenseInfo}">
+            © 2023 iJupiter Trading System. All rights reserved.
+        </span>
+    </div>
+    
+    <!-- JavaScript用于更新时间 -->
+    <script>
+        // 更新系统时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const formattedTime = now.getFullYear() + '-' + 
+                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(now.getDate()).padStart(2, '0') + ' ' + 
+                String(now.getHours()).padStart(2, '0') + ':' + 
+                String(now.getMinutes()).padStart(2, '0') + ':' + 
+                String(now.getSeconds()).padStart(2, '0');
+            
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = formattedTime;
+            }
+        }
+        
+        // 页面加载完成后立即更新时间，然后每秒更新一次
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+        });
+    </script>
+</footer>
+</body>
+</html>

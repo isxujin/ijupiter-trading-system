@@ -1,10 +1,6 @@
 package net.ijupiter.trading.spi.message;
 
-////import org.axonframework.messaging.Message;
-
 import org.axonframework.messaging.Message;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * 消息适配器服务接口
@@ -16,7 +12,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param message 消息体
@@ -25,7 +21,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送延迟消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param message 消息体
@@ -35,7 +31,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送持久化消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param message 消息体
@@ -45,7 +41,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送事件消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param eventMessage 事件消息
@@ -54,7 +50,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送命令消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param commandMessage 命令消息
@@ -63,7 +59,7 @@ public interface MessageAdapterService {
 
     /**
      * 发送查询消息
-     * 
+     *
      * @param exchange 交换机
      * @param routingKey 路由键
      * @param queryMessage 查询消息

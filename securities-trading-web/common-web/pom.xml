@@ -16,16 +16,20 @@
     <description>终端类工程的公共模块，提供视图层框架资源和控制层公共资源</description>
 
     <dependencies>
-        <!-- Spring Boot Starter Web -->
+        <!-- 二方依赖 -->
+
+        <!-- 三方依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        
-        <!-- Spring Boot Starter Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         
         <!-- WebJars 依赖 -->
@@ -49,27 +53,12 @@
             <groupId>org.webjars.npm</groupId>
             <artifactId>chart.js</artifactId>
         </dependency>
-        
-        <!-- Spring Security Taglibs -->
+
+        <!-- 测试依赖 -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
-        </dependency>
-        
-        <!-- Thymeleaf Spring Security -->
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-        </dependency>
-        
-        <!-- 工具类 -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

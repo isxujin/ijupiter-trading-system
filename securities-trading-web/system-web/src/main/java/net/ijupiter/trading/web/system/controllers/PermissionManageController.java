@@ -7,7 +7,6 @@ import net.ijupiter.trading.web.common.controllers.BaseController;
 import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;

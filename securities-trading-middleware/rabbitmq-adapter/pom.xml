@@ -16,16 +16,22 @@
     <description>RabbitMQ消息队列适配器实现</description>
 
     <dependencies>
-        <!-- API依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>message-adapter-spi</artifactId>
+            <version>${project.version}</version>
         </dependency>
         
-        <!-- RabbitMQ -->
+        <!-- 三方依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

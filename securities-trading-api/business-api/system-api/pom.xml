@@ -16,35 +16,13 @@
     <description>系统管理API接口</description>
 
     <dependencies>
-        <!-- 内部API依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>securities-trading-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Jakarta Persistence API -->
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-        </dependency>
-
-        <!-- Jakarta Validation API -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-        </dependency>
-
-        <!-- Spring Security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+        <!-- 三方依赖 -->
     </dependencies>
 </project>

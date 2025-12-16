@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>导航栏</title>
+</head>
+<body>
+<div th:fragment="navigation" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2" th:if="${navigationItems != null}">
+            <!-- 循环显示导航菜单项 -->
+            <a th:each="item : ${navigationItems}" 
+               th:href="${item.url}" 
+               th:class="${item.name == '仪表盘'} ? 'btn btn-sm btn-outline-secondary active' : 'btn btn-sm btn-outline-secondary'"
+               role="button">
+                <span th:text="${item.name}">菜单项</span>
+            </a>
+        </div>
+        <div class="btn-group me-2" th:if="${navigationItems == null}">
+            <!-- 默认菜单项 -->
+            <button type="button" class="btn btn-sm btn-outline-secondary">概览</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">报表</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">设置</button>
+        </div>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <i class="bi bi-calendar3"></i>
+                本周
+            </button>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-download"></i>
+            导出
+        </button>
+    </div>
+</div>
+</body>
+</html>

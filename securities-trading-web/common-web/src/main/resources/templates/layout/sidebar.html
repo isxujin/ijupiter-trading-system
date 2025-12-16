@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>侧边栏</title>
+</head>
+<body>
+<div th:fragment="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column" th:if="${sidebarItems != null}">
+            <!-- 循环显示菜单项 -->
+            <li class="nav-item" th:each="item : ${sidebarItems}">
+                <!-- 简化的菜单结构，不使用children属性 -->
+                <a th:href="${item.url}" 
+                   th:class="${item.active} ? 'nav-link active' : 'nav-link'">
+                    <i th:if="${item.icon}" th:class="${item.icon}" class="bi"></i>
+                    <span th:text="${item.name}">菜单项</span>
+                </a>
+            </li>
+        </ul>
+        
+        <!-- 默认菜单（如果没有传入菜单数据） -->
+        <ul class="nav flex-column" th:if="${sidebarItems == null}">
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-house"></i>
+                    首页
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-speedometer2"></i>
+                    控制台
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people"></i>
+                    用户管理
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-gear"></i>
+                    系统设置
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

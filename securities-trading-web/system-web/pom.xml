@@ -16,29 +16,22 @@
     <description>系统管理终端</description>
 
     <dependencies>
-        <!-- 公共终端模块 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>common-web</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
-        <!-- 内部API依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>system-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Spring Security 扩展 -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-        </dependency>
+        <!-- 三方依赖 -->
+
+        <!-- 测试依赖 -->
+
     </dependencies>
 
     <build>

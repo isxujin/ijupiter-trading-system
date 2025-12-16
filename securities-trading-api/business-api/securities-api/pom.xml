@@ -16,11 +16,13 @@
     <description>账户/证券相关 API 接口定义（原 account-api）</description>
 
     <dependencies>
-        <!-- Common模块依赖 -->
+        <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
             <artifactId>securities-trading-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- 三方依赖 -->
     </dependencies>
 </project>
