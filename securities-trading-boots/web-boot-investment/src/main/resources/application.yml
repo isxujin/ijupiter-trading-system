@@ -5,7 +5,7 @@ spring:
     name: web-boot-investment
   # 1.2 视图模版配置（Thymeleaf）
   thymeleaf:
-    prefix: classpath:/templates/  # 前缀
+    prefix: classpath*:/templates/  # 支持跨模块模板解析，*表示搜索所有JAR包
     suffix: .html                  # 后缀
     mode: HTML                     # 模板模式
     encoding: UTF-8
@@ -42,3 +42,5 @@ logging:
     org.springframework.security: INFO
     net.ijupiter.trading.boot.web.investment: DEBUG
     org.springframework.beans.factory: DEBUG
+    org.thymeleaf: DEBUG
+    org.springframework.web: DEBUG
