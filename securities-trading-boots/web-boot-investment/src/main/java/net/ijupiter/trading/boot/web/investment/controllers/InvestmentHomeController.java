@@ -16,7 +16,7 @@ public class InvestmentHomeController extends InvestmentBaseController {
     public String dashboard(Model model) {
         // 添加仪表盘特定的模型属性
         model.addAttribute("pageTitle", "投资系统控制台");
-        return "investment/dashboard_simple";
+        return "investment/dashboard";
     }
     
     /**

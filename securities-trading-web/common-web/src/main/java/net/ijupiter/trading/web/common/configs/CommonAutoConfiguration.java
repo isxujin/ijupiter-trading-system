@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
  * 自动配置公共资源、控制器和模板解析器
  */
 @AutoConfiguration
-@ComponentScan(basePackages = "net.ijupiter.trading.web.common")
+@ComponentScan(basePackages = "net.ijupiter.trading.web")
 @Import({ThymeleafConfig.class, CommonConfig.class})
 @EnableConfigurationProperties
 public class CommonAutoConfiguration {

@@ -10,7 +10,7 @@ import org.webjars.WebJarAssetLocator;
  * 确保公共控制器和服务被正确扫描
  */
 @Configuration
-@ComponentScan(basePackages = "net.ijupiter.trading.web.common")
+@ComponentScan(basePackages = "net.ijupiter.trading.web")
 public class CommonConfig {
     // 定义WebJarAssetLocator的Bean，供Spring容器管理
     @Bean

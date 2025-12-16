@@ -2,7 +2,6 @@ package net.ijupiter.trading.boot.web.investment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.ComponentScan;
         "net.ijupiter.trading.web",
         "net.ijupiter.trading.boot.web"
 })
-@EntityScan(basePackages = "net.ijupiter.trading.core.*.entities")
 public class InvestmentWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(InvestmentWebApplication.class, args);

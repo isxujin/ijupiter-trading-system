@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title != null ? title : '交易管理系统'}">交易管理系统</title>
-    
+
     <!-- Bootstrap CSS -->
-    <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link th:href="@{/webjars/bootstrap-icons/1.10.0/font/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
+
+    <!-- Bootstrap Icons CSS -->
+    <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
     
     <!-- 页面特定CSS -->
     <th:block th:fragment="css"></th:block>
@@ -37,11 +38,11 @@
     
     <!-- 页脚 -->
     <footer th:replace="~{layout/footer :: footer}">页脚</footer>
-    
-    <!-- Bootstrap Bundle with Popper -->
-    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+
     <!-- jQuery -->
-    <script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+    <!-- Bootstrap JS -->
+    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
     
     <!-- 页面特定JS -->
     <th:block th:fragment="js"></th:block>
