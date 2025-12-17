@@ -5,18 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle} ?: '交易管理系统'">交易管理系统</title>
+    <title th:text="${systemName} ?: 'iJupiter Trading System'"></title>
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
 
     <!-- Bootstrap Icons CSS -->
     <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
 
-    <!-- 页面特定CSS -->
-    <th:block layout:fragment="css"></th:block>
-    
     <!-- 自定义样式 -->
     <link th:href="@{/css/layout.css}" rel="stylesheet">
+
+    <!-- 页面特定CSS -->
+    <th:block layout:fragment="css"></th:block>
+
 </head>
 <body>
 <div class="layout-container">
@@ -31,7 +32,7 @@
         <main class="layout-content">
             <!-- 内容区域 -->
             <section layout:fragment="content">
-                <p>默认内容</p>
+                <p>主内容区</p>
             </section>
         </main>
     </div>

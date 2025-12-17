@@ -1,40 +1,44 @@
-<!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<!-- 必须声明 navigation-fragment，与layout.html中的引用匹配 -->
-<nav th:fragment="navigation-fragment" aria-label="breadcrumb">
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="/">首页</a></li>
-        <li class="breadcrumb-item active" aria-current="page" th:text="${currentPage} ?: '仪表盘'">仪表盘</li>
-    </ol>
-</nav>
-
-<!-- 页面标题区域 -->
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2" th:text="${pageTitle} ?: '仪表盘'">仪表盘</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-            <!-- 循环显示导航菜单项 -->
-            <a href="/dashboard" class="btn btn-sm btn-outline-secondary active" role="button">首页</a>
-            <a href="/system" class="btn btn-sm btn-outline-secondary" role="button">系统管理</a>
-            <a href="/investment" class="btn btn-sm btn-outline-secondary" role="button">投资管理</a>
-            <a href="/report" class="btn btn-sm btn-outline-secondary" role="button">报表统计</a>
-        </div>
-        <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-download"></i> 导出
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Excel</a></li>
-                <li><a class="dropdown-item" href="#">PDF</a></li>
-                <li><a class="dropdown-item" href="#">CSV</a></li>
+<!-- 系统模块导航菜单 - 将在header.html中引用 -->
+<nav th:fragment="nav-menu" class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white active" aria-current="page" href="/dashboard"
+                       style="transition: all 0.3s ease;" 
+                       onmouseover="this.style.color='#ffc107';" 
+                       onmouseout="this.style.color='white';">
+                        <i class="bi bi-house-door me-1"></i>首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/system"
+                       style="transition: all 0.3s ease;" 
+                       onmouseover="this.style.color='#ffc107';" 
+                       onmouseout="this.style.color='white';">
+                        <i class="bi bi-gear me-1"></i>系统管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/investment"
+                       style="transition: all 0.3s ease;" 
+                       onmouseover="this.style.color='#ffc107';" 
+                       onmouseout="this.style.color='white';">
+                        <i class="bi bi-graph-up me-1"></i>投资管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/report"
+                       style="transition: all 0.3s ease;" 
+                       onmouseover="this.style.color='#ffc107';" 
+                       onmouseout="this.style.color='white';">
+                        <i class="bi bi-bar-chart me-1"></i>报表统计
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
-</div>
 </nav>
-</body>
-</html>

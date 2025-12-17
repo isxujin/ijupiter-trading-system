@@ -48,19 +48,6 @@
 
 <body>
     <section layout:fragment="content">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">仪表盘</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group me-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">导出</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">今日</button>
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                    <i class="bi bi-calendar3"></i> 本周
-                </button>
-            </div>
-        </div>
-
         <!-- 欢迎信息卡片 -->
         <div class="row mb-4">
             <div class="col-12">
@@ -68,78 +55,9 @@
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h4 class="card-title">欢迎回来，管理员！</h4>
+                                <i class="bi bi-person-heart me-2"></i>
+                                <span th:text="欢迎回来，酱爆螺蛳！"></span>
                                 <p class="card-text">今天是 <span th:text="${#dates.format(#dates.createNow(), 'yyyy年MM月dd日 EEEE')}">2023年12月15日 星期五</span>，以下是您的投资概览。</p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <img src="https://picsum.photos/seed/dashboard/150/150.jpg" class="img-fluid rounded-circle" alt="用户头像">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 统计数据卡片 -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2 stat-card">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">总资产</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">¥ 1,234,567</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-wallet2 fa-2x text-gray-300" style="font-size: 2rem;"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2 stat-card success">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">今日收益</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">+¥ 12,345</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-graph-up-arrow fa-2x text-gray-300" style="font-size: 2rem;"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2 stat-card warning">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">持仓数量</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">23</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-briefcase fa-2x text-gray-300" style="font-size: 2rem;"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2 stat-card danger">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">今日亏损</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">-¥ 3,456</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="bi bi-graph-down-arrow fa-2x text-gray-300" style="font-size: 2rem;"></i>
                             </div>
                         </div>
                     </div>
@@ -197,6 +115,73 @@
                     <div class="card-body p-3">
                         <i class="bi bi-gear text-secondary"></i>
                         <p class="mb-0 mt-2">系统设置</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计数据卡片 -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2 stat-card">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">总资产</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">¥ 1,234,567</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-wallet2 fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2 stat-card success">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">可用资金</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">¥ 34,000</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2 stat-card warning">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">持仓市值</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">¥ 1,200,567</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-briefcase fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2 stat-card danger">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">今日损益</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">+¥ 3,456</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow fa-2x text-gray-300" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

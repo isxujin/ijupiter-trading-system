@@ -43,25 +43,25 @@ public abstract class BaseController {
      */
     protected List<Map<String, Object>> getCommonSidebarItems(String activeModule) {
         List<Map<String, Object>> sidebarItems = new ArrayList<>();
-        
+
         // 客户管理菜单
         Map<String, Object> customerMenu = new HashMap<>();
         customerMenu.put("id", "customer");
         customerMenu.put("name", "客户管理");
         customerMenu.put("icon", "bi-person-badge");
-        
+
         List<Map<String, Object>> customerItems = new ArrayList<>();
-        
+
         Map<String, Object> customerList = new HashMap<>();
         customerList.put("id", "customer:list");
         customerList.put("name", "客户列表");
         customerList.put("url", "/customer/list");
         customerList.put("active", "customer:view".equals(activeModule));
         customerItems.add(customerList);
-        
+
         customerMenu.put("items", customerItems);
         sidebarItems.add(customerMenu);
-        
+
         return sidebarItems;
     }
 
