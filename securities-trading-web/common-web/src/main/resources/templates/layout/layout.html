@@ -1,50 +1,51 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title != null ? title : '交易管理系统'}">交易管理系统</title>
-
+    <title th:text="${pageTitle} ?: '交易管理系统'">交易管理系统</title>
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
 
     <!-- Bootstrap Icons CSS -->
     <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
-    
+
     <!-- 页面特定CSS -->
-    <th:block th:fragment="css"></th:block>
-</head>
-<body th:fragment="layout">
-    <!-- 顶部导航栏 -->
-    <header th:replace="~{layout/header :: header}">顶部导航栏</header>
+    <th:block layout:fragment="css"></th:block>
     
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 侧边栏 -->
-            <nav th:replace="~{layout/sidebar :: sidebar}">侧边栏</nav>
-            
-            <!-- 主内容区 -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <!-- 导航菜单栏 -->
-                <div th:replace="~{layout/navigation :: navigation}">导航菜单栏</div>
-                
-                <!-- 内容区域 -->
-                <div th:fragment="content">
-                    <th:block th:replace="~{::content}"></th:block>
-                </div>
-            </main>
-        </div>
+    <!-- 自定义样式 -->
+    <link th:href="@{/css/layout.css}" rel="stylesheet">
+</head>
+<body>
+<div class="layout-container">
+    <!-- 顶部导航栏 -->
+    <header th:replace="~{layout/header :: header-fragment}"></header>
+    
+    <div class="layout-main">
+        <!-- 侧边栏 -->
+        <aside th:replace="~{layout/sidebar :: sidebar-fragment}"></aside>
+        
+        <!-- 主内容区 -->
+        <main class="layout-content">
+            <!-- 内容区域 -->
+            <section layout:fragment="content">
+                <p>默认内容</p>
+            </section>
+        </main>
     </div>
     
     <!-- 页脚 -->
-    <footer th:replace="~{layout/footer :: footer}">页脚</footer>
+    <footer th:replace="~{layout/footer :: footer-fragment}"></footer>
+</div>
 
-    <!-- jQuery -->
-    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
-    <!-- Bootstrap JS -->
-    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
-    
-    <!-- 页面特定JS -->
-    <th:block th:fragment="js"></th:block>
+<!-- jQuery -->
+<script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
+<!-- Bootstrap JS -->
+<script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+
+<!-- 页面特定JS -->
+<th:block layout:fragment="js"></th:block>
 </body>
 </html>

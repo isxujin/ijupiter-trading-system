@@ -3,6 +3,9 @@ spring:
   # 1.1 应用配置
   application:
     name: web-boot-investment
+  # 允许Bean定义覆盖
+  main:
+    allow-bean-definition-overriding: true
   # 1.2 视图模版配置（Thymeleaf）
   thymeleaf:
     prefix: classpath*:/templates/  # 支持跨模块模板解析，*表示搜索所有JAR包
@@ -15,6 +18,9 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/investment/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+  mvc:
+    favicon:
+      enabled: false  # 关闭默认favicon处理
 
 # 服务器配置
 server:
@@ -40,7 +46,7 @@ investment:
 logging:
   level:
     org.springframework.security: INFO
-    net.ijupiter.trading.boot.web.investment: DEBUG
-    org.springframework.beans.factory: DEBUG
-    org.thymeleaf: DEBUG
-    org.springframework.web: DEBUG
+    net.ijupiter.trading.boot.web.investment: INFO
+    org.springframework.beans.factory: INFO
+    org.thymeleaf: INFO
+    org.springframework.web: INFO

@@ -1,42 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>页头栏</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<header th:fragment="header" class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-        <i class="bi bi-graph-up-arrow me-2"></i>
-        <span th:text="${systemName} != null ? ${systemName} : '交易管理系统'">交易管理系统</span>
-        <span class="badge bg-secondary ms-2" th:text="${systemVersion} != null ? ${systemVersion} : 'v1.0.0'">v1.0.0</span>
-    </a>
-    
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-            <!-- 用户信息 -->
-            <span class="nav-link" th:if="${currentUser}">
-                <i class="bi bi-person-circle me-2"></i>
-                <!-- 简单处理：默认当作字符串显示 -->
-                <span th:text="${currentUser}">用户名</span>
-            </span>
-            <span class="nav-link" th:if="${currentUser == null}">
-                <i class="bi bi-person-circle me-2"></i>
-                访客
-            </span>
-        </div>
+<!-- 声明 header-fragment，匹配layout.html引用 -->
+<nav th:fragment="header-fragment" class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="bi bi-graph-up-arrow me-2"></i>
+            <span th:text="${systemName} ?: '交易管理系统'">交易管理系统</span>
+            <span class="badge bg-secondary ms-2" th:text="${systemVersion} ?: '1.0.1-SNAPSHOT'">1.0.1-SNAPSHOT</span>
+        </a>
         
-        <!-- 登出按钮 -->
-        <div class="nav-item text-nowrap">
-            <a class="nav-link" href="/logout">
-                <i class="bi bi-box-arrow-right"></i>
-                登出
-            </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">首页</a>
+                </li>
+            </ul>
+            <div class="navbar-nav">
+                <div class="nav-item text-nowrap">
+                    <span class="nav-link text-white">
+                        <i class="bi bi-person-circle me-2"></i>
+                        <span th:text="${currentUser} ?: '管理员'">管理员</span>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
-</header>
+</nav>
 </body>
 </html>

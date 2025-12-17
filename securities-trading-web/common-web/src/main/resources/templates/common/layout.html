@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="layout(title, css, content, js)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title} + ' - ' + ${appName != null ? appName : 'iJupiter Trading System'}">iJupiter Trading System</title>
-    
+
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons CSS -->
     <link th:href="@{/webjars/bootstrap-icons/{version}/font/bootstrap-icons.css(version=${webjarsVersion.bootstrapIcons})}" rel="stylesheet">
-    
+
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    
+
     <!-- 通用自定义CSS -->
     <style>
         body {
@@ -60,7 +60,7 @@
             padding-top: 20px;
         }
     </style>
-    
+
     <!-- 页面特定CSS -->
     <th:block th:replace="${css}"></th:block>
 </head>
@@ -74,7 +74,7 @@
                     <span class="d-block text-primary" th:text="${appName != null ? appName : 'iJupiter Trading System'}">iJupiter Trading System</span>
                 </a>
             </div>
-            
+
             <ul class="nav flex-column">
                 <!-- 动态侧边栏菜单项 -->
                 <li class="nav-item" th:each="item : ${sidebarItems}">
@@ -83,7 +83,7 @@
                         <span th:text="${item.name}">菜单项</span>
                     </a>
                 </li>
-                
+
                 <!-- 默认菜单项（如果没有提供sidebarItems） -->
                 <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
                     <a class="nav-link" th:href="@{/dashboard}" th:classappend="${#strings.equals(activeMenu, 'dashboard')} ? 'active' : ''">
@@ -118,13 +118,13 @@
             </ul>
         </div>
     </nav>
-    
+
     <!-- 主内容区 -->
     <main class="content col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <!-- 顶部导航 -->
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2" th:text="${title}">系统管理</h1>
-            
+
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group me-2">
                     <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -150,7 +150,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 页面内容 -->
         <div class="py-4">
             <th:block th:replace="${content}"></th:block>
@@ -159,8 +159,10 @@
 </body>
 
 <!-- jQuery -->
+<!--<script th:src="@{/webjars/jquery/3.6.4/dist/jquery.min.js}"></script>-->
 <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
 <!-- Bootstrap JS -->
+<!--<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>-->
 <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
 
 <!-- 页面特定JS -->

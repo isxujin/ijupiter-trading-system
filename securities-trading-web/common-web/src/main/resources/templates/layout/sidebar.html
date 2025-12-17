@@ -1,51 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>侧边栏</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<div th:fragment="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-    <div class="position-sticky pt-3">
-        <ul class="nav flex-column" th:if="${sidebarItems != null}">
-            <!-- 循环显示菜单项 -->
-            <li class="nav-item" th:each="item : ${sidebarItems}">
-                <!-- 简化的菜单结构，不使用children属性 -->
-                <a th:href="${item.url}" 
-                   th:class="${item.active} ? 'nav-link active' : 'nav-link'">
-                    <i th:if="${item.icon}" th:class="${item.icon}" class="bi"></i>
-                    <span th:text="${item.name}">菜单项</span>
-                </a>
-            </li>
-        </ul>
-        
-        <!-- 默认菜单（如果没有传入菜单数据） -->
-        <ul class="nav flex-column" th:if="${sidebarItems == null}">
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-house"></i>
-                    首页
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-speedometer2"></i>
-                    控制台
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-people"></i>
-                    用户管理
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-gear"></i>
-                    系统设置
-                </a>
-            </li>
+<!-- 声明 sidebar-fragment，匹配layout.html引用 -->
+<nav th:fragment="sidebar-fragment" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 250px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <i class="bi bi-graph-up-arrow me-2"></i>
+        <span class="fs-4">管理</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto" id="menu">
+        <li class="nav-item">
+            <a href="/investment/dashboard" class="nav-link active" aria-current="page">
+                <i class="bi bi-speedometer2 me-2"></i>
+                仪表盘
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/products" class="nav-link text-white">
+                <i class="bi bi-box-seam me-2"></i>
+                产品管理
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/trades" class="nav-link text-white">
+                <i class="bi bi-cash-coin me-2"></i>
+                交易管理
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/accounts" class="nav-link text-white">
+                <i class="bi bi-people me-2"></i>
+                账户管理
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/orders" class="nav-link text-white">
+                <i class="bi bi-list-ul me-2"></i>
+                订单查询
+            </a>
+        </li>
+        <li>
+            <hr>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/project/list" class="nav-link text-white">
+                <i class="bi bi-folder2-open me-2"></i>
+                项目列表
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/project/add" class="nav-link text-white">
+                <i class="bi bi-plus-circle me-2"></i>
+                新增项目
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/investment/risk" class="nav-link text-white">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                风险监控
+            </a>
+        </li>
+    </ul>
+    <hr>
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-2"></i>
+            <strong th:text="${currentUser} ?: '管理员'">管理员</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="#">设置</a></li>
+            <li><a class="dropdown-item" href="#">个人资料</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">退出登录</a></li>
         </ul>
     </div>
-</div>
+</nav>
 </body>
 </html>

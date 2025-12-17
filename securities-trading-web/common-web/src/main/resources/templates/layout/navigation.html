@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>导航栏</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<div th:fragment="navigation" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2" th:if="${navigationItems != null}">
-            <!-- 循环显示导航菜单项 -->
-            <a th:each="item : ${navigationItems}" 
-               th:href="${item.url}" 
-               th:class="${item.name == '仪表盘'} ? 'btn btn-sm btn-outline-secondary active' : 'btn btn-sm btn-outline-secondary'"
-               role="button">
-                <span th:text="${item.name}">菜单项</span>
-            </a>
-        </div>
-        <div class="btn-group me-2" th:if="${navigationItems == null}">
-            <!-- 默认菜单项 -->
-            <button type="button" class="btn btn-sm btn-outline-secondary">概览</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">报表</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">设置</button>
-        </div>
-    </div>
+<!-- 必须声明 navigation-fragment，与layout.html中的引用匹配 -->
+<nav th:fragment="navigation-fragment" aria-label="breadcrumb">
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">首页</a></li>
+        <li class="breadcrumb-item active" aria-current="page" th:text="${currentPage} ?: '仪表盘'">仪表盘</li>
+    </ol>
+</nav>
+
+<!-- 页面标题区域 -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2" th:text="${pageTitle} ?: '仪表盘'">仪表盘</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                <i class="bi bi-calendar3"></i>
-                本周
-            </button>
+            <!-- 循环显示导航菜单项 -->
+            <a href="/dashboard" class="btn btn-sm btn-outline-secondary active" role="button">首页</a>
+            <a href="/system" class="btn btn-sm btn-outline-secondary" role="button">系统管理</a>
+            <a href="/investment" class="btn btn-sm btn-outline-secondary" role="button">投资管理</a>
+            <a href="/report" class="btn btn-sm btn-outline-secondary" role="button">报表统计</a>
         </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary">
-            <i class="bi bi-download"></i>
-            导出
-        </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-download"></i> 导出
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Excel</a></li>
+                <li><a class="dropdown-item" href="#">PDF</a></li>
+                <li><a class="dropdown-item" href="#">CSV</a></li>
+            </ul>
+        </div>
     </div>
 </div>
+</nav>
 </body>
 </html>

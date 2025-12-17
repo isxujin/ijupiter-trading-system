@@ -26,6 +26,10 @@
         </dependency>
 
         <!-- 三方依赖 -->
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+        </dependency>
 
         <!-- 测试依赖 -->
         <dependency>
