@@ -63,7 +63,6 @@ public abstract class BaseController {
      */
     @ModelAttribute("navigationItems")
     public List<MenuItem> getNavigationItems(){
-        log.info("navigationItems: {}", SystemMenu.getNavigationItems());
         return SystemMenu.getNavigationItems();
     }
 
@@ -72,7 +71,6 @@ public abstract class BaseController {
      */
     @ModelAttribute("sidebarItems")
     public List<MenuItem> getSidebarItems(){
-        log.info("getSidebarItems: {}", SystemMenu.getSidebarItems());
         return SystemMenu.getSidebarItems();
     }
 
@@ -82,33 +80,6 @@ public abstract class BaseController {
     @ModelAttribute("webjarsVersion")
     public WebJarsVersion getWebJarsVersion() {
         return new WebJarsVersion();
-    }
-
-    /**
-     * 获取通用侧边栏菜单项
-     */
-    protected List<Map<String, Object>> getCommonSidebarItems(String activeModule) {
-        List<Map<String, Object>> sidebarItems = new ArrayList<>();
-
-        // 客户管理菜单
-        Map<String, Object> customerMenu = new HashMap<>();
-        customerMenu.put("id", "customer");
-        customerMenu.put("name", "客户管理");
-        customerMenu.put("icon", "bi-person-badge");
-
-        List<Map<String, Object>> customerItems = new ArrayList<>();
-
-        Map<String, Object> customerList = new HashMap<>();
-        customerList.put("id", "customer:list");
-        customerList.put("name", "客户列表");
-        customerList.put("url", "/customer/list");
-        customerList.put("active", "customer:view".equals(activeModule));
-        customerItems.add(customerList);
-
-        customerMenu.put("items", customerItems);
-        sidebarItems.add(customerMenu);
-
-        return sidebarItems;
     }
 
     // 内部类：通过WebJarAssetLocator获取版本

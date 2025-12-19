@@ -32,9 +32,7 @@ public class ParameterManageController extends BaseController {
     @GetMapping("/list")
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("system/parameter/list");
-        
-        // 设置侧边栏菜单
-        modelAndView.addObject("sidebarItems", getSystemSidebarItems());
+
         modelAndView.addObject("activeModule", "system");
         
         return modelAndView;
@@ -121,9 +119,7 @@ public class ParameterManageController extends BaseController {
         
         ParameterDTO parameter = parameterService.findById(id)
                 .orElseThrow(() -> new RuntimeException("参数不存在"));
-        
-        // 设置侧边栏菜单
-        modelAndView.addObject("sidebarItems", getSystemSidebarItems());
+
         modelAndView.addObject("activeModule", "system");
         modelAndView.addObject("parameter", parameter);
         
@@ -136,9 +132,7 @@ public class ParameterManageController extends BaseController {
     @GetMapping("/add")
     public ModelAndView add() {
         ModelAndView modelAndView = new ModelAndView("system/parameter/add");
-        
-        // 设置侧边栏菜单
-        modelAndView.addObject("sidebarItems", getSystemSidebarItems());
+
         modelAndView.addObject("activeModule", "system");
         
         // 获取所有参数分组
@@ -156,9 +150,7 @@ public class ParameterManageController extends BaseController {
         
         ParameterDTO parameter = parameterService.findById(id)
                 .orElseThrow(() -> new RuntimeException("参数不存在"));
-        
-        // 设置侧边栏菜单
-        modelAndView.addObject("sidebarItems", getSystemSidebarItems());
+
         modelAndView.addObject("activeModule", "system");
         modelAndView.addObject("parameter", parameter);
         modelAndView.addObject("paramGroups", parameterService.findAllParamGroups());
@@ -389,110 +381,5 @@ public class ParameterManageController extends BaseController {
             return ApiResponse.<Void>error("批量更新参数值失败");
         }
     }
-    
-    /**
-     * 获取系统管理侧边栏菜单
-     */
-    private java.util.List<Map<String, Object>> getSystemSidebarItems() {
-        java.util.List<Map<String, Object>> sidebarItems = getCommonSidebarItems("system");
-        
-        // 用户管理菜单
-        Map<String, Object> userMenu = new HashMap<>();
-        userMenu.put("id", "user");
-        userMenu.put("name", "用户管理");
-        userMenu.put("icon", "bi-people");
-        
-        java.util.List<Map<String, Object>> userItems = new java.util.ArrayList<>();
-        
-        Map<String, Object> userList = new HashMap<>();
-        userList.put("id", "user:list");
-        userList.put("name", "用户列表");
-        userList.put("url", "/system/user/list");
-        userList.put("active", false);
-        userItems.add(userList);
-        
-        userMenu.put("items", userItems);
-        sidebarItems.add(userMenu);
-        
-        // 角色管理菜单
-        Map<String, Object> roleMenu = new HashMap<>();
-        roleMenu.put("id", "role");
-        roleMenu.put("name", "角色管理");
-        roleMenu.put("icon", "bi-shield-check");
-        
-        java.util.List<Map<String, Object>> roleItems = new java.util.ArrayList<>();
-        
-        Map<String, Object> roleList = new HashMap<>();
-        roleList.put("id", "role:list");
-        roleList.put("name", "角色列表");
-        roleList.put("url", "/system/role/list");
-        roleList.put("active", false);
-        roleItems.add(roleList);
-        
-        roleMenu.put("items", roleItems);
-        sidebarItems.add(roleMenu);
-        
-        // 权限管理菜单
-        Map<String, Object> permissionMenu = new HashMap<>();
-        permissionMenu.put("id", "permission");
-        permissionMenu.put("name", "权限管理");
-        permissionMenu.put("icon", "bi-key");
-        
-        java.util.List<Map<String, Object>> permissionItems = new java.util.ArrayList<>();
-        
-        Map<String, Object> permissionList = new HashMap<>();
-        permissionList.put("id", "permission:list");
-        permissionList.put("name", "权限列表");
-        permissionList.put("url", "/system/permission/list");
-        permissionList.put("active", false);
-        permissionItems.add(permissionList);
-        
-        permissionMenu.put("items", permissionItems);
-        sidebarItems.add(permissionMenu);
-        
-        // 字典管理菜单
-        Map<String, Object> dictMenu = new HashMap<>();
-        dictMenu.put("id", "dictionary");
-        dictMenu.put("name", "字典管理");
-        dictMenu.put("icon", "bi-book");
-        
-        java.util.List<Map<String, Object>> dictItems = new java.util.ArrayList<>();
-        
-        Map<String, Object> dictList = new HashMap<>();
-        dictList.put("id", "dictionary:list");
-        dictList.put("name", "字典列表");
-        dictList.put("url", "/system/dictionary/list");
-        dictList.put("active", false);
-        dictItems.add(dictList);
-        
-        dictMenu.put("items", dictItems);
-        sidebarItems.add(dictMenu);
-        
-        // 参数管理菜单
-        Map<String, Object> paramMenu = new HashMap<>();
-        paramMenu.put("id", "parameter");
-        paramMenu.put("name", "参数管理");
-        paramMenu.put("icon", "bi-gear");
-        
-        java.util.List<Map<String, Object>> paramItems = new java.util.ArrayList<>();
-        
-        Map<String, Object> paramList = new HashMap<>();
-        paramList.put("id", "parameter:list");
-        paramList.put("name", "参数列表");
-        paramList.put("url", "/system/parameter/list");
-        paramList.put("active", true);
-        paramItems.add(paramList);
-        
-        Map<String, Object> paramAdd = new HashMap<>();
-        paramAdd.put("id", "parameter:add");
-        paramAdd.put("name", "添加参数");
-        paramAdd.put("url", "/system/parameter/add");
-        paramAdd.put("active", false);
-        paramItems.add(paramAdd);
-        
-        paramMenu.put("items", paramItems);
-        sidebarItems.add(paramMenu);
-        
-        return sidebarItems;
-    }
+
 }
