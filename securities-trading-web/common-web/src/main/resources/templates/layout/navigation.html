@@ -1,43 +1,52 @@
 <!-- 系统模块导航菜单 - 将在header.html中引用 -->
-<nav th:fragment="nav-menu" class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom">
+<nav th:fragment="nav-menu" class="navbar navbar-expand-lg navbar-dark bg-primary border-bottom"
+     xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white active" aria-current="page" href="/dashboard"
-                       style="transition: all 0.3s ease;" 
-                       onmouseover="this.style.color='#ffc107';" 
+                <!-- 动态侧边栏菜单项 -->
+                <li class="nav-item" th:each="item : ${navigationItems}" th:if="${item != null}">
+                    <a th:class="'nav-link text-white'+ ${item.active ? ' active' : ''}" aria-current="page" th:href="${item.url}"
+                       style="transition: all 0.3s ease;">
+                        <i th:class="${item.icon} +' me-1'"></i>
+                        <span th:text="${item.name}"></span>
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${navigationItems == null or #lists.isEmpty(navigationItems)}">
+                    <a class="nav-link text-white active" aria-current="page" href="/"
+                       style="transition: all 0.3s ease;"
+                       onmouseover="this.style.color='#ffc107';"
                        onmouseout="this.style.color='white';">
                         <i class="bi bi-house-door me-1"></i>首页
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/system"
-                       style="transition: all 0.3s ease;" 
-                       onmouseover="this.style.color='#ffc107';" 
-                       onmouseout="this.style.color='white';">
-                        <i class="bi bi-gear me-1"></i>系统管理
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/investment"
-                       style="transition: all 0.3s ease;" 
-                       onmouseover="this.style.color='#ffc107';" 
-                       onmouseout="this.style.color='white';">
-                        <i class="bi bi-graph-up me-1"></i>投资管理
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/report"
-                       style="transition: all 0.3s ease;" 
-                       onmouseover="this.style.color='#ffc107';" 
-                       onmouseout="this.style.color='white';">
-                        <i class="bi bi-bar-chart me-1"></i>报表统计
-                    </a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link text-white" href="/system"-->
+<!--                       style="transition: all 0.3s ease;" -->
+<!--                       onmouseover="this.style.color='#ffc107';" -->
+<!--                       onmouseout="this.style.color='white';">-->
+<!--                        <i class="bi bi-gear me-1"></i>系统管理-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link text-white" href="/investment"-->
+<!--                       style="transition: all 0.3s ease;" -->
+<!--                       onmouseover="this.style.color='#ffc107';" -->
+<!--                       onmouseout="this.style.color='white';">-->
+<!--                        <i class="bi bi-graph-up me-1"></i>投资管理-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link text-white" href="/report"-->
+<!--                       style="transition: all 0.3s ease;" -->
+<!--                       onmouseover="this.style.color='#ffc107';" -->
+<!--                       onmouseout="this.style.color='white';">-->
+<!--                        <i class="bi bi-bar-chart me-1"></i>报表统计-->
+<!--                    </a>-->
+<!--                </li>-->
             </ul>
         </div>
     </div>

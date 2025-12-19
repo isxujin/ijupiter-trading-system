@@ -36,12 +36,6 @@ server:
       include-message: always
       include-binding-errors: always
 
-# 投资终端自定义配置（补全缺失的属性）
-investment:
-  terminal:
-    title: 证券交易系统投资平台  # 缺失的配置项
-    version: 1.0.1-SNAPSHOT     # 缺失的配置项
-
 # 日志配置（便于调试）
 logging:
   level:
@@ -50,3 +44,10 @@ logging:
     org.springframework.beans.factory: INFO
     org.thymeleaf: INFO
     org.springframework.web: INFO
+
+# 系统自有配置项
+system:
+  web:
+    title: iJupiter Trading System # 系统页标签
+    name: iJupiter证券交易系统       # 系统名称
+    version: V1.0.0                # 系统版本

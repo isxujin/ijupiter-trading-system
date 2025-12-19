@@ -12,10 +12,10 @@ public class SystemMenu {
     @Getter
     private static final List<MenuItem> sidebarItems = new ArrayList<MenuItem>();
     static {
-        navigationItems.add(new MenuItem(1, null, "首页", "/dashboard", "fa-home"));
-        navigationItems.add(new MenuItem(3, null, "账户", "/accounts/dashboard", "fa-user-circle"));
-        navigationItems.add(new MenuItem(4, null, "交易", "/trades/dashboard", "fa-exchange-alt"));
-        navigationItems.add(new MenuItem(5, null, "系统", "/settings/dashboard", "fa-cog"));
+        navigationItems.add(new MenuItem(1, null, "首页", "/dashboard", "bi bi-house-door", true));
+        navigationItems.add(new MenuItem(3, null, "账户", "/accounts/dashboard", "bi bi-person-vcard"));
+        navigationItems.add(new MenuItem(4, null, "交易", "/trades/dashboard", "bi bi-graph-up"));
+        navigationItems.add(new MenuItem(5, null, "系统", "/settings/dashboard", "bi bi-gear"));
 
         sidebarItems.add(new MenuItem(1, 2, "仪表盘", "/accounts/dashboard", "bi bi-speedometer2", true));
         sidebarItems.add(new MenuItem(2, 2, "证券账户", "/accounts/products", "bi bi-box-seam"));

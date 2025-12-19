@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${systemName} ?: 'iJupiter Trading System'"></title>
+    <title th:text="${pageTitle ?: systemTitle ?: 'iJupiter Trading System'}">iJupiter Trading System</title>
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/{version}/css/bootstrap.min.css(version=${webjarsVersion.bootstrap})}" rel="stylesheet">
 

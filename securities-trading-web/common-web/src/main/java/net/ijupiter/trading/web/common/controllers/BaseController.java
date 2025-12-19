@@ -1,7 +1,10 @@
 package net.ijupiter.trading.web.common.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ijupiter.trading.web.common.constants.SystemMenu;
+import net.ijupiter.trading.web.common.dtos.MenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.webjars.WebJarAssetLocator;
@@ -18,16 +21,59 @@ import java.util.Map;
 @Slf4j
 @Controller
 public abstract class BaseController {
+    @Value("${system.web.title: © iJupiter}")
+    protected String systemTitle;
+
+    @Value("${system.web.name:iJupiter Trading System}")
+    protected String systemName;
+
+    @Value("${system.web.version:1.0.1-SNAPSHOT}")
+    protected String systemVersion;
+
     // 注入WebJarAssetLocator用于动态获取版本
     @Autowired
     private WebJarAssetLocator webJarAssetLocator;
 
     /**
-     * 添加全局模型属性
+     * 添加全局模型属性:系统标签
      */
-    @ModelAttribute("appVersion")
-    public String getAppVersion() {
-        return "1.0.1-SNAPSHOT";
+    @ModelAttribute("systemTitle")
+    public String getSystemTitle() {
+        return systemTitle;
+    }
+
+    /**
+     * 添加全局模型属性:系统名称
+     */
+    @ModelAttribute("systemName")
+    public String getSystemName() {
+        return systemName;
+    }
+
+    /**
+     * 添加全局模型属性:系统版本
+     */
+    @ModelAttribute("systemVersion")
+    public String getSystemVersion() {
+        return systemVersion;
+    }
+
+    /**
+     * 添加全局模型属性:系统导航菜单项
+     */
+    @ModelAttribute("navigationItems")
+    public List<MenuItem> getNavigationItems(){
+        log.info("navigationItems: {}", SystemMenu.getNavigationItems());
+        return SystemMenu.getNavigationItems();
+    }
+
+    /**
+     * 添加全局模型属性:系统边栏菜单项
+     */
+    @ModelAttribute("sidebarItems")
+    public List<MenuItem> getSidebarItems(){
+        log.info("getSidebarItems: {}", SystemMenu.getSidebarItems());
+        return SystemMenu.getSidebarItems();
     }
 
     /**

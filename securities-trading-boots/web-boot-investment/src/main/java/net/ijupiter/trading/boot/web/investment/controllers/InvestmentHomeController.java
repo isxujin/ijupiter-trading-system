@@ -14,13 +14,6 @@ public class InvestmentHomeController extends InvestmentBaseController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        // 页面标题
-//        model.addAttribute("pageTitle", "投资管理-仪表盘");
-//        // 系统基础信息（传递到layout的header/footer）
-//        model.addAttribute("systemName", "投资管理系统");
-//        model.addAttribute("systemVersion", "v2.0.1");
-//        model.addAttribute("licenseInfo", "© 2025 某某投资集团 | 商用许可（京ICP备888888号）");
-
         // 仪表盘核心数据
         model.addAttribute("totalInvestment", "¥ 12,580,000.00");
         model.addAttribute("investmentGrowth", "+2.5%");

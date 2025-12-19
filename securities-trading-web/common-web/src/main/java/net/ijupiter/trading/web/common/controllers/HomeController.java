@@ -43,31 +43,6 @@ public class HomeController extends BaseController {
     }
 
     /**
-     * 获取导航菜单项
-     */
-    private List<MenuItem> getNavigationItems() {
-        return Arrays.asList(
-                new MenuItem("首页", "/"),
-                new MenuItem("交易", "/trading"),
-                new MenuItem("账户", "/account"),
-                new MenuItem("查询", "/query")
-        );
-    }
-
-    /**
-     * 获取侧边栏菜单项
-     */
-    private List<MenuItem> getSidebarItems() {
-        return Arrays.asList(
-                new MenuItem("仪表盘", "/dashboard", "bi bi-speedometer2", true),
-                new MenuItem("交易管理", "/trading", "bi bi-graph-up"),
-                new MenuItem("账户管理", "/account", "bi bi-person"),
-                new MenuItem("订单查询", "/orders", "bi bi-list-ul"),
-                new MenuItem("报表统计", "/reports", "bi bi-bar-chart")
-        );
-    }
-
-    /**
      * 获取系统信息
      */
     private Object getSystemInfo() {

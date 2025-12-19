@@ -1,12 +1,12 @@
 package net.ijupiter.trading.boot.web.menagement.controllers;
 
 import net.ijupiter.trading.web.common.controllers.BaseController;
+import net.ijupiter.trading.web.common.dtos.MenuItem;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,74 +42,4 @@ public abstract class ManagementBaseController extends BaseController {
         model.addAttribute("sidebarItems", getSidebarItems());
     }
 
-    /**
-     * 获取顶部导航菜单
-     */
-    protected List<NavigationItem> getNavigationItems() {
-        List<NavigationItem> items = new ArrayList<>();
-        items.add(new NavigationItem("首页", "/management/dashboard"));
-        items.add(new NavigationItem("产品", "/management/products"));
-        items.add(new NavigationItem("交易", "/management/trades"));
-        items.add(new NavigationItem("账户", "/management/accounts"));
-        items.add(new NavigationItem("系统", "/management/settings"));
-        return items;
-    }
-
-    /**
-     * 获取侧边栏菜单
-     */
-    protected List<MenuItem> getSidebarItems() {
-        List<MenuItem> items = new ArrayList<>();
-        items.add(new MenuItem("仪表盘", "/management/dashboard", "bi bi-speedometer2", true));
-        items.add(new MenuItem("产品管理", "/management/products", "bi bi-box-seam"));
-        items.add(new MenuItem("交易管理", "/management/trades", "bi bi-cash-coin"));
-        items.add(new MenuItem("账户管理", "/management/accounts", "bi bi-people"));
-        items.add(new MenuItem("订单查询", "/management/orders", "bi bi-list-ul"));
-        items.add(new MenuItem("系统设置", "/management/settings", "bi bi-gear"));
-        return items;
-    }
-
-    /**
-     * 导航项DTO
-     */
-    public static class NavigationItem {
-        private String name;
-        private String url;
-
-        public NavigationItem(String name, String url) {
-            this.name = name;
-            this.url = url;
-        }
-
-        // Getters
-        public String getName() { return name; }
-        public String getUrl() { return url; }
-    }
-
-    /**
-     * 菜单项DTO
-     */
-    public static class MenuItem {
-        private String name;
-        private String url;
-        private String icon;
-        private boolean active;
-
-        public MenuItem(String name, String url, String icon, boolean active) {
-            this.name = name;
-            this.url = url;
-            this.icon = icon;
-            this.active = active;
-        }
-
-        public MenuItem(String name, String url, String icon) {
-            this(name, url, icon, false);
-        }
-
-        // Getters
-        public String getName() { return name; }
-        public String getUrl() { return url; }
-        public String getIcon() { return icon; }
-        public boolean isActive() { return active; }
-    }
 }

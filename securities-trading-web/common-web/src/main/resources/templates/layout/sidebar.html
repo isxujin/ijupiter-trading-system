@@ -7,55 +7,16 @@
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto" id="menu">
-        <li class="nav-item">
-            <a href="/investment/dashboard" class="nav-link active" aria-current="page">
+        <li class="nav-item" th:each="item : ${sidebarItems}" th:if="${item != null}">
+            <a th:href="${item.url}" th:class="'nav-link text-white' + ${item.active ? ' active' : ''}" aria-current="page">
+                <i th:class="${item.icon} +' me-2'"></i>
+                <span th:text="${item.name}"></span>
+            </a>
+        </li>
+        <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+            <a href="/investment/dashboard" class="nav-link text-white">
                 <i class="bi bi-speedometer2 me-2"></i>
                 仪表盘
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/products" class="nav-link text-white">
-                <i class="bi bi-box-seam me-2"></i>
-                产品管理
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/trades" class="nav-link text-white">
-                <i class="bi bi-cash-coin me-2"></i>
-                交易管理
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/accounts" class="nav-link text-white">
-                <i class="bi bi-people me-2"></i>
-                账户管理
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/orders" class="nav-link text-white">
-                <i class="bi bi-list-ul me-2"></i>
-                订单查询
-            </a>
-        </li>
-        <li>
-            <hr>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/project/list" class="nav-link text-white">
-                <i class="bi bi-folder2-open me-2"></i>
-                项目列表
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/project/add" class="nav-link text-white">
-                <i class="bi bi-plus-circle me-2"></i>
-                新增项目
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="/investment/risk" class="nav-link text-white">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                风险监控
             </a>
         </li>
     </ul>

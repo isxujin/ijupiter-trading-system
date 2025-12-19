@@ -62,7 +62,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         // 允许访问的路径
-                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**").permitAll()
+                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**", "/layout/**").permitAll()
                         
                         // 管理页面需要认证
                         .requestMatchers("/management/**").authenticated()
