@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{common/base :: head}">
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}">
+<head>
     <title>字典管理 - iJupiter Trading System</title>
-    <th:block th:fragment="css">
+    <th:block layout:fragment="css">
         <style>
             .table-actions { white-space: nowrap; }
         </style>
     </th:block>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 主内容区 -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <div th:fragment="content">
+<div layout:fragment="content">
                     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h3">字典管理</h1>
@@ -66,7 +64,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="js">
+<th:block layout:fragment="js">
     <script src="/js/system-ui.js"></script>
     <script src="/js/system-management.js"></script>
     <script>
@@ -89,7 +87,7 @@
         </div>
     </div>
     
-    <script th:src="@{/webjars/jquery/{version}/dist/jquery.min.js(version=${webjarsVersion.jquery})}"></script>
-    <script th:src="@{/webjars/bootstrap/{version}/js/bootstrap.bundle.min.js(version=${webjarsVersion.bootstrap})}"></script>
+    
+    
 </body>
 </html>

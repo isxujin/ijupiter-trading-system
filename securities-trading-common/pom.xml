@@ -17,6 +17,8 @@
     <description>证券交易系统 - 公共模块</description>
 
     <dependencies>
+        <!-- 内部依赖 -->
+
         <!-- 三方依赖 -->
         <dependency>
             <groupId>jakarta.persistence</groupId>

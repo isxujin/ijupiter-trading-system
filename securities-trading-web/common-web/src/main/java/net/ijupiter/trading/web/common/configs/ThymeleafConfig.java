@@ -33,6 +33,11 @@ public class ThymeleafConfig implements WebMvcConfigurer {
                         "classpath:/META-INF/resources/"
                 )
                 .setCachePeriod(0); // 开发环境关闭缓存，生产环境建议设3600+
+
+        // 映射favicon.ico请求到空资源，避免404
+        registry.addResourceHandler("/favicon.ico")
+                .addResourceLocations("classpath:/static/icon") // 即使无文件也不会报404
+                .resourceChain(false);
     }
 
 }

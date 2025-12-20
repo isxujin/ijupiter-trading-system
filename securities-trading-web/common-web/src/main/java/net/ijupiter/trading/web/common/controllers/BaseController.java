@@ -1,6 +1,7 @@
 package net.ijupiter.trading.web.common.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ijupiter.trading.common.dtos.SystemEnvironment;
 import net.ijupiter.trading.web.common.constants.SystemMenu;
 import net.ijupiter.trading.web.common.dtos.MenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.webjars.WebJarAssetLocator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 终端公共基础控制器
@@ -22,40 +20,29 @@ import java.util.Map;
 @Controller
 public abstract class BaseController {
     @Value("${system.web.title: © iJupiter}")
-    protected String systemTitle;
+    private String systemTitle;
 
     @Value("${system.web.name:iJupiter Trading System}")
-    protected String systemName;
+    private String systemName;
 
     @Value("${system.web.version:1.0.1-SNAPSHOT}")
-    protected String systemVersion;
+    private String systemVersion;
 
     // 注入WebJarAssetLocator用于动态获取版本
     @Autowired
     private WebJarAssetLocator webJarAssetLocator;
 
     /**
-     * 添加全局模型属性:系统标签
+     * 添加全局模型属性:系统环境信息
      */
-    @ModelAttribute("systemTitle")
-    public String getSystemTitle() {
-        return systemTitle;
-    }
-
-    /**
-     * 添加全局模型属性:系统名称
-     */
-    @ModelAttribute("systemName")
-    public String getSystemName() {
-        return systemName;
-    }
-
-    /**
-     * 添加全局模型属性:系统版本
-     */
-    @ModelAttribute("systemVersion")
-    public String getSystemVersion() {
-        return systemVersion;
+    @ModelAttribute("systemEnvironment")
+    public SystemEnvironment getSystemEnvironment() {
+        SystemEnvironment systemEnvironment = new SystemEnvironment();
+        systemEnvironment.setSystemName(systemName);
+        systemEnvironment.setSystemVersion(systemVersion);
+        systemEnvironment.setSystemTitle(systemTitle);
+        systemEnvironment.setCurrentUserName("Admin");
+        return systemEnvironment;
     }
 
     /**
@@ -85,20 +72,16 @@ public abstract class BaseController {
     // 内部类：通过WebJarAssetLocator获取版本
     public class WebJarsVersion {
         // 获取bootstrap版本
-        public String getBootstrap() {
-            // 从getWebJars()返回的map中获取"bootstrap"对应的版本
-            return webJarAssetLocator.getWebJars().get("bootstrap");
-        }
+        public String getBootstrap() {return webJarAssetLocator.getWebJars().get("bootstrap");}
 
         public String getJquery() {
             return webJarAssetLocator.getWebJars().get("jquery");
         }
 
         public String getChartjs() {
-            return webJarAssetLocator.getWebJars().get("chart.js");
+            return webJarAssetLocator.getWebJars().get("chartjs");
         }
 
-        // 新增：获取 bootstrap-icons 版本
         public String getBootstrapIcons() {
             return webJarAssetLocator.getWebJars().get("bootstrap-icons");
         }

@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{common/base :: layout(
-      title = '系统管理',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
+      layout:decorate="~{layout/layout}">
       
-<th:block th:fragment="css">
+<th:block layout:fragment="css">
     <style>
         .dashboard-card {
             transition: transform 0.3s;
@@ -22,7 +18,7 @@
     </style>
 </th:block>
 
-<th:block th:fragment="content">
+<th:block layout:fragment="content">
     <div class="container-fluid main-content">
         <div class="row">
             <div class="col-12">
@@ -231,7 +227,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="js">
+<th:block layout:fragment="js">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 加载统计数据

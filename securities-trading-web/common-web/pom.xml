@@ -17,6 +17,11 @@
 
     <dependencies>
         <!-- 二方依赖 -->
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>securities-trading-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- 三方依赖 -->
         <dependency>
@@ -47,15 +52,15 @@
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
-            <artifactId>jquery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
             <artifactId>bootstrap-icons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.webjars.npm</groupId>
-            <artifactId>chart.js</artifactId>
+            <artifactId>jquery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>chartjs</artifactId>
         </dependency>
 
         <!-- 测试依赖 -->

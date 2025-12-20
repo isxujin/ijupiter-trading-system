@@ -6,8 +6,8 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <i class="bi bi-bank me-2"></i>
-                <span th:text="${systemName} ?: 'iJupiter Trading System'"></span>
-                <span class="badge bg-secondary ms-2" th:text="${systemVersion} ?: 'V1.0.1-SNAPSHOT'"></span>
+                <span th:text="${systemEnvironment.systemName} ?: 'iJupiter Trading System'"></span>
+                <span class="badge bg-secondary ms-2" th:text="${systemEnvironment.systemVersion} ?: 'V1.0.1-SNAPSHOT'"></span>
             </a>
 
             <!-- 系统模块导航菜单 -->
@@ -18,7 +18,7 @@
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-2"></i>
-                        <strong th:text="${currentUser} ?: '管理员'">管理员</strong>
+                        <strong th:text="${systemEnvironment.currentUserName} ?: '管理员'">管理员</strong>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow dropdown-menu-end" aria-labelledby="dropdownUser1">
                         <li><a class="dropdown-item" href="#">设置</a></li>

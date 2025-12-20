@@ -14,6 +14,9 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/management/,classpath:/META-INF/resources/,classpath:/META-INF/resources/webjars/
+  mvc:
+    favicon:
+      enabled: false  # 关闭默认favicon处理
   # 1.4 数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true

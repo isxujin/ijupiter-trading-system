@@ -10,34 +10,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuItem {
-    /**
-     * 菜单项标识
-     */
-    private Integer id;
-    /**
-     * 父菜单项标识
-     */
-    private Integer parentId;
-    /**
-     * 菜单项名称
-     */
-    private String name;
-    /**
-     * 菜单项URL
-     */
-    private String url;
-    /**
-     * 菜单项图标
-     */
-    private String icon;
+public class MenuItem extends net.ijupiter.trading.common.dtos.MenuItem {
     /**
      * 是否激活
      */
-    private boolean active;
+    private Boolean active;
 
-    public MenuItem(Integer id,Integer parentId, String name, String url, String icon) {
-        this(id,parentId, name, url, icon, false);
+    public MenuItem(Long id,Long parentId, String name, String url, String icon) {
+        super();
+        this.id = id;
+        this.parentId = parentId;
+        this.name = name;
+        this.url = url;
+        this.icon = icon;
+        this.active = false;
     }
 
 }

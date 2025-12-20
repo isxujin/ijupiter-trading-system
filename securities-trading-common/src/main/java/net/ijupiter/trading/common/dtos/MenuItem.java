@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SystemMenuItem extends BaseDTO<SystemMenuItem> {
+public class MenuItem extends BaseDTO<MenuItem> {
     /**
      * 父菜单项标识
      */

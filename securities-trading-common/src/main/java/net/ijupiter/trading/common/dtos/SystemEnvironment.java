@@ -10,17 +10,22 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SystemEnv extends BaseDTO<SystemEnv> {
+public class SystemEnvironment extends BaseDTO<SystemEnvironment> {
     /**
      * 系统名称
      */
-    private static String systemName;
+    private String systemName;
     /**
      * 系统版本
      */
-    private static String systemVersion;
+    private String systemVersion;
     /**
      * 系统标题
      */
-    private static String systemTitle;
+    private String systemTitle;
+
+    /**
+     * 当前登录用户名称
+     */
+    private String currentUserName;
 }

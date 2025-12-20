@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{common/base :: head}">
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}">
+<head>
     <title>添加用户 - iJupiter Trading System</title>
-    <th:block th:fragment="css">
+    <th:block layout:fragment="css">
         <style>
             .form-group {
                 margin-bottom: 1.5rem;
@@ -16,11 +18,7 @@
     </th:block>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 主内容区 -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <div th:fragment="content">
+<div layout:fragment="content">
     <div class="container-fluid main-content">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">添加用户</h1>
@@ -344,5 +342,5 @@
         }
     </script>
     </th:block>
-</body>
+</div>
 </html>

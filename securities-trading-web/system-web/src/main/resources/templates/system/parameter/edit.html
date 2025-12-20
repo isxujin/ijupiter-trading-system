@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{common/base :: head}">
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}">
+<head>
     <title>编辑系统参数 - iJupiter Trading System</title>
-    <th:block th:fragment="css">
+    <th:block layout:fragment="css">
         <style>
             .form-label { font-weight: 600; }
             .required::after { content: "*"; color: #dc3545; margin-left: 4px; }
@@ -11,11 +13,7 @@
     </th:block>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 主内容区 -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <div th:fragment="content">
+<div layout:fragment="content">
                     <div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
@@ -121,7 +119,7 @@
 	</div>
 </th:block>
 
-<th:block th:fragment="js">
+<th:block layout:fragment="js">
 	<script src="/js/system-ui.js"></script>
 	<script src="/js/system-management.js"></script>
 	<script>
