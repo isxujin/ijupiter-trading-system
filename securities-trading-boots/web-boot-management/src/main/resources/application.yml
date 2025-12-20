@@ -68,16 +68,17 @@ server:
       include-message: always
       include-binding-errors: always
 
-# 管理员终端自定义配置（补全缺失的属性）
-admin:
-  terminal:
-    title: 证券交易系统管理平台  # 缺失的配置项
-    version: 1.0.1-SNAPSHOT     # 缺失的配置项
-
 # 日志配置（便于调试）
 logging:
   level:
-    org.springframework.security: DEBUG
-    net.ijupiter.trading.web.admin: DEBUG
-    net.ijupiter.trading: DEBUG
-    org.springframework.beans.factory: DEBUG
+    org.springframework.security: INFO
+    net.ijupiter.trading.web.admin: INFO
+    net.ijupiter.trading: INFO
+    org.springframework.beans.factory: INFO
+
+# 系统自有配置项
+system:
+  web:
+    title: iJupiter Trading System # 系统页标签
+    name: iJupiter证券交易系统       # 系统名称
+    version: V1.0.0                # 系统版本

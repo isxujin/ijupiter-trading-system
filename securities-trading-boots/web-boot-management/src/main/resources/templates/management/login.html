@@ -52,7 +52,7 @@
                 <!-- 品牌标志 -->
                 <div class="brand-logo">
                     <i class="bi bi-shield-check"></i>
-                    <span>证券交易系统</span>
+                    <span th:text="${systemEnvironment.systemName} ?: 'iJupiter Trading System'"></span>
                 </div>
                 
                 <!-- 登录表单 -->
@@ -102,7 +102,7 @@
                 
                 <div class="mt-4 text-center">
                     <small class="text-muted">
-                        &copy; 2023 金融交易系统管理平台 | 版本 1.0.1-SNAPSHOT
+                        <p class="text-center text-muted" th:text="${licenseInfo} ?: 'Copyright © 2025 The IJupiter Foundation ｜ Licensed under the Apache License 2.0'"></p>
                     </small>
                 </div>
             </div>
