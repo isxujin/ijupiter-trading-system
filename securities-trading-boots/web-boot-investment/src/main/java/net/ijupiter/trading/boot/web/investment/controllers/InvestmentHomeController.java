@@ -1,5 +1,6 @@
 package net.ijupiter.trading.boot.web.investment.controllers;
 
+import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/investment")
-public class InvestmentHomeController extends InvestmentBaseController {
+public class InvestmentHomeController extends BaseController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {

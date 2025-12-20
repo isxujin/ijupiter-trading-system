@@ -2,6 +2,7 @@ package net.ijupiter.trading.boot.web.menagement.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.boot.web.menagement.utils.SecurityUtils;
+import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Slf4j
 @Controller
 @RequestMapping("/management")
-public class ManagementLoginController extends ManagementBaseController {
+public class ManagementLoginController extends BaseController {
 
     /**
      * 登录页面

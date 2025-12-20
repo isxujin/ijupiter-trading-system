@@ -1,5 +1,6 @@
 package net.ijupiter.trading.boot.web.menagement.controllers;
 
+import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/management")
-public class ProductController extends ManagementBaseController {
+public class ProductController extends BaseController {
 
     // 假设你的分页查询逻辑
     @GetMapping("/products/list")

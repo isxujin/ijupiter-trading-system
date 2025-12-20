@@ -1,5 +1,6 @@
 package net.ijupiter.trading.boot.web.menagement.controllers;
 
+import net.ijupiter.trading.web.common.controllers.BaseController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/management")
-public class SettingsController extends ManagementBaseController {
+public class SettingsController extends BaseController {
 
     @Value("${management.terminal.title:金融交易系统管理平台}")
     private String systemTitle;

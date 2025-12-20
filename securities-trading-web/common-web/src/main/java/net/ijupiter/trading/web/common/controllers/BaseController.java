@@ -45,6 +45,11 @@ public abstract class BaseController {
         return systemEnvironment;
     }
 
+    public void setCurrentUser(String currentUserName) {
+        SystemEnvironment systemEnvironment = getSystemEnvironment();
+        systemEnvironment.setCurrentUserName(currentUserName);
+    }
+
     /**
      * 添加全局模型属性:系统导航菜单项
      */

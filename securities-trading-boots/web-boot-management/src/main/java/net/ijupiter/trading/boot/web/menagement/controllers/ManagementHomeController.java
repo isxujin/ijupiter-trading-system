@@ -1,6 +1,8 @@
 package net.ijupiter.trading.boot.web.menagement.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ijupiter.trading.boot.web.menagement.utils.SecurityUtils;
+import net.ijupiter.trading.web.common.controllers.BaseController;
 import net.ijupiter.trading.web.common.dtos.ApiResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,19 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequestMapping("/management")
-public class ManagementHomeController extends ManagementBaseController {
+public class ManagementHomeController extends BaseController {
+
+    /**
+     * 403无权限页面
+     */
+    @GetMapping("/403")
+    public String accessDenied(Model model) {
+        SecurityUtils.getCurrentUser().ifPresent(user -> {
+            model.addAttribute("currentUser", user);
+            log.warn("用户 {} 尝试访问无权限的资源", user.getUsername());
+        });
+        return "management/403";
+    }
 
     /**
      * 系统首页/仪表盘
