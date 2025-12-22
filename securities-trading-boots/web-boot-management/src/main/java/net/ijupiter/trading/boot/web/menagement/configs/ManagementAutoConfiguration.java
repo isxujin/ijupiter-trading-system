@@ -1,5 +1,7 @@
-package net.ijupiter.trading.web.common.configs;
+package net.ijupiter.trading.boot.web.menagement.configs;
 
+import net.ijupiter.trading.web.common.configs.CommonConfig;
+import net.ijupiter.trading.web.common.configs.ThymeleafConfig;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,7 +12,7 @@ import org.springframework.context.annotation.Import;
  * 自动配置公共资源、控制器和模板解析器
  */
 @AutoConfiguration
-@ComponentScan(basePackages = "net.ijupiter.trading.web.common")
+@ComponentScan(basePackages = "net.ijupiter.trading.web.menagement")
 @Import({ThymeleafConfig.class, CommonConfig.class})
 @EnableConfigurationProperties
 public class ModuleAutoConfiguration {
