@@ -48,7 +48,7 @@ public class InvestmentHomeController extends BaseController {
         recentProjects.add(new ProjectTypeDTO(3, "AI研发中心"));
         model.addAttribute("recentProjects", recentProjects);
 
-        return "investment/dashboard"; // 指向templates/investment/dashboard.html
+        return "investment/dashboard";
     }
 
     // 内部数据传输类

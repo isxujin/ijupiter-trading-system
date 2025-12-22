@@ -46,9 +46,6 @@ public class ManagementHomeController extends BaseController {
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication authentication) {
-        // 设置页面标题
-        model.addAttribute("title", "仪表盘");
-        
         // 设置活跃菜单项
         model.addAttribute("activeMenu", "dashboard");
         
