@@ -34,6 +34,14 @@ public class ManagementHomeController extends BaseController {
     }
 
     /**
+     * 处理系统根路径，重定向到仪表盘
+     */
+    @GetMapping({"", "/"})
+    public String investmentIndex() {
+        return "redirect:/management/dashboard";
+    }
+
+    /**
      * 系统首页/仪表盘
      */
     @GetMapping("/dashboard")

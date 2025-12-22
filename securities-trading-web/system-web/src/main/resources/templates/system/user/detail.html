@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{common/base :: layout(
-      title = '用户详情',
-      css = ~{::css},
-      content = ~{::content},
-      js = ~{::js}
-    )}">
+<html lang="zh-CN"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}">
 
 <th:block th:fragment="content">
     <div class="container-fluid">

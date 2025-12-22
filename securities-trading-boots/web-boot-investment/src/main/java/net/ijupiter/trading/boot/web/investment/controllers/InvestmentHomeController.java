@@ -12,6 +12,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/investment")
 public class InvestmentHomeController extends BaseController {
+    /**
+     * 处理系统根路径，重定向到仪表盘
+     */
+    @GetMapping({"", "/"})
+    public String investmentIndex() {
+        return "redirect:/investment/dashboard";
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -60,12 +67,5 @@ public class InvestmentHomeController extends BaseController {
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
     }
-    
-    /**
-     * 处理投资系统根路径，重定向到仪表盘
-     */
-    @GetMapping({"", "/"})
-    public String investmentIndex() {
-        return "redirect:/investment/dashboard";
-    }
+
 }
