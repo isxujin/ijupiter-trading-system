@@ -1,4 +1,4 @@
-package net.ijupiter.trading.web.query.configs;
+package net.ijupiter.trading.web.tradingengine.configs;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {
-    "net.ijupiter.trading.web.query.controllers"
+    "net.ijupiter.trading.web.engine.controllers"
 })
 public class ModuleAutoConfiguration {
 
