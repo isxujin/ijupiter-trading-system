@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.system.dtos.ParameterDTO;
 import net.ijupiter.trading.api.system.services.ParameterService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -163,13 +163,13 @@ public class ParameterManageController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public ApiResponse<ParameterDTO> saveParameter(@RequestBody ParameterDTO parameterDTO) {
+    public Result<ParameterDTO> saveParameter(@RequestBody ParameterDTO parameterDTO) {
         try {
             ParameterDTO savedParameter = parameterService.createParameter(parameterDTO);
-            return ApiResponse.success("参数保存成功", savedParameter);
+            return Result.success("参数保存成功", savedParameter);
         } catch (Exception e) {
             log.error("保存参数失败", e);
-            return ApiResponse.<ParameterDTO>error("保存参数失败");
+            return Result.<ParameterDTO>fail("保存参数失败");
         }
     }
 
@@ -178,14 +178,14 @@ public class ParameterManageController extends BaseController {
      */
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ApiResponse<ParameterDTO> updateParameter(@PathVariable Long id, @RequestBody ParameterDTO parameterDTO) {
+    public Result<ParameterDTO> updateParameter(@PathVariable Long id, @RequestBody ParameterDTO parameterDTO) {
         try {
             parameterDTO.setId(id);
             ParameterDTO updatedParameter = parameterService.updateParameter(parameterDTO);
-            return ApiResponse.success("参数更新成功", updatedParameter);
+            return Result.success("参数更新成功", updatedParameter);
         } catch (Exception e) {
             log.error("更新参数失败", e);
-            return ApiResponse.<ParameterDTO>error("更新参数失败");
+            return Result.fail("更新参数失败");
         }
     }
 
@@ -194,13 +194,13 @@ public class ParameterManageController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ApiResponse<Void> deleteParameter(@PathVariable Long id) {
+    public Result<Void> deleteParameter(@PathVariable Long id) {
         try {
             parameterService.deleteById(id);
-            return ApiResponse.success("参数删除成功", (Void)null);
+            return Result.success("参数删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除参数失败", e);
-            return ApiResponse.<Void>error("删除参数失败");
+            return Result.fail("删除参数失败");
         }
     }
 
@@ -209,16 +209,16 @@ public class ParameterManageController extends BaseController {
      */
     @DeleteMapping("/batch")
     @ResponseBody
-    public ApiResponse<Void> batchDeleteParameters(@RequestBody List<Long> ids) {
+    public Result<Void> batchDeleteParameters(@RequestBody List<Long> ids) {
         try {
             // BaseService中没有deleteByIds方法，需要循环删除
             for (Long id : ids) {
                 parameterService.deleteById(id);
             }
-            return ApiResponse.success("批量删除参数成功", (Void)null);
+            return Result.success("批量删除参数成功", (Void)null);
         } catch (Exception e) {
             log.error("批量删除参数失败", e);
-            return ApiResponse.<Void>error("批量删除参数失败");
+            return Result.fail("批量删除参数失败");
         }
     }
 
@@ -227,17 +227,17 @@ public class ParameterManageController extends BaseController {
      */
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ApiResponse<Void> updateParameterStatus(@PathVariable Long id, @RequestParam Integer status) {
+    public Result<Void> updateParameterStatus(@PathVariable Long id, @RequestParam Integer status) {
         try {
             if (status == 1) {
                 parameterService.enableParameter(id);
             } else {
                 parameterService.disableParameter(id);
             }
-            return ApiResponse.success("参数状态更新成功", (Void)null);
+            return Result.success("参数状态更新成功", (Void)null);
         } catch (Exception e) {
             log.error("更新参数状态失败", e);
-            return ApiResponse.<Void>error("更新参数状态失败");
+            return Result.fail("更新参数状态失败");
         }
     }
 
@@ -246,13 +246,13 @@ public class ParameterManageController extends BaseController {
      */
     @PutMapping("/reset/{id}")
     @ResponseBody
-    public ApiResponse<Void> resetParameter(@PathVariable Long id) {
+    public Result<Void> resetParameter(@PathVariable Long id) {
         try {
             parameterService.resetToDefaultValue(id);
-            return ApiResponse.success("参数重置成功", (Void)null);
+            return Result.success("参数重置成功", (Void)null);
         } catch (Exception e) {
             log.error("重置参数失败", e);
-            return ApiResponse.<Void>error("重置参数失败");
+            return Result.fail("重置参数失败");
         }
     }
 
@@ -261,13 +261,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/groups")
     @ResponseBody
-    public ApiResponse<List<String>> getParamGroups() {
+    public Result<List<String>> getParamGroups() {
         try {
             List<String> groups = parameterService.findAllParamGroups();
-            return ApiResponse.success("获取参数分组成功", groups);
+            return Result.success("获取参数分组成功", groups);
         } catch (Exception e) {
             log.error("获取参数分组失败", e);
-            return ApiResponse.<List<String>>error("获取参数分组失败");
+            return Result.<List<String>>fail("获取参数分组失败");
         }
     }
 
@@ -276,13 +276,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/system")
     @ResponseBody
-    public ApiResponse<List<ParameterDTO>> getSystemParameters() {
+    public Result<List<ParameterDTO>> getSystemParameters() {
         try {
             List<ParameterDTO> parameters = parameterService.findSystemParameters();
-            return ApiResponse.success("获取系统参数成功", parameters);
+            return Result.success("获取系统参数成功", parameters);
         } catch (Exception e) {
             log.error("获取系统参数失败", e);
-            return ApiResponse.<List<ParameterDTO>>error("获取系统参数失败");
+            return Result.<List<ParameterDTO>>fail("获取系统参数失败");
         }
     }
 
@@ -291,13 +291,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/group/{paramGroup}")
     @ResponseBody
-    public ApiResponse<List<ParameterDTO>> getParametersByGroup(@PathVariable String paramGroup) {
+    public Result<List<ParameterDTO>> getParametersByGroup(@PathVariable String paramGroup) {
         try {
             List<ParameterDTO> parameters = parameterService.findByParamGroupOrderBySortOrder(paramGroup);
-            return ApiResponse.success("获取参数分组成功", parameters);
+            return Result.success("获取参数分组成功", parameters);
         } catch (Exception e) {
             log.error("获取参数分组失败", e);
-            return ApiResponse.<List<ParameterDTO>>error("获取参数分组失败");
+            return Result.<List<ParameterDTO>>fail("获取参数分组失败");
         }
     }
 
@@ -306,13 +306,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/check/paramcode")
     @ResponseBody
-    public ApiResponse<Boolean> checkParamCodeExists(@RequestParam String paramCode) {
+    public Result<Boolean> checkParamCodeExists(@RequestParam String paramCode) {
         try {
             boolean exists = parameterService.existsByParamCode(paramCode);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查参数编码失败", e);
-            return ApiResponse.<Boolean>error("检查参数编码失败");
+            return Result.<Boolean>fail("检查参数编码失败");
         }
     }
 
@@ -321,13 +321,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/check/paramname")
     @ResponseBody
-    public ApiResponse<Boolean> checkParamNameExists(@RequestParam String paramName) {
+    public Result<Boolean> checkParamNameExists(@RequestParam String paramName) {
         try {
             boolean exists = parameterService.existsByParamName(paramName);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查参数名称失败", e);
-            return ApiResponse.<Boolean>error("检查参数名称失败");
+            return Result.<Boolean>fail("检查参数名称失败");
         }
     }
 
@@ -336,13 +336,13 @@ public class ParameterManageController extends BaseController {
      */
     @GetMapping("/export")
     @ResponseBody
-    public ApiResponse<String> exportParameters(@RequestParam(required = false) String paramGroup) {
+    public Result<String> exportParameters(@RequestParam(required = false) String paramGroup) {
         try {
             String configJson = parameterService.exportParameters(paramGroup);
-            return ApiResponse.success("导出参数配置成功", configJson);
+            return Result.success("导出参数配置成功", configJson);
         } catch (Exception e) {
             log.error("导出参数配置失败", e);
-            return ApiResponse.<String>error("导出参数配置失败");
+            return Result.<String>fail("导出参数配置失败");
         }
     }
 
@@ -351,15 +351,15 @@ public class ParameterManageController extends BaseController {
      */
     @PostMapping("/import")
     @ResponseBody
-    public ApiResponse<String> importParameters(
+    public Result<String> importParameters(
             @RequestParam String configJson,
             @RequestParam(defaultValue = "false") Boolean isOverride) {
         try {
             String result = parameterService.importParameters(configJson, isOverride);
-            return ApiResponse.success("导入参数配置成功", result);
+            return Result.success("导入参数配置成功", result);
         } catch (Exception e) {
             log.error("导入参数配置失败", e);
-            return ApiResponse.<String>error("导入参数配置失败: " + e.getMessage());
+            return Result.<String>fail("导入参数配置失败: " + e.getMessage());
         }
     }
 
@@ -368,17 +368,17 @@ public class ParameterManageController extends BaseController {
      */
     @PutMapping("/batch-update")
     @ResponseBody
-    public ApiResponse<Void> batchUpdateParamValues(@RequestBody Map<String, String> paramValueMap) {
+    public Result<Void> batchUpdateParamValues(@RequestBody Map<String, String> paramValueMap) {
         try {
             boolean success = parameterService.batchUpdateParamValues(paramValueMap);
             if (success) {
-                return ApiResponse.success("批量更新参数值成功", (Void)null);
+                return Result.success("批量更新参数值成功", (Void)null);
             } else {
-                return ApiResponse.<Void>error("部分参数值更新失败");
+                return Result.<Void>fail("部分参数值更新失败");
             }
         } catch (Exception e) {
             log.error("批量更新参数值失败", e);
-            return ApiResponse.<Void>error("批量更新参数值失败");
+            return Result.<Void>fail("批量更新参数值失败");
         }
     }
 

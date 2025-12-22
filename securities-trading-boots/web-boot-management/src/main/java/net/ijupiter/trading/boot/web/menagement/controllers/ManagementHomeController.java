@@ -3,7 +3,7 @@ package net.ijupiter.trading.boot.web.menagement.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.boot.web.menagement.utils.SecurityUtils;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,8 +100,8 @@ public class ManagementHomeController extends BaseController {
      */
     @GetMapping("/api/dashboard/stats")
     @ResponseBody
-    public ApiResponse<Object> getDashboardStatsApi() {
-        return ApiResponse.success("获取统计数据成功", getDashboardStats());
+    public Result<Object> getDashboardStatsApi() {
+        return Result.success("获取统计数据成功", getDashboardStats());
     }
     
     /**

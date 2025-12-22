@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.system.dtos.PermissionDTO;
 import net.ijupiter.trading.api.system.services.PermissionService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,7 +43,7 @@ public class PermissionManageController extends BaseController {
      */
     @GetMapping("/tree")
     @ResponseBody
-    public ApiResponse<List<PermissionDTO>> getPermissionTree(
+    public Result<List<PermissionDTO>> getPermissionTree(
             @RequestParam(required = false) String permissionName,
             @RequestParam(required = false) String permissionType) {
         
@@ -59,10 +59,10 @@ public class PermissionManageController extends BaseController {
             // 获取所有权限
             List<PermissionDTO> allPermissions = permissionService.findAll();
             
-            return ApiResponse.success("获取权限树成功", allPermissions);
+            return Result.success("获取权限树成功", allPermissions);
         } catch (Exception e) {
             log.error("获取权限树失败", e);
-            return ApiResponse.error("获取权限树失败");
+            return Result.fail("获取权限树失败");
         }
     }
 
@@ -161,13 +161,13 @@ public class PermissionManageController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public ApiResponse<PermissionDTO> savePermission(@RequestBody PermissionDTO permissionDTO) {
+    public Result<PermissionDTO> savePermission(@RequestBody PermissionDTO permissionDTO) {
         try {
             PermissionDTO savedPermission = permissionService.save(permissionDTO);
-            return ApiResponse.success("权限保存成功", savedPermission);
+            return Result.success("权限保存成功", savedPermission);
         } catch (Exception e) {
             log.error("保存权限失败", e);
-            return ApiResponse.error("保存权限失败");
+            return Result.fail("保存权限失败");
         }
     }
 
@@ -176,14 +176,14 @@ public class PermissionManageController extends BaseController {
      */
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ApiResponse<PermissionDTO> updatePermission(@PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
+    public Result<PermissionDTO> updatePermission(@PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
         try {
             permissionDTO.setId(id);
             PermissionDTO updatedPermission = permissionService.updatePermission(permissionDTO);
-            return ApiResponse.success("权限更新成功", updatedPermission);
+            return Result.success("权限更新成功", updatedPermission);
         } catch (Exception e) {
             log.error("更新权限失败", e);
-            return ApiResponse.error("更新权限失败");
+            return Result.fail("更新权限失败");
         }
     }
 
@@ -192,13 +192,13 @@ public class PermissionManageController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ApiResponse<Void> deletePermission(@PathVariable Long id) {
+    public Result<Void> deletePermission(@PathVariable Long id) {
         try {
             permissionService.deleteById(id);
-            return ApiResponse.success("权限删除成功", (Void)null);
+            return Result.success("权限删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除权限失败", e);
-            return ApiResponse.error("删除权限失败");
+            return Result.fail("删除权限失败");
         }
     }
 
@@ -207,16 +207,16 @@ public class PermissionManageController extends BaseController {
      */
     @DeleteMapping("/batch")
     @ResponseBody
-    public ApiResponse<Void> batchDeletePermissions(@RequestBody List<Long> ids) {
+    public Result<Void> batchDeletePermissions(@RequestBody List<Long> ids) {
         try {
             // BaseService中没有deleteByIds方法，需要循环删除
             for (Long id : ids) {
                 permissionService.deleteById(id);
             }
-            return ApiResponse.success("批量删除权限成功", (Void)null);
+            return Result.success("批量删除权限成功", (Void)null);
         } catch (Exception e) {
             log.error("批量删除权限失败", e);
-            return ApiResponse.error("批量删除权限失败");
+            return Result.fail("批量删除权限失败");
         }
     }
 
@@ -225,15 +225,15 @@ public class PermissionManageController extends BaseController {
      */
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ApiResponse<Void> updatePermissionStatus(@PathVariable Long id, @RequestParam Integer status) {
+    public Result<Void> updatePermissionStatus(@PathVariable Long id, @RequestParam Integer status) {
         try {
             PermissionDTO permission = permissionService.findById(id).orElseThrow(() -> new RuntimeException("权限不存在"));
             permission.setStatus(status);
             permissionService.updatePermission(permission);
-            return ApiResponse.success("权限状态更新成功", (Void)null);
+            return Result.success("权限状态更新成功", (Void)null);
         } catch (Exception e) {
             log.error("更新权限状态失败", e);
-            return ApiResponse.error("更新权限状态失败");
+            return Result.fail("更新权限状态失败");
         }
     }
 
@@ -242,13 +242,13 @@ public class PermissionManageController extends BaseController {
      */
     @GetMapping("/check/permissionname")
     @ResponseBody
-    public ApiResponse<Boolean> checkPermissionNameExists(@RequestParam String permissionName) {
+    public Result<Boolean> checkPermissionNameExists(@RequestParam String permissionName) {
         try {
             boolean exists = permissionService.existsByPermissionName(permissionName);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查权限名失败", e);
-            return ApiResponse.error("检查权限名失败");
+            return Result.fail("检查权限名失败");
         }
     }
 
@@ -257,13 +257,13 @@ public class PermissionManageController extends BaseController {
      */
     @GetMapping("/check/permissioncode")
     @ResponseBody
-    public ApiResponse<Boolean> checkPermissionCodeExists(@RequestParam String permissionCode) {
+    public Result<Boolean> checkPermissionCodeExists(@RequestParam String permissionCode) {
         try {
             boolean exists = permissionService.existsByPermissionCode(permissionCode);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查权限代码失败", e);
-            return ApiResponse.error("检查权限代码失败");
+            return Result.fail("检查权限代码失败");
         }
     }
 
@@ -272,13 +272,13 @@ public class PermissionManageController extends BaseController {
      */
     @GetMapping("/children/{parentId}")
     @ResponseBody
-    public ApiResponse<List<PermissionDTO>> getChildPermissions(@PathVariable Long parentId) {
+    public Result<List<PermissionDTO>> getChildPermissions(@PathVariable Long parentId) {
         try {
             List<PermissionDTO> children = permissionService.findByParentId(parentId);
-            return ApiResponse.success("获取子权限成功", children);
+            return Result.success("获取子权限成功", children);
         } catch (Exception e) {
             log.error("获取子权限失败", e);
-            return ApiResponse.error("获取子权限失败");
+            return Result.fail("获取子权限失败");
         }
     }
 }

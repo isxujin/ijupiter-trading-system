@@ -14,39 +14,36 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PageResult<T> extends Result<List<T>> {
-    
-    private static final int SUCCESS_CODE = 0;
-    private static final int FAIL_CODE = -1;
 
     /**
      * 当前页码
      */
-    private int pageNum;
+    private Integer pageNum;
 
     /**
      * 每页条数
      */
-    private int pageSize;
+    private Integer pageSize;
 
     /**
      * 总记录数
      */
-    private long total;
+    private Long total;
 
     /**
      * 总页数
      */
-    private int pages;
+    private Integer pages;
 
     /**
      * 是否有下一页
      */
-    private boolean hasNext;
+    private Boolean hasNext;
 
     /**
      * 是否有上一页
      */
-    private boolean hasPrevious;
+    private Boolean hasPrevious;
 
     public PageResult() {
         super();

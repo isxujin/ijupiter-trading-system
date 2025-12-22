@@ -5,7 +5,7 @@ import net.ijupiter.trading.api.system.dtos.DictionaryDTO;
 import net.ijupiter.trading.api.system.dtos.DictionaryItemDTO;
 import net.ijupiter.trading.api.system.services.DictionaryService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -135,13 +135,13 @@ public class DictionaryManageController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public ApiResponse<DictionaryDTO> saveDictionary(@RequestBody DictionaryDTO dictionaryDTO) {
+    public Result<DictionaryDTO> saveDictionary(@RequestBody DictionaryDTO dictionaryDTO) {
         try {
             DictionaryDTO savedDictionary = dictionaryService.save(dictionaryDTO);
-            return ApiResponse.success("字典保存成功", savedDictionary);
+            return Result.success("字典保存成功", savedDictionary);
         } catch (Exception e) {
             log.error("保存字典失败", e);
-            return ApiResponse.error("保存字典失败");
+            return Result.fail("保存字典失败");
         }
     }
 
@@ -150,14 +150,14 @@ public class DictionaryManageController extends BaseController {
      */
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ApiResponse<DictionaryDTO> updateDictionary(@PathVariable Long id, @RequestBody DictionaryDTO dictionaryDTO) {
+    public Result<DictionaryDTO> updateDictionary(@PathVariable Long id, @RequestBody DictionaryDTO dictionaryDTO) {
         try {
             dictionaryDTO.setId(id);
             DictionaryDTO updatedDictionary = dictionaryService.updateDictionary(dictionaryDTO);
-            return ApiResponse.success("字典更新成功", updatedDictionary);
+            return Result.success("字典更新成功", updatedDictionary);
         } catch (Exception e) {
             log.error("更新字典失败", e);
-            return ApiResponse.error("更新字典失败");
+            return Result.fail("更新字典失败");
         }
     }
 
@@ -166,13 +166,13 @@ public class DictionaryManageController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ApiResponse<Void> deleteDictionary(@PathVariable Long id) {
+    public Result<Void> deleteDictionary(@PathVariable Long id) {
         try {
             dictionaryService.deleteById(id);
-            return ApiResponse.success("字典删除成功", (Void)null);
+            return Result.success("字典删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除字典失败", e);
-            return ApiResponse.error("删除字典失败");
+            return Result.fail("删除字典失败");
         }
     }
 
@@ -181,16 +181,16 @@ public class DictionaryManageController extends BaseController {
      */
     @DeleteMapping("/batch")
     @ResponseBody
-    public ApiResponse<Void> batchDeleteDictionaries(@RequestBody List<Long> ids) {
+    public Result<Void> batchDeleteDictionaries(@RequestBody List<Long> ids) {
         try {
             // BaseService中没有deleteByIds方法，需要循环删除
             for (Long id : ids) {
                 dictionaryService.deleteById(id);
             }
-            return ApiResponse.success("批量删除字典成功", (Void)null);
+            return Result.success("批量删除字典成功", (Void)null);
         } catch (Exception e) {
             log.error("批量删除字典失败", e);
-            return ApiResponse.error("批量删除字典失败");
+            return Result.fail("批量删除字典失败");
         }
     }
 
@@ -199,15 +199,15 @@ public class DictionaryManageController extends BaseController {
      */
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ApiResponse<Void> updateDictionaryStatus(@PathVariable Long id, @RequestParam Integer status) {
+    public Result<Void> updateDictionaryStatus(@PathVariable Long id, @RequestParam Integer status) {
         try {
             DictionaryDTO dictionary = dictionaryService.findById(id).orElseThrow(() -> new RuntimeException("字典不存在"));
             dictionary.setStatus(status);
             dictionaryService.updateDictionary(dictionary);
-            return ApiResponse.success("字典状态更新成功", (Void)null);
+            return Result.success("字典状态更新成功", (Void)null);
         } catch (Exception e) {
             log.error("更新字典状态失败", e);
-            return ApiResponse.error("更新字典状态失败");
+            return Result.fail("更新字典状态失败");
         }
     }
 
@@ -216,13 +216,13 @@ public class DictionaryManageController extends BaseController {
      */
     @GetMapping("/check/dictname")
     @ResponseBody
-    public ApiResponse<Boolean> checkDictNameExists(@RequestParam String dictName) {
+    public Result<Boolean> checkDictNameExists(@RequestParam String dictName) {
         try {
             boolean exists = dictionaryService.existsByDictName(dictName);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查字典名失败", e);
-            return ApiResponse.error("检查字典名失败");
+            return Result.fail("检查字典名失败");
         }
     }
 
@@ -231,13 +231,13 @@ public class DictionaryManageController extends BaseController {
      */
     @GetMapping("/check/dictcode")
     @ResponseBody
-    public ApiResponse<Boolean> checkDictCodeExists(@RequestParam String dictCode) {
+    public Result<Boolean> checkDictCodeExists(@RequestParam String dictCode) {
         try {
             boolean exists = dictionaryService.existsByDictCode(dictCode);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查字典代码失败", e);
-            return ApiResponse.error("检查字典代码失败");
+            return Result.fail("检查字典代码失败");
         }
     }
 
@@ -246,13 +246,13 @@ public class DictionaryManageController extends BaseController {
      */
     @GetMapping("/{dictId}/items")
     @ResponseBody
-    public ApiResponse<List<DictionaryItemDTO>> getDictionaryItems(@PathVariable Long dictId) {
+    public Result<List<DictionaryItemDTO>> getDictionaryItems(@PathVariable Long dictId) {
         try {
             List<DictionaryItemDTO> items = dictionaryService.findItemsByDictionaryId(dictId);
-            return ApiResponse.success("获取字典项成功", items);
+            return Result.success("获取字典项成功", items);
         } catch (Exception e) {
             log.error("获取字典项失败", e);
-            return ApiResponse.error("获取字典项失败");
+            return Result.fail("获取字典项失败");
         }
     }
 
@@ -261,15 +261,15 @@ public class DictionaryManageController extends BaseController {
      */
     @PostMapping("/{dictId}/items")
     @ResponseBody
-    public ApiResponse<DictionaryItemDTO> addDictionaryItem(@PathVariable Long dictId, @RequestBody DictionaryItemDTO itemDTO) {
+    public Result<DictionaryItemDTO> addDictionaryItem(@PathVariable Long dictId, @RequestBody DictionaryItemDTO itemDTO) {
         try {
             itemDTO.setDictionaryId(dictId);
             // 使用DictionaryService的createDictionaryItem方法
             DictionaryItemDTO savedItem = dictionaryService.createDictionaryItem(itemDTO);
-            return ApiResponse.success("字典项添加成功", savedItem);
+            return Result.success("字典项添加成功", savedItem);
         } catch (Exception e) {
             log.error("添加字典项失败", e);
-            return ApiResponse.<DictionaryItemDTO>error("添加字典项失败");
+            return Result.<DictionaryItemDTO>fail("添加字典项失败");
         }
     }
 
@@ -278,14 +278,14 @@ public class DictionaryManageController extends BaseController {
      */
     @PutMapping("/items/{itemId}")
     @ResponseBody
-    public ApiResponse<DictionaryItemDTO> updateDictionaryItem(@PathVariable Long itemId, @RequestBody DictionaryItemDTO itemDTO) {
+    public Result<DictionaryItemDTO> updateDictionaryItem(@PathVariable Long itemId, @RequestBody DictionaryItemDTO itemDTO) {
         try {
             itemDTO.setId(itemId);
             DictionaryItemDTO updatedItem = dictionaryService.updateDictionaryItem(itemDTO);
-            return ApiResponse.success("字典项更新成功", updatedItem);
+            return Result.success("字典项更新成功", updatedItem);
         } catch (Exception e) {
             log.error("更新字典项失败", e);
-            return ApiResponse.<DictionaryItemDTO>error("更新字典项失败");
+            return Result.<DictionaryItemDTO>fail("更新字典项失败");
         }
     }
 
@@ -294,13 +294,13 @@ public class DictionaryManageController extends BaseController {
      */
     @DeleteMapping("/items/{itemId}")
     @ResponseBody
-    public ApiResponse<Void> deleteDictionaryItem(@PathVariable Long itemId) {
+    public Result<Void> deleteDictionaryItem(@PathVariable Long itemId) {
         try {
             dictionaryService.deleteDictionaryItem(itemId);
-            return ApiResponse.success("字典项删除成功", (Void)null);
+            return Result.success("字典项删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除字典项失败", e);
-            return ApiResponse.error("删除字典项失败");
+            return Result.fail("删除字典项失败");
         }
     }
 
@@ -309,13 +309,13 @@ public class DictionaryManageController extends BaseController {
      */
     @GetMapping("/by-code/{dictCode}")
     @ResponseBody
-    public ApiResponse<List<DictionaryItemDTO>> getItemsByDictCode(@PathVariable String dictCode) {
+    public Result<List<DictionaryItemDTO>> getItemsByDictCode(@PathVariable String dictCode) {
         try {
             List<DictionaryItemDTO> items = dictionaryService.findItemsByDictCode(dictCode);
-            return ApiResponse.success("获取字典项成功", items);
+            return Result.success("获取字典项成功", items);
         } catch (Exception e) {
             log.error("获取字典项失败", e);
-            return ApiResponse.error("获取字典项失败");
+            return Result.fail("获取字典项失败");
         }
     }
 

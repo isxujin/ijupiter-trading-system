@@ -1,6 +1,6 @@
 package net.ijupiter.trading.web.common.controllers;
 
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +38,8 @@ public class HomeController extends BaseController {
      */
     @GetMapping("/api/system/info")
     @ResponseBody
-    public ApiResponse<Object> systemInfo() {
-        return ApiResponse.success("获取系统信息成功", getSystemInfo());
+    public Result<Object> systemInfo() {
+        return Result.success("获取系统信息成功", getSystemInfo());
     }
 
     /**

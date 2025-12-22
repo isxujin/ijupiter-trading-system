@@ -6,7 +6,7 @@ import net.ijupiter.trading.api.system.dtos.PermissionDTO;
 import net.ijupiter.trading.api.system.services.RoleService;
 import net.ijupiter.trading.api.system.services.PermissionService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -140,13 +140,13 @@ public class RoleManageController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public ApiResponse<RoleDTO> saveRole(@RequestBody RoleDTO roleDTO) {
+    public Result<RoleDTO> saveRole(@RequestBody RoleDTO roleDTO) {
         try {
             RoleDTO savedRole = roleService.save(roleDTO);
-            return ApiResponse.success("角色保存成功", savedRole);
+            return Result.success("角色保存成功", savedRole);
         } catch (Exception e) {
             log.error("保存角色失败", e);
-            return ApiResponse.error("保存角色失败");
+            return Result.fail("保存角色失败");
         }
     }
 
@@ -155,14 +155,14 @@ public class RoleManageController extends BaseController {
      */
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ApiResponse<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
+    public Result<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
         try {
             roleDTO.setId(id);
             RoleDTO updatedRole = roleService.updateRoleInfo(roleDTO);
-            return ApiResponse.success("角色更新成功", updatedRole);
+            return Result.success("角色更新成功", updatedRole);
         } catch (Exception e) {
             log.error("更新角色失败", e);
-            return ApiResponse.error("更新角色失败");
+            return Result.fail("更新角色失败");
         }
     }
 
@@ -171,13 +171,13 @@ public class RoleManageController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ApiResponse<Void> deleteRole(@PathVariable Long id) {
+    public Result<Void> deleteRole(@PathVariable Long id) {
         try {
             roleService.deleteById(id);
-            return ApiResponse.success("角色删除成功", (Void)null);
+            return Result.success("角色删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除角色失败", e);
-            return ApiResponse.error("删除角色失败");
+            return Result.fail("删除角色失败");
         }
     }
 
@@ -186,16 +186,16 @@ public class RoleManageController extends BaseController {
      */
     @DeleteMapping("/batch")
     @ResponseBody
-    public ApiResponse<Void> batchDeleteRoles(@RequestBody List<Long> ids) {
+    public Result<Void> batchDeleteRoles(@RequestBody List<Long> ids) {
         try {
             // BaseService中没有deleteByIds方法，需要循环删除
             for (Long id : ids) {
                 roleService.deleteById(id);
             }
-            return ApiResponse.success("批量删除角色成功", (Void)null);
+            return Result.success("批量删除角色成功", (Void)null);
         } catch (Exception e) {
             log.error("批量删除角色失败", e);
-            return ApiResponse.error("批量删除角色失败");
+            return Result.fail("批量删除角色失败");
         }
     }
 
@@ -204,15 +204,15 @@ public class RoleManageController extends BaseController {
      */
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ApiResponse<Void> updateRoleStatus(@PathVariable Long id, @RequestParam Integer status) {
+    public Result<Void> updateRoleStatus(@PathVariable Long id, @RequestParam Integer status) {
         try {
             RoleDTO role = roleService.findById(id).orElseThrow(() -> new RuntimeException("角色不存在"));
             role.setStatus(status);
             roleService.updateRoleInfo(role);
-            return ApiResponse.success("角色状态更新成功", (Void)null);
+            return Result.success("角色状态更新成功", (Void)null);
         } catch (Exception e) {
             log.error("更新角色状态失败", e);
-            return ApiResponse.error("更新角色状态失败");
+            return Result.fail("更新角色状态失败");
         }
     }
 
@@ -221,13 +221,13 @@ public class RoleManageController extends BaseController {
      */
     @PostMapping("/{roleId}/permissions")
     @ResponseBody
-    public ApiResponse<Void> assignPermissions(@PathVariable Long roleId, @RequestBody List<Long> permissionIds) {
+    public Result<Void> assignPermissions(@PathVariable Long roleId, @RequestBody List<Long> permissionIds) {
         try {
             roleService.assignPermissions(roleId, permissionIds);
-            return ApiResponse.success("权限分配成功", (Void)null);
+            return Result.success("权限分配成功", (Void)null);
         } catch (Exception e) {
             log.error("分配权限失败", e);
-            return ApiResponse.error("分配权限失败");
+            return Result.fail("分配权限失败");
         }
     }
 
@@ -236,19 +236,19 @@ public class RoleManageController extends BaseController {
      */
     @GetMapping("/{roleId}/permissions")
     @ResponseBody
-    public ApiResponse<List<PermissionDTO>> getRolePermissions(@PathVariable Long roleId) {
+    public Result<List<PermissionDTO>> getRolePermissions(@PathVariable Long roleId) {
         try {
             // 需要先根据角色ID查找角色，然后使用权限服务获取权限列表
             Optional<RoleDTO> role = roleService.findById(roleId);
             if (role.isPresent()) {
                 List<PermissionDTO> permissions = permissionService.findByRoleId(roleId);
-                return ApiResponse.success("获取角色权限成功", permissions);
+                return Result.success("获取角色权限成功", permissions);
             } else {
-                return ApiResponse.<List<PermissionDTO>>error("角色不存在");
+                return Result.<List<PermissionDTO>>fail("角色不存在");
             }
         } catch (Exception e) {
             log.error("获取角色权限失败", e);
-            return ApiResponse.<List<PermissionDTO>>error("获取角色权限失败");
+            return Result.<List<PermissionDTO>>fail("获取角色权限失败");
         }
     }
 
@@ -257,13 +257,13 @@ public class RoleManageController extends BaseController {
      */
     @GetMapping("/check/rolename")
     @ResponseBody
-    public ApiResponse<Boolean> checkRoleNameExists(@RequestParam String roleName) {
+    public Result<Boolean> checkRoleNameExists(@RequestParam String roleName) {
         try {
             boolean exists = roleService.existsByRoleName(roleName);
-            return ApiResponse.success("检查完成", exists);
+            return Result.success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查角色名失败", e);
-            return ApiResponse.error("检查角色名失败");
+            return Result.fail("检查角色名失败");
         }
     }
 

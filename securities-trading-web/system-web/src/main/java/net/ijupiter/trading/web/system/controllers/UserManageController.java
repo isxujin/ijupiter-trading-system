@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.system.dtos.UserDTO;
 import net.ijupiter.trading.api.system.services.UserService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
-import net.ijupiter.trading.web.common.dtos.ApiResponse;
+import net.ijupiter.trading.web.common.models.Result;
 import net.ijupiter.trading.web.common.models.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -114,13 +114,13 @@ public class UserManageController extends BaseController {
      */
     @PostMapping("/save")
     @ResponseBody
-    public ApiResponse<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
+    public Result<UserDTO> saveUser(@RequestBody UserDTO userDTO) {
         try {
             UserDTO savedUser = userService.save(userDTO);
-            return ApiResponse.success("用户保存成功", savedUser);
+            return Result.success("用户保存成功", savedUser);
         } catch (Exception e) {
             log.error("保存用户失败", e);
-            return ApiResponse.<UserDTO>error("保存用户失败");
+            return Result.fail("保存用户失败");
         }
     }
 
@@ -129,14 +129,14 @@ public class UserManageController extends BaseController {
      */
     @PutMapping("/update/{id}")
     @ResponseBody
-    public ApiResponse<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    public Result<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         try {
             userDTO.setId(id);
             UserDTO updatedUser = userService.updateUserInfo(userDTO);
-            return ApiResponse.success("用户更新成功", updatedUser);
+            return Result.success("用户更新成功", updatedUser);
         } catch (Exception e) {
             log.error("更新用户失败", e);
-            return ApiResponse.<UserDTO>error("更新用户失败");
+            return Result.fail("更新用户失败");
         }
     }
 
@@ -145,13 +145,13 @@ public class UserManageController extends BaseController {
      */
     @DeleteMapping("/delete/{id}")
     @ResponseBody
-    public ApiResponse<Void> deleteUser(@PathVariable Long id) {
+    public Result<Void> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteById(id);
-            return ApiResponse.success("用户删除成功", (Void)null);
+            return Result.success("用户删除成功", (Void)null);
         } catch (Exception e) {
             log.error("删除用户失败", e);
-            return ApiResponse.<Void>error("删除用户失败");
+            return Result.fail("删除用户失败");
         }
     }
 
@@ -160,16 +160,16 @@ public class UserManageController extends BaseController {
      */
     @DeleteMapping("/batch")
     @ResponseBody
-    public ApiResponse<Void> batchDeleteUsers(@RequestBody List<Long> ids) {
+    public Result<Void> batchDeleteUsers(@RequestBody List<Long> ids) {
         try {
             // BaseService中没有deleteByIds方法，需要循环删除
             for (Long id : ids) {
                 userService.deleteById(id);
             }
-            return ApiResponse.success("批量删除用户成功", (Void)null);
+            return Result.success("批量删除用户成功", (Void)null);
         } catch (Exception e) {
             log.error("批量删除用户失败", e);
-            return ApiResponse.error("批量删除用户失败");
+            return Result.fail("批量删除用户失败");
         }
     }
 
@@ -178,15 +178,15 @@ public class UserManageController extends BaseController {
      */
     @PutMapping("/status/{id}")
     @ResponseBody
-    public ApiResponse<Void> updateUserStatus(@PathVariable Long id, @RequestParam Integer status) {
+    public Result<Void> updateUserStatus(@PathVariable Long id, @RequestParam Integer status) {
         try {
             UserDTO user = userService.findById(id).orElseThrow(() -> new RuntimeException("用户不存在"));
             user.setStatus(status);
             userService.updateUserInfo(user);
-            return ApiResponse.success("用户状态更新成功", (Void)null);
+            return Result.success("用户状态更新成功", (Void)null);
         } catch (Exception e) {
             log.error("更新用户状态失败", e);
-            return ApiResponse.error("更新用户状态失败");
+            return Result.fail("更新用户状态失败");
         }
     }
 
@@ -195,13 +195,13 @@ public class UserManageController extends BaseController {
      */
     @GetMapping("/check/username")
     @ResponseBody
-    public ApiResponse<Boolean> checkUsernameExists(@RequestParam String username) {
+        public Result<Boolean> checkUsernameExists(@RequestParam String username) {
         try {
             boolean exists = userService.existsByUsername(username);
-            return ApiResponse.<Boolean>success("检查完成", exists);
+            return Result.<Boolean>success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查用户名失败", e);
-            return ApiResponse.error("检查用户名失败");
+            return Result.fail("检查用户名失败");
         }
     }
 
@@ -210,13 +210,13 @@ public class UserManageController extends BaseController {
      */
     @GetMapping("/check/email")
     @ResponseBody
-    public ApiResponse<Boolean> checkEmailExists(@RequestParam String email) {
+        public Result<Boolean> checkEmailExists(@RequestParam String email) {
         try {
             boolean exists = userService.existsByEmail(email);
-            return ApiResponse.<Boolean>success("检查完成", exists);
+            return Result.<Boolean>success("检查完成", exists);
         } catch (Exception e) {
             log.error("检查邮箱失败", e);
-            return ApiResponse.error("检查邮箱失败");
+            return Result.fail("检查邮箱失败");
         }
     }
 
@@ -225,15 +225,15 @@ public class UserManageController extends BaseController {
      */
     @PutMapping("/reset-password/{id}")
     @ResponseBody
-    public ApiResponse<Void> resetPassword(@PathVariable Long id, @RequestParam String newPassword) {
+    public Result<Void> resetPassword(@PathVariable Long id, @RequestParam String newPassword) {
         try {
  UserDTO user = userService.findById(id).orElseThrow(() -> new RuntimeException("用户不存在"));
             user.setPassword(newPassword);
             userService.updateUserInfo(user);
-            return ApiResponse.success("密码重置成功", (Void)null);
+            return Result.success("密码重置成功", (Void)null);
         } catch (Exception e) {
             log.error("重置密码失败", e);
-            return ApiResponse.error("重置密码失败");
+            return Result.fail("重置密码失败");
         }
     }
 }

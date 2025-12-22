@@ -11,13 +11,13 @@ import lombok.Data;
 @Data
 public class Result<T> {
 
-    private static final int SUCCESS_CODE = 0;
-    private static final int FAIL_CODE = -1;
+    protected static final int SUCCESS_CODE = 0;
+    protected static final int FAIL_CODE = -1;
 
     /**
      * 返回码
      */
-    private int code;
+    private Integer code;
 
     /**
      * 返回消息
@@ -32,7 +32,7 @@ public class Result<T> {
     /**
      * 时间戳
      */
-    private long timestamp;
+    private Long timestamp;
 
     public Result() {
         this.timestamp = System.currentTimeMillis();
