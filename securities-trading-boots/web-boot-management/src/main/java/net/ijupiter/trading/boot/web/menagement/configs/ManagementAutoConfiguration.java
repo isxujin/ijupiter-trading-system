@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
  */
 @AutoConfiguration
 @ComponentScan(basePackages = "net.ijupiter.trading.web.menagement")
-@Import({ThymeleafConfig.class, CommonConfig.class})
+@Import({SecurityConfig.class})
 @EnableConfigurationProperties
 public class ManagementAutoConfiguration {
 }
