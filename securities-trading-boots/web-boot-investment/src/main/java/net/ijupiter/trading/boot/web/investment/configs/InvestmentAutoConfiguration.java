@@ -15,5 +15,5 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages = "net.ijupiter.trading.web.investment")
 @Import({ThymeleafConfig.class, CommonConfig.class})
 @EnableConfigurationProperties
-public class ModuleAutoConfiguration {
+public class InvestmentAutoConfiguration {
 }

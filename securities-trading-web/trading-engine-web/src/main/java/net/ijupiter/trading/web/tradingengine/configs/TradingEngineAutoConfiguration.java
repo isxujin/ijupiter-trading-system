@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {
-    "net.ijupiter.trading.web.engine.controllers"
+    "net.ijupiter.trading.web.tradingengine.controllers"
 })
-public class ModuleAutoConfiguration {
+public class TradingEngineAutoConfiguration {
 
 }

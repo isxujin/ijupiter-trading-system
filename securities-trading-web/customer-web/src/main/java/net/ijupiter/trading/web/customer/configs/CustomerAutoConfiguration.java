@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {
     "net.ijupiter.trading.web.customer.controllers"
 })
-public class ModuleAutoConfiguration {
+public class CustomerAutoConfiguration {
 
 }
