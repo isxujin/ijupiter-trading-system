@@ -16,13 +16,12 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @Controller
-@RequestMapping("/management")
-public class ManagementLoginController extends BaseController {
+public class AuthenticationController extends BaseController {
 
     /**
      * 登录页面
      */
-    @GetMapping("/login")
+    @GetMapping("/common/login")
     public String login(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
@@ -45,8 +44,6 @@ public class ManagementLoginController extends BaseController {
             log.info("用户退出登录，IP: {}", request.getRemoteAddr());
         }
         
-        return "management/login";
-        // 正确返回值：无需写.html后缀，直接返回"management/login"
-        // 错误示例：return "login" / return "management/Login" / return "management/login.html"
+        return "common/login";
     }
 }

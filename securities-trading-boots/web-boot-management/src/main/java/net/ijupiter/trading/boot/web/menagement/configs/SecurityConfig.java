@@ -62,7 +62,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         // 允许访问的路径
-                        .requestMatchers("/management/login", "/webjars/**", "/static/**", "/error", "/common/**", "/layout/**").permitAll()
+                        .requestMatchers("/webjars/**", "/static/**", "/error", "/common/**", "/layout/**").permitAll()
                         
                         // 管理页面需要认证
                         .requestMatchers("/management/**").authenticated()
@@ -72,16 +72,16 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .formLogin(form -> form
-                        .loginPage("/management/login")
+                        .loginPage("/common/login")
                         .defaultSuccessUrl("/management/dashboard", true)
-                        .failureUrl("/management/login?error=true")
+                        .failureUrl("/common/login?error=true")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/management/logout")
-                        .logoutSuccessUrl("/management/login?logout=true")
+                        .logoutUrl("/common/logout")
+                        .logoutSuccessUrl("/common/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
