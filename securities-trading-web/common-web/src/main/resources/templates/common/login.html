@@ -56,12 +56,12 @@
                 </div>
                 
                 <!-- 登录表单 -->
-                <form th:action="@{/management/login}" method="post">
+                <form th:action="@{/login}" method="post">
                     <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                        用户名或密码错误
+                        <span th:text="${errorMessage} ?: '用户名或密码错误'"></span>
                     </div>
                     <div th:if="${param.logout}" class="alert alert-success" role="alert">
-                        您已成功退出登录
+                        <span th:text="${successMessage} ?: '您已成功退出登录'"></span>
                     </div>
                     
                     <div class="mb-3">
