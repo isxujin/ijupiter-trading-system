@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.webjars.WebJarAssetLocator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,28 +43,32 @@ public abstract class BaseController {
         systemEnvironment.setSystemVersion(systemVersion);
         systemEnvironment.setSystemTitle(systemTitle);
         systemEnvironment.setCurrentUserName("Admin");
+
+        // 动态获取导航菜单和边栏菜单
+        List<MenuItem> navigationItems = SystemMenu.getNavigationItems();
+        systemEnvironment.setNavigationItems(navigationItems);
+        MenuItem currNavigationItem = null;
+        for (MenuItem item : navigationItems) {
+            if(item.getActive()){
+                currNavigationItem = item;
+                break;
+            }
+        }
+        List<MenuItem> allSidebarItems = SystemMenu.getSidebarItems();
+        List<MenuItem> sidebarItems = new ArrayList<>();
+        for (MenuItem item : allSidebarItems) {
+            if(item.getParentId().equals(currNavigationItem.getId())) {
+                sidebarItems.add(item);
+            }
+        }
+        systemEnvironment.setSidebarItems(sidebarItems);
+
         return systemEnvironment;
     }
 
     public void setCurrentUser(String currentUserName) {
         SystemEnvironment systemEnvironment = getSystemEnvironment();
         systemEnvironment.setCurrentUserName(currentUserName);
-    }
-
-    /**
-     * 添加全局模型属性:系统导航菜单项
-     */
-    @ModelAttribute("navigationItems")
-    public List<MenuItem> getNavigationItems(){
-        return SystemMenu.getNavigationItems();
-    }
-
-    /**
-     * 添加全局模型属性:系统边栏菜单项
-     */
-    @ModelAttribute("sidebarItems")
-    public List<MenuItem> getSidebarItems(){
-        return SystemMenu.getSidebarItems();
     }
 
     /**

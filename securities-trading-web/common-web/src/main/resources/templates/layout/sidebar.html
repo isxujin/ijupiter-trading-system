@@ -7,13 +7,13 @@
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto" id="menu">
-        <li class="nav-item" th:each="item : ${sidebarItems}" th:if="${item != null}">
+        <li class="nav-item" th:each="item : ${systemEnvironment.sidebarItems}" th:if="${item != null}">
             <a th:href="${item.url}" th:class="'nav-link text-white' + ${item.active ? ' active' : ''}" aria-current="page">
                 <i th:class="${item.icon} +' me-2'"></i>
                 <span th:text="${item.name}"></span>
             </a>
         </li>
-        <li class="nav-item" th:if="${sidebarItems == null or #lists.isEmpty(sidebarItems)}">
+        <li class="nav-item" th:if="${systemEnvironment.sidebarItems == null or #lists.isEmpty(systemEnvironment.sidebarItems)}">
             <a href="/investment/dashboard" class="nav-link text-white">
                 <i class="bi bi-speedometer2 me-2"></i>
                 仪表盘

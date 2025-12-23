@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 系统环境信息声明类
  */
@@ -28,4 +30,8 @@ public class SystemEnvironment extends BaseDTO<SystemEnvironment> {
      * 当前登录用户名称
      */
     private String currentUserName;
+
+    private List<?> navigationItems;
+
+    private List<?> sidebarItems;
 }

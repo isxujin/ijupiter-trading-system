@@ -8,14 +8,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <!-- 动态侧边栏菜单项 -->
-                <li class="nav-item" th:each="item : ${navigationItems}" th:if="${item != null}">
+                <li class="nav-item" th:each="item : ${systemEnvironment.navigationItems}" th:if="${item != null}">
                     <a th:class="'nav-link text-white'+ ${item.active ? ' active' : ''}" aria-current="page" th:href="${item.url}"
                        style="transition: all 0.3s ease;">
                         <i th:class="${item.icon} +' me-1'"></i>
                         <span th:text="${item.name}"></span>
                     </a>
                 </li>
-                <li class="nav-item" th:if="${navigationItems == null or #lists.isEmpty(navigationItems)}">
+                <li class="nav-item" th:if="${systemEnvironment.navigationItems == null or #lists.isEmpty(systemEnvironment.navigationItems)}">
                     <a class="nav-link text-white active" aria-current="page" href="/"
                        style="transition: all 0.3s ease;"
                        onmouseover="this.style.color='#ffc107';"

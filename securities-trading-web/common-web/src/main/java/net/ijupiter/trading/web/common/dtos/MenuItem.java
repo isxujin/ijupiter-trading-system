@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class MenuItem extends net.ijupiter.trading.common.dtos.MenuItem {
     /**
      * 是否激活
@@ -17,13 +16,16 @@ public class MenuItem extends net.ijupiter.trading.common.dtos.MenuItem {
     private Boolean active;
 
     public MenuItem(Long id,Long parentId, String name, String url, String icon) {
+        this(id,parentId, name, url, icon,false);
+    }
+
+    public MenuItem(Long id,Long parentId, String name, String url, String icon,Boolean active) {
         super();
         this.id = id;
         this.parentId = parentId;
         this.name = name;
         this.url = url;
         this.icon = icon;
-        this.active = false;
+        this.active = active;
     }
-
 }
