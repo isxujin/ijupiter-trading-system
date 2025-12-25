@@ -38,7 +38,7 @@ public class ManagementHomeController extends BaseController {
      */
     @GetMapping({"", "/"})
     public String investmentIndex() {
-        return "redirect:/common/dashboard";
+        return "redirect:/";
     }
 
     /**

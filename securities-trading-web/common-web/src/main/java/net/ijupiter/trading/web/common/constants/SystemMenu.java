@@ -21,7 +21,7 @@ public class SystemMenu {
         navigationItems.add(new MenuItem(7L, null, "系统", "/system/dashboard", "bi bi-gear-wide-connected"));
         navigationItems.add(new MenuItem(8L, null, "综合查询", "/query/dashboard", "bi bi-eyeglasses"));
 
-        sidebarItems.add(new MenuItem(11L, 1L, "仪表盘", "/common/dashboard", "bi bi-speedometer2",true));
+        sidebarItems.add(new MenuItem(11L, 1L, "仪表盘", "/", "bi bi-speedometer2",true));
         sidebarItems.add(new MenuItem(21L, 2L, "仪表盘", "/customer/dashboard", "bi bi-speedometer2",true));
         sidebarItems.add(new MenuItem(22L, 2L, "客户账户", "/customer/account", "bi bi-piggy-bank"));
         sidebarItems.add(new MenuItem(31L, 3L, "仪表盘", "/funding/dashboard", "bi bi-speedometer2",true));
