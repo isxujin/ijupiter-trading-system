@@ -12,13 +12,13 @@ public class SystemMenu {
     @Getter
     private static final List<MenuItem> sidebarItems = new ArrayList<MenuItem>();
     static {
-        navigationItems.add(new MenuItem(1L, null, "首页", "/dashboard", "bi bi-house-door"));
+        navigationItems.add(new MenuItem(1L, null, "首页", "/dashboard", "bi bi-house-door",true));
         navigationItems.add(new MenuItem(2L, null, "客户", "/customer/dashboard", "bi bi-person-vcard"));
         navigationItems.add(new MenuItem(3L, null, "资金", "/funding/dashboard", "bi bi-cash-coin"));
         navigationItems.add(new MenuItem(4L, null, "证券", "/securities/dashboard", "bi bi-journals"));
         navigationItems.add(new MenuItem(5L, null, "交易", "/trading-engine/dashboard", "bi bi-graph-up"));
         navigationItems.add(new MenuItem(6L, null, "清算", "/settlement/dashboard", "bi bi-android2"));
-        navigationItems.add(new MenuItem(7L, null, "系统", "/system/dashboard", "bi bi-gear-wide-connected",true));
+        navigationItems.add(new MenuItem(7L, null, "系统", "/system/dashboard", "bi bi-gear-wide-connected"));
         navigationItems.add(new MenuItem(8L, null, "综合查询", "/query/dashboard", "bi bi-eyeglasses"));
 
         sidebarItems.add(new MenuItem(11L, 1L, "仪表盘", "/common/dashboard", "bi bi-speedometer2",true));

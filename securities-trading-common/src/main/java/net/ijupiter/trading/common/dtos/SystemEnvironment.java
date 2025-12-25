@@ -34,4 +34,8 @@ public class SystemEnvironment extends BaseDTO<SystemEnvironment> {
     private List<?> navigationItems;
 
     private List<?> sidebarItems;
+
+    private Object activeNavigation;
+
+    private Object activeSidebar;
 }

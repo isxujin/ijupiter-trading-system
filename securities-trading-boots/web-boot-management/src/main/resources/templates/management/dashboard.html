@@ -5,36 +5,6 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 
-<th:block layout:fragment="css">
-    <style>
-        .dashboard-card {
-            transition: transform 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-card {
-            border-left: 4px solid;
-        }
-        .card-primary {
-            border-left-color: #007bff;
-        }
-        .card-success {
-            border-left-color: #28a745;
-        }
-        .card-info {
-            border-left-color: #17a2b8;
-        }
-        .card-warning {
-            border-left-color: #ffc107;
-        }
-        .card-danger {
-            border-left-color: #dc3545;
-        }
-    </style>
-</th:block>
-
 <th:block layout:fragment="content">
 <div class="container-fluid">
     <!-- 用户信息卡片 -->

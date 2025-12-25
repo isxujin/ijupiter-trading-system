@@ -47,18 +47,22 @@ public abstract class BaseController {
         // 动态获取导航菜单和边栏菜单
         List<MenuItem> navigationItems = SystemMenu.getNavigationItems();
         systemEnvironment.setNavigationItems(navigationItems);
-        MenuItem currNavigationItem = null;
+        MenuItem activeNavigation = null;
         for (MenuItem item : navigationItems) {
             if(item.getActive()){
-                currNavigationItem = item;
+                activeNavigation = item;
                 break;
             }
         }
+        systemEnvironment.setActiveNavigation(activeNavigation);
         List<MenuItem> allSidebarItems = SystemMenu.getSidebarItems();
         List<MenuItem> sidebarItems = new ArrayList<>();
         for (MenuItem item : allSidebarItems) {
-            if(item.getParentId().equals(currNavigationItem.getId())) {
+            if(item.getParentId().equals(activeNavigation.getId())) {
                 sidebarItems.add(item);
+                if(item.getActive()){
+                    systemEnvironment.setActiveSidebar(item);
+                }
             }
         }
         systemEnvironment.setSidebarItems(sidebarItems);

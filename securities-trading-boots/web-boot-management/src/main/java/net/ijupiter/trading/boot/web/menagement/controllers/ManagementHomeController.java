@@ -38,7 +38,7 @@ public class ManagementHomeController extends BaseController {
      */
     @GetMapping({"", "/"})
     public String investmentIndex() {
-        return "redirect:/management/dashboard";
+        return "redirect:/common/dashboard";
     }
 
     /**
@@ -68,7 +68,7 @@ public class ManagementHomeController extends BaseController {
         // 添加仪表盘数据
         model.addAttribute("dashboardStats", getDashboardStats());
         
-        return "management/dashboard";
+        return "common/dashboard";
     }
 
     /**

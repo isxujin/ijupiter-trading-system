@@ -2,8 +2,8 @@
 <!-- 声明 sidebar-fragment，匹配layout.html引用 -->
 <nav th:fragment="sidebar-fragment" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 250px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <i class="bi bi-graph-up-arrow me-2"></i>
-        <span class="fs-4">管理</span>
+        <i th:class="${systemEnvironment.activeNavigation.icon} +' me-2'"></i>
+        <span class="fs-4" th:text="${systemEnvironment.activeNavigation.name}"></span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto" id="menu">

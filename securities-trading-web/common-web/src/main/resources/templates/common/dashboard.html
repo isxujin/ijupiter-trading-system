@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+      xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0" th:text="${currentUser != null ? (currentUser.realName != null ? currentUser.realName : currentUser.username) : '管理员'}"></h4>
+                            <p class="card-text">今天是 <span th:text="${#dates.format(#dates.createNow(), 'yyyy年MM月dd日 EEEE')}"></span></p>
+                        </div>
+                        <div class="text-end">
+                            <h5 class="mb-0">系统管理控制台</h5>
+                            <small><span th:text="${systemEnvironment.systemName} ?: 'iJupiter Trading System'"></span></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快捷操作 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">快捷操作</h4>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-cash-stack text-primary"></i>
+                    <p class="mb-0 mt-2">买入</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-cash-coin text-danger"></i>
+                    <p class="mb-0 mt-2">卖出</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-clock-history text-warning"></i>
+                    <p class="mb-0 mt-2">历史记录</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-graph-up text-success"></i>
+                    <p class="mb-0 mt-2">趋势分析</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-newspaper text-info"></i>
+                    <p class="mb-0 mt-2">市场资讯</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="card dashboard-card quick-action-card">
+                <div class="card-body p-3">
+                    <i class="bi bi-gear text-secondary"></i>
+                    <p class="mb-0 mt-2">系统设置</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>
