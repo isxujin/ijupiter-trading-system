@@ -15,10 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Slf4j
 @Controller
 public class WebErrorController implements ErrorController {
-
-    private static final String ERROR_PATH = "/error";
-
-    @GetMapping(value = ERROR_PATH)
+    @GetMapping(value = "/error")
     public RedirectView handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         Object message = request.getAttribute(RequestDispatcher.ERROR_MESSAGE);

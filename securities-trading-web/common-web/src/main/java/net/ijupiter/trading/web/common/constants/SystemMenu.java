@@ -12,7 +12,7 @@ public class SystemMenu {
     @Getter
     private static final List<MenuItem> sidebarItems = new ArrayList<MenuItem>();
     static {
-        navigationItems.add(new MenuItem(1L, null, "首页", "/dashboard", "bi bi-house-door",true));
+        navigationItems.add(new MenuItem(1L, null, "首页", "/", "bi bi-house-door",true));
         navigationItems.add(new MenuItem(2L, null, "客户", "/customer/dashboard", "bi bi-person-vcard"));
         navigationItems.add(new MenuItem(3L, null, "资金", "/funding/dashboard", "bi bi-cash-coin"));
         navigationItems.add(new MenuItem(4L, null, "证券", "/securities/dashboard", "bi bi-journals"));
