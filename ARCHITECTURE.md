@@ -11,7 +11,7 @@
 
 ## 系统概述
 
-iJupiter证券交易系统是一个基于事件引擎架构的证券交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot和Axon Framework构建，具备高可扩展性、高性能和高可用性特点。
+iJupiter证券交易系统是一个基于事件引擎架构的证券交易平台，支持证券、基金、期货等多种金融产品的交易业务。系统采用现代化的微服务架构，遵循DDD（领域驱动设计）和CQRS（命令查询责任分离）模式，使用Spring Boot 3.5.8和Axon Framework 4.12.2构建，具备高可扩展性、高性能和高可用性特点。
 
 系统以事件驱动为核心，通过领域事件解耦各业务模块，实现异步处理和数据最终一致性。
 
@@ -22,12 +22,11 @@ iJupiter证券交易系统是一个基于事件引擎架构的证券交易平台
 | 技术 | 版本 | 用途 |
 |------|------|------|
 | Java | 17 | 编程语言 |
-| Spring Boot | 3.2.5 | 应用框架 |
+| Spring Boot | 3.5.8 | 应用框架 |
 | Axon Framework | 4.12.2 | 事件驱动架构框架 |
-| MySQL | 8.4.0 | 主数据存储 |
+| MySQL | 9.5.0 | 主数据存储 |
 | Redis | 7 | 缓存与会话存储 |
 | RabbitMQ | 5.20.0 | 消息队列 |
-| MongoDB | 6.0 | 文档数据库 |
 | Spring Security | 6.5.7 | 安全框架 |
 | Thymeleaf | 3.2.6.RELEASE | 服务端模板引擎 |
 | Jakarta Persistence | 3.1.0 | JPA API |
@@ -88,7 +87,7 @@ ijupiter-trading-system (父模块)
 │   └── system-web                 # 系统管理Web模块
 ├── securities-trading-boots            # 应用启动层
 │   ├── service-boot-allinone     # 服务单体启动器
-│   ├── web-boot-investor          # 投资者Web启动器
+│   ├── web-boot-investment       # 投资者Web启动器
 │   └── web-boot-management       # 管理员Web启动器
 ├── mvnw / mvnw.cmd / mvnw.sh       # Maven Wrapper脚本
 ├── init-trading-system.sh          # 项目初始化脚本
@@ -117,16 +116,18 @@ ijupiter-trading-system (父模块)
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
   - **business-api**: 业务领域API，包括客户管理、资金、证券、清/结算、交易撮合、通用查询、系统管理等API
-    - **customer-api**: 客户管理API，提供客户、客户资金账户、客户证券账户等接口
-    - **funding-api**: 资金API，提供资金余额、资金变动流水、交易所信息等接口
-    - **securities-api**: 证券API，提供证券持仓、持仓变动流水、银行信息等接口
-    - **settlement-api**: 清/结算API，提供日清/结算相关功能接口
-    - **trading-engine-api**: 交易撮合API，提供日间证券标的交易/撮合相关功能接口
-    - **query-api**: 通用查询API，提供所有上述模块的查询能力接口
-    - **system-api**: 系统管理API，提供系统操作员、角色、权限、数据字典等接口
+  - **customer-api**: 客户管理API，提供客户、客户资金账户、客户证券账户等接口 - 待实现
+  - **funding-api**: 资金API，提供资金余额、资金变动流水、交易所信息等接口 - 待实现
+  - **securities-api**: 证券API，提供证券持仓、持仓变动流水、银行信息等接口 - 待实现
+  - **settlement-api**: 清/结算API，提供日清/结算相关功能接口 - 待实现
+  - **trading-engine-api**: 交易撮合API，提供日间证券标的交易/撮合相关功能接口 - 待实现
+  - **query-api**: 通用查询API，提供所有上述模块的查询能力接口 - 待实现
+  - **system-api**: 系统管理API，提供系统操作员、角色、权限、数据字典等接口 - **已实现**
+    - UserDTO、RoleDTO、PermissionDTO、DictionaryDTO等
+    - UserService、RoleService、PermissionService等接口
   - **middleware-spi**: 中间件SPI（服务提供者接口），定义中间件实现的标准接口
-    - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口
-    - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口
+  - **message-adapter-spi**: 消息适配器SPI，定义消息服务的标准接口 - **已实现**
+  - **cache-adapter-spi**: 缓存适配器SPI，定义缓存服务的标准接口 - **已实现**
 
 #### 4. securities-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
@@ -155,7 +156,7 @@ ijupiter-trading-system (父模块)
   - **query-core**: 通用查询核心，处理所有模块的查询请求，采用查询与事件分离架构
     - 服务层：各模块查询相关Service实现
     - 查询模型：针对各模块查询需求优化的数据模型
-  - **system-core**: 系统管理核心，采用传统MVC架构，处理系统操作员、角色、权限、数据字典、系统参数等，为管理终端提供标准的CRUD服务
+  - **system-core**: 系统管理核心，采用传统MVC架构，处理系统操作员、角色、权限、数据字典、系统参数等，为管理终端提供标准的CRUD服务 - **已实现**
     - **实体层**: 操作员、角色、权限、数据字典、系统参数等实体定义
     - **仓储层**: 各实体的Repository接口
     - **服务层**: 各实体对应的Service实现
@@ -164,32 +165,32 @@ ijupiter-trading-system (父模块)
 #### 5. securities-trading-middleware
 - **职责**: 提供中间件技术适配器
 - **子模块**:
-  - **rabbitmq-adapter**: RabbitMQ消息适配器，处理异步消息
-  - **redis-adapter**: Redis缓存适配器，处理缓存和会话
+  - **rabbitmq-adapter**: RabbitMQ消息适配器，处理异步消息 - **已实现**
+  - **redis-adapter**: Redis缓存适配器，处理缓存和会话 - **已实现**
 
 #### 6. securities-trading-web
 - **职责**: 提供Web界面和API入口
 - **子模块**:
   - **common-web**: 公共Web模块，提供视图层框架资源和控制层公共资源，包括：
     - Spring MVC和Thymeleaf配置
-    - WebJars资源管理（Bootstrap和jQuery）
+    - WebJars资源管理（Bootstrap 5.3.8和jQuery 3.7.1）
     - 基础控制器类和统一API响应格式（Result和PageResult）
     - 统一的页面模板结构
     - 包结构调整：控制器包名从/controller调整为/controllers，模型包名从/dto调整为/models
-  - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源
-  - **funding-web**: 资金Web模块，提供资金管理界面，继承common-web的公共资源
-  - **securities-web**: 证券Web模块，提供证券管理界面，继承common-web的公共资源
-  - **settlement-web**: 清/结算Web模块，提供清/结算管理界面，继承common-web的公共资源
-  - **trading-engine-web**: 交易撮合Web模块，提供交易撮合管理界面，继承common-web的公共资源
-  - **query-web**: 通用查询Web模块，提供所有模块的查询界面，继承common-web的公共资源
-  - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源
+  - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源 - **已实现**
+    - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源 - 待实现
+  - **funding-web**: 资金Web模块，提供资金管理界面，继承common-web的公共资源 - 待实现
+  - **securities-web**: 证券Web模块，提供证券管理界面，继承common-web的公共资源 - 待实现
+  - **settlement-web**: 清/结算Web模块，提供清/结算管理界面，继承common-web的公共资源 - 待实现
+  - **trading-engine-web**: 交易撮合Web模块，提供交易撮合管理界面，继承common-web的公共资源 - 待实现
+  - **query-web**: 通用查询Web模块，提供所有模块的查询界面，继承common-web的公共资源 - 待实现
 
 #### 7. securities-trading-boots
 - **职责**: 提供不同场景的应用启动入口
 - **子模块**:
-  - **service-boot-allinone**: 服务单体启动器，包含所有核心服务模块
-  - **web-boot-investor**: 投资者Web启动器，面向证券投资者域的客户端
-  - **web-boot-management**: 管理员Web启动器，面向管理员域的管理终端
+  - **service-boot-allinone**: 服务单体启动器，包含所有核心服务模块 - **已实现**
+  - **web-boot-investment**: 投资者Web启动器，面向证券投资者域的客户端 - **已实现**
+  - **web-boot-management**: 管理员Web启动器，面向管理员域的管理终端 - **已实现**
 - **特点**: 支持按业务域分离启动，方便不同角色使用
 
 ## 设计原则
@@ -521,7 +522,8 @@ ijupiter-trading-system (父模块)
 - 读写分离
 - 分库分表策略
 - 索引优化
-- 连接池管理
+- HikariCP连接池管理
+- 事务控制：使用Spring事务管理确保数据一致性
 
 ### 2. 缓存策略
 - 多级缓存（本地缓存 + Redis）
@@ -588,3 +590,48 @@ ijupiter-trading-system (父模块)
 - **MAVEN_WRAPPER.md**: Maven Wrapper详细使用指南
 - **README.md**: 项目总体介绍和快速入门指南
 - **ARCHITECTURE.md**: 系统架构详细说明
+
+## 项目实现状态
+
+### ✅ 已实现模块
+
+1. **securities-trading-boms** - 依赖版本统一管理
+2. **securities-trading-common** - 公共基础组件
+3. **securities-trading-middleware** - 中间件适配器层
+   - redis-adapter: Redis缓存适配器
+   - rabbitmq-adapter: RabbitMQ消息适配器
+4. **securities-trading-web** - Web表示层
+   - common-web: 公共Web模块
+   - system-web: 系统管理Web模块
+5. **securities-trading-boots** - 应用启动层
+   - service-boot-allinone: 服务单体启动器
+   - web-boot-management: 管理员Web启动器
+   - web-boot-investment: 投资者Web启动器
+
+### ⏳ 待实现模块
+
+1. **customer-core/web** - 客户管理模块
+2. **funding-core/web** - 资金管理模块
+3. **securities-core/web** - 证券管理模块
+4. **settlement-core/web** - 清算模块
+5. **trading-engine-core/web** - 交易引擎模块
+6. **query-core/web** - 通用查询模块
+
+## 架构特色
+
+### 已实现的关键设计模式
+
+1. **事件驱动架构**: 使用Axon Framework实现，通过领域事件解耦各模块
+2. **CQRS模式**: 命令查询责任分离，优化读写性能
+3. **领域驱动设计(DDD)**: 按业务领域划分模块，明确的领域边界
+4. **微服务架构**: 按业务域垂直拆分，服务独立部署和扩展
+5. **多层架构设计**: 清晰的分层结构，职责分明
+6. **SPI模式**: 支持中间件的灵活替换
+
+### 技术选型亮点
+
+1. **Spring Boot 3.5.8**: 最新稳定版本，提供强大的自动配置
+2. **Axon Framework 4.12.2**: 业界领先的事件驱动框架
+3. **统一响应格式**: 采用`Result`类型统一API响应
+4. **WebJars管理**: 通过WebJars统一管理前端资源版本
+5. **Maven Wrapper**: 确保所有开发者使用相同的构建环境
