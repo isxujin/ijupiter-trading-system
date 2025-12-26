@@ -38,11 +38,6 @@
                     <groupId>org.axonframework</groupId>
                     <artifactId>axon-axonserver-connector</artifactId>
                 </exclusion>
-                <!-- 排除 Axon 自动配置，避免重复 Bean -->
-                <exclusion>
-                    <groupId>org.axonframework</groupId>
-                    <artifactId>axon-spring-boot-autoconfigure</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -53,6 +48,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.axonframework</groupId>-->
+<!--            <artifactId>axon-core</artifactId>-->
+<!--        </dependency>-->
 
         <!-- 测试依赖 -->
         <dependency>

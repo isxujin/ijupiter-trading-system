@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户账户管理 - iJupiter Trading System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .table th {
+            background-color: #f8f9fc;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            color: #5a5c69;
+        }
+        .hover-action:hover {
+            cursor: pointer;
+            color: #4e73df;
+        }
+        .avatar-small {
+            width: 32px;
+            height: 32px;
+            display: inline-block;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #e3e6f0;
+            color: #5a5c69;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .text-truncate-custom {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="common/layout :: header"></div>
+    <div th:replace="common/layout :: sidebar"></div>
+    
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                <h1>客户账户管理</h1>
+                <div>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAccountModal">
+                        <i class="bi bi-plus-circle"></i> 创建账户
+                    </button>
+                    <button class="btn btn-outline-primary ms-2" onclick="exportData()">
+                        <i class="bi bi-download"></i> 导出
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 搜索面板 -->
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <i class="bi bi-funnel"></i> 搜索条件
+                </div>
+                <div class="card-body">
+                    <form id="searchForm" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="customerCode" class="form-label">客户编号</label>
+                            <input type="text" class="form-control" id="customerCode" name="customerCode" placeholder="输入客户编号">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="accountCode" class="form-label">账户编号</label>
+                            <input type="text" class="form-control" id="accountCode" name="accountCode" placeholder="输入账户编号">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="accountType" class="form-label">账户类型</label>
+                            <select class="form-select" id="accountType" name="accountType">
+                                <option value="">全部</option>
+                                <option value="1">资金账户</option>
+                                <option value="2">证券账户</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="status" class="form-label">账户状态</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">全部</option>
+                                <option value="1">正常</option>
+                                <option value="2">冻结</option>
+                                <option value="3">注销</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary me-2" onclick="search()">
+                                <i class="bi bi-search"></i> 搜索
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="resetSearch()">
+                                <i class="bi bi-arrow-clockwise"></i> 重置
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- 数据表格 -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <i class="bi bi-table"></i> 客户账户列表
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="accountTable">
+                            <thead>
+                                <tr>
+                                    <th>账户编号</th>
+                                    <th>客户编号</th>
+                                    <th>客户名称</th>
+                                    <th>账户类型</th>
+                                    <th>账户余额</th>
+                                    <th>冻结金额</th>
+                                    <th>可用余额</th>
+                                    <th>状态</th>
+                                    <th>开户时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 数据将通过AJAX加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="text-muted">
+                            显示第 <span id="pageStart">0</span> 至 <span id="pageEnd">0</span> 条，共 <span id="pageTotal">0</span> 条
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0" id="pagination">
+                                <!-- 分页将通过JS动态生成 -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 创建账户模态框 -->
+    <div class="modal fade" id="createAccountModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">创建账户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createAccountForm">
+                        <div class="mb-3">
+                            <label for="modalCustomerCode" class="form-label">客户编号</label>
+                            <input type="text" class="form-control" id="modalCustomerCode" name="customerCode" required>
+                            <div class="form-text">输入客户编号将自动获取客户信息</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalAccountType" class="form-label">账户类型</label>
+                            <select class="form-select" id="modalAccountType" name="accountType" required>
+                                <option value="">选择账户类型</option>
+                                <option value="1">资金账户</option>
+                                <option value="2">证券账户</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalAccountName" class="form-label">账户名称</label>
+                            <input type="text" class="form-control" id="modalAccountName" name="accountName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalInitialBalance" class="form-label">初始余额</label>
+                            <input type="number" class="form-control" id="modalInitialBalance" name="initialBalance" step="0.01" value="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="modalRemark" class="form-label">备注</label>
+                            <textarea class="form-control" id="modalRemark" name="remark" rows="3"></textarea>
+                        </div>
+                        <div id="customerInfo" class="alert alert-info d-none">
+                            <!-- 客户信息将在这里显示 -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAccount()">创建账户</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 账户状态模态框 -->
+    <div class="modal fade" id="accountStatusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">更改账户状态</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="accountStatusForm">
+                        <div class="mb-3">
+                            <label for="statusAccountId" class="form-label">账户编号</label>
+                            <input type="text" class="form-control" id="statusAccountId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newStatus" class="form-label">新状态</label>
+                            <select class="form-select" id="newStatus" name="newStatus" required>
+                                <option value="1">正常</option>
+                                <option value="2">冻结</option>
+                                <option value="3">注销</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="updateAccountStatus()">保存更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let pageSize = 10;
+        let totalElements = 0;
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAccountData();
+        });
+
+        // 加载账户数据
+        function loadAccountData(page = 1) {
+            currentPage = page;
+            const searchForm = document.getElementById('searchForm');
+            const formData = new FormData(searchForm);
+            
+            const params = new URLSearchParams();
+            params.append('pageNum', page);
+            params.append('pageSize', pageSize);
+            
+            for (let [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    params.append(key, value);
+                }
+            }
+            
+            fetch(`/customer/account/data?${params}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderAccountTable(data.data.list);
+                        renderPagination(data.data);
+                    } else {
+                        showAlert('error', data.message || '获取账户数据失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('获取账户数据失败:', error);
+                    showAlert('error', '获取账户数据失败');
+                });
+        }
+
+        // 渲染账户表格
+        function renderAccountTable(accounts) {
+            const tbody = document.querySelector('#accountTable tbody');
+            tbody.innerHTML = '';
+            
+            if (accounts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center">暂无数据</td></tr>';
+                return;
+            }
+            
+            accounts.forEach(account => {
+                const statusBadge = getStatusBadge(account.status);
+                const accountTypeBadge = getAccountTypeBadge(account.accountType);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="avatar-small">${account.accountCode.substring(0, 2).toUpperCase()}</span> ${account.accountCode}</td>
+                    <td>${account.customerCode || '-'}</td>
+                    <td class="text-truncate-custom" title="${account.customerName || '-'}">${account.customerName || '-'}</td>
+                    <td>${accountTypeBadge}</td>
+                    <td class="text-end">¥${formatNumber(account.balance || 0)}</td>
+                    <td class="text-end">¥${formatNumber(account.frozenAmount || 0)}</td>
+                    <td class="text-end">¥${formatNumber(account.availableBalance || 0)}</td>
+                    <td>${statusBadge}</td>
+                    <td>${formatDate(account.openDate)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="changeAccountStatus(${account.id}, '${account.accountCode}', ${account.status})" title="更改状态">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-info" onclick="viewAccountDetails(${account.id})" title="查看详情">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 渲染分页
+        function renderPagination(pageData) {
+            totalElements = pageData.total;
+            const totalPages = Math.ceil(totalElements / pageSize);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            
+            // 计算显示的页码范围
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+            
+            // 上一页
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#" onclick="loadAccountData(${currentPage - 1}); return false;">上一页</a>`;
+            pagination.appendChild(prevLi);
+            
+            // 页码
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" onclick="loadAccountData(${i}); return false;">${i}</a>`;
+                pagination.appendChild(li);
+            }
+            
+            // 下一页
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#" onclick="loadAccountData(${currentPage + 1}); return false;">下一页</a>`;
+            pagination.appendChild(nextLi);
+            
+            // 更新统计信息
+            updatePageInfo();
+        }
+
+        // 更新页面信息
+        function updatePageInfo() {
+            const start = (currentPage - 1) * pageSize + 1;
+            const end = Math.min(currentPage * pageSize, totalElements);
+            
+            document.getElementById('pageStart').textContent = totalElements > 0 ? start : 0;
+            document.getElementById('pageEnd').textContent = end;
+            document.getElementById('pageTotal').textContent = totalElements;
+        }
+
+        // 搜索
+        function search() {
+            loadAccountData(1);
+        }
+
+        // 重置搜索
+        function resetSearch() {
+            document.getElementById('searchForm').reset();
+            loadAccountData(1);
+        }
+
+        // 更改账户状态
+        function changeAccountStatus(accountId, accountCode, currentStatus) {
+            document.getElementById('statusAccountId').value = accountCode;
+            document.getElementById('newStatus').value = currentStatus;
+            
+            const modal = new bootstrap.Modal(document.getElementById('accountStatusModal'));
+            modal.show();
+        }
+
+        // 更新账户状态
+        function updateAccountStatus() {
+            const accountCode = document.getElementById('statusAccountId').value;
+            const status = document.getElementById('newStatus').value;
+            
+            // 提取账户ID（从隐藏输入或通过其他方式获取）
+            // 这里简化处理，实际需要根据实际情况调整
+            
+            showAlert('info', '功能开发中...');
+            
+            // 实际实现应调用API
+            // fetch(`/customer/account/status/${accountId}?status=${status}`, {
+            //     method: 'PUT'
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         showAlert('success', '账户状态更新成功');
+            //         bootstrap.Modal.getInstance(document.getElementById('accountStatusModal')).hide();
+            //         loadAccountData(currentPage);
+            //     } else {
+            //         showAlert('error', data.message || '账户状态更新失败');
+            //     }
+            // });
+        }
+
+        // 查看账户详情
+        function viewAccountDetails(accountId) {
+            showAlert('info', '功能开发中...');
+        }
+
+        // 导出数据
+        function exportData() {
+            showAlert('info', '导出功能开发中...');
+        }
+
+        // 创建账户
+        function saveAccount() {
+            const form = document.getElementById('createAccountForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            const formData = new FormData(form);
+            const accountData = {
+                customerCode: formData.get('customerCode'),
+                accountType: parseInt(formData.get('accountType')),
+                accountName: formData.get('accountName'),
+                balance: parseFloat(formData.get('initialBalance') || '0'),
+                remark: formData.get('remark')
+            };
+            
+            fetch('/customer/account/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(accountData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', '账户创建成功');
+                    bootstrap.Modal.getInstance(document.getElementById('createAccountModal')).hide();
+                    form.reset();
+                    loadAccountData(currentPage);
+                } else {
+                    showAlert('error', data.message || '账户创建失败');
+                }
+            })
+            .catch(error => {
+                console.error('账户创建失败:', error);
+                showAlert('error', '账户创建失败');
+            });
+        }
+
+        // 获取账户类型徽章
+        function getAccountTypeBadge(type) {
+            if (type === 1) {
+                return '<span class="badge bg-primary">资金账户</span>';
+            } else if (type === 2) {
+                return '<span class="badge bg-success">证券账户</span>';
+            }
+            return '<span class="badge bg-secondary">未知</span>';
+        }
+
+        // 获取状态徽章
+        function getStatusBadge(status) {
+            switch (status) {
+                case 1:
+                    return '<span class="badge bg-success">正常</span>';
+                case 2:
+                    return '<span class="badge bg-warning">冻结</span>';
+                case 3:
+                    return '<span class="badge bg-danger">注销</span>';
+                default:
+                    return '<span class="badge bg-secondary">未知</span>';
+            }
+        }
+
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // 格式化数字
+        function formatNumber(num) {
+            return parseFloat(num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // 显示提示信息
+        function showAlert(type, message) {
+            // 创建提示元素
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // 添加到页面顶部
+            const main = document.querySelector('main');
+            main.insertBefore(alertDiv, main.firstChild);
+            
+            // 3秒后自动关闭
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 3000);
+        }
+
+        // 监听客户编号输入，自动获取客户信息
+        document.getElementById('modalCustomerCode').addEventListener('blur', function() {
+            const customerCode = this.value.trim();
+            if (customerCode === '') {
+                document.getElementById('customerInfo').classList.add('d-none');
+                document.getElementById('modalAccountName').value = '';
+                return;
+            }
+            
+            // 实际实现中应通过API获取客户信息
+            // fetch(`/customer/data?customerCode=${customerCode}`)
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success && data.data && data.data.list.length > 0) {
+            //         const customer = data.data.list[0];
+            //         const infoDiv = document.getElementById('customerInfo');
+            //         infoDiv.textContent = `客户名称: ${customer.customerName}, 客户类型: ${customer.customerType === 1 ? '个人' : '机构'}`;
+            //         infoDiv.classList.remove('d-none');
+            //         
+            //         // 自动填充账户名称
+            //         if (!document.getElementById('modalAccountName').value) {
+            //             document.getElementById('modalAccountName').value = customer.customerName + '的' + 
+            //                 (document.getElementById('modalAccountType').value === '1' ? '资金账户' : '证券账户');
+            //         }
+            //     } else {
+            //         document.getElementById('customerInfo').classList.add('d-none');
+            //         showAlert('error', '客户不存在');
+            //     }
+            // });
+        });
+
+        // 监听账户类型变化，更新账户名称
+        document.getElementById('modalAccountType').addEventListener('change', function() {
+            const customerCode = document.getElementById('modalCustomerCode').value.trim();
+            const accountNameInput = document.getElementById('modalAccountName');
+            
+            if (customerCode && !accountNameInput.value) {
+                const accountType = this.value === '1' ? '资金账户' : '证券账户';
+                accountNameInput.placeholder = `例如: ${customerCode}的${accountType}`;
+            }
+        });
+    </script>
+</body>
+</html>

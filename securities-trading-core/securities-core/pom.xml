@@ -13,7 +13,7 @@
     <artifactId>securities-core</artifactId>
     <packaging>jar</packaging>
     <name>Securities Core</name>
-    <description>账户/证券管理核心实现（原 account-core）</description>
+    <description>证券管理核心模块</description>
 
     <dependencies>
         <!-- 二方依赖 -->
@@ -37,11 +37,6 @@
                 <exclusion>
                     <groupId>org.axonframework</groupId>
                     <artifactId>axon-axonserver-connector</artifactId>
-                </exclusion>
-                <!-- 排除 Axon 自动配置，避免重复 Bean -->
-                <exclusion>
-                    <groupId>org.axonframework</groupId>
-                    <artifactId>axon-spring-boot-autoconfigure</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

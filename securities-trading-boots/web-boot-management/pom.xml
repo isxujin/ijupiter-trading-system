@@ -32,6 +32,17 @@
             <version>${project.version}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>net.ijupiter.trading</groupId>-->
+<!--            <artifactId>customer-web</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>net.ijupiter.trading</groupId>-->
+<!--            <artifactId>customer-core</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--        </dependency>-->
+
         <!-- 三方依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

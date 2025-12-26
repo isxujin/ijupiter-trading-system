@@ -1,0 +1,32 @@
+package net.ijupiter.trading.api.trading.commands;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.experimental.Accessors;
+
+/**
+ * 取消交易命令
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Accessors(chain = true)
+public class CancelTradeCommand {
+    /**
+     * 交易编号
+     */
+    private String tradeCode;
+    
+    /**
+     * 取消原因
+     */
+    private String reason;
+    
+    /**
+     * 操作员ID
+     */
+    private Long operatorId;
+}

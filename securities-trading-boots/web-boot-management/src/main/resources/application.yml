@@ -53,6 +53,27 @@ spring:
   # 1.6 允许循环依赖
   main:
     allow-circular-references: true
+  # 1.7 Axon Framework 配置
+  axon:
+    eventhandling:
+      processors:
+        customer-event-processor:
+          mode: tracking  # 使用跟踪模式处理事件
+    serializer:
+      general: jackson  # 使用Jackson序列化器
+      events: jackson
+      messages: jackson
+    eventstore:
+      jdbc:
+        # 启用JDBC事件存储
+        enabled: true
+    snapshotting:
+      # 启用快照
+      enabled: true
+      # 快照触发阈值
+      threshold: 50
+      # 快照序列化器
+      serializer: jackson
 
 # 服务器配置
 server:

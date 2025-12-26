@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户仪表盘 - iJupiter Trading System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div th:replace="common/layout :: header"></div>
+    <div th:replace="common/layout :: sidebar"></div>
+    
+    <main class="main-content">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                <h1>客户仪表盘</h1>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="refreshDashboard()">
+                        <i class="bi bi-arrow-clockwise"></i> 刷新
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 统计卡片 -->
+            <div class="row mb-4" th:if="${statistics}">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">客户总数</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${statistics.totalCustomers}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-people-fill fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">活跃客户</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${statistics.activeCustomers}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-person-check-fill fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">冻结客户</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${statistics.frozenCustomers}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-snow2 fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-danger shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">注销客户</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${statistics.closedCustomers}">0</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-person-x-fill fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图表和最近客户 -->
+            <div class="row">
+                <!-- 客户状态分布图 -->
+                <div class="col-xl-6 col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">客户状态分布</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                                    <a class="dropdown-item" href="#" onclick="downloadChart('customerStatusChart')">下载图表</a>
+                                    <a class="dropdown-item" href="#" onclick="refreshChart()">刷新数据</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area" style="position: relative; height: 300px;">
+                                <canvas id="customerStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近添加的客户 -->
+                <div class="col-xl-6 col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">最近添加的客户</h6>
+                            <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" href="/customer/account">
+                                <i class="bi bi-eye"></i> 查看全部
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>客户编号</th>
+                                            <th>客户名称</th>
+                                            <th>客户类型</th>
+                                            <th>状态</th>
+                                            <th>开户时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="customer : ${recentCustomers}" th:if="${recentCustomers}">
+                                            <td th:text="${customer.customerCode}">-</td>
+                                            <td th:text="${customer.customerName}">-</td>
+                                            <td>
+                                                <span th:if="${customer.customerType == 1}" class="badge bg-info">个人</span>
+                                                <span th:if="${customer.customerType == 2}" class="badge bg-warning">机构</span>
+                                            </td>
+                                            <td>
+                                                <span th:if="${customer.status == 1}" class="badge bg-success">正常</span>
+                                                <span th:if="${customer.status == 2}" class="badge bg-warning">冻结</span>
+                                                <span th:if="${customer.status == 3}" class="badge bg-danger">注销</span>
+                                            </td>
+                                            <td th:text="${#temporals.format(customer.openDate, 'yyyy-MM-dd')}">-</td>
+                                        </tr>
+                                        <tr th:if="${recentCustomers == null or #lists.isEmpty(recentCustomers)}">
+                                            <td colspan="5" class="text-center">暂无客户数据</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        // 客户状态分布图
+        const customerStatusCtx = document.getElementById('customerStatusChart').getContext('2d');
+        const customerStatusChart = new Chart(customerStatusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['活跃客户', '冻结客户', '注销客户'],
+                datasets: [{
+                    data: [
+                        /*[[${statistics != null ? statistics.activeCustomers : 0}]]*/ 0,
+                        /*[[${statistics != null ? statistics.frozenCustomers : 0}]]*/ 0,
+                        /*[[${statistics != null ? statistics.closedCustomers : 0}]]*/ 0
+                    ],
+                    backgroundColor: ['#4e73df', '#f6c23e', '#e74a3b'],
+                    hoverBackgroundColor: ['#2e59d9', '#f4b619', '#e02d1b'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        fontColor: 'rgb(0, 0, 0)',
+                        fontSize: 12
+                    }
+                }
+            }
+        });
+
+        // 刷新仪表盘
+        function refreshDashboard() {
+            window.location.reload();
+        }
+
+        // 刷新图表
+        function refreshChart() {
+            fetch('/customer/statistics')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        const stats = data.data;
+                        customerStatusChart.data.datasets[0].data = [
+                            stats.activeCustomers,
+                            stats.frozenCustomers,
+                            stats.closedCustomers
+                        ];
+                        customerStatusChart.update();
+                    }
+                })
+                .catch(error => {
+                    console.error('刷新统计数据失败:', error);
+                });
+        }
+
+        // 下载图表
+        function downloadChart(chartId) {
+            const canvas = document.getElementById(chartId);
+            const url = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'customer-status-chart.png';
+            link.href = url;
+            link.click();
+        }
+    </script>
+
+    <style>
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        .border-left-danger {
+            border-left: 0.25rem solid #e74a3b !important;
+        }
+        .text-xs {
+            font-size: 0.75rem;
+        }
+        .text-gray-300 {
+            color: #dddfeb !important;
+        }
+        .text-gray-800 {
+            color: #5a5c69 !important;
+        }
+    </style>
+</body>
+</html>
