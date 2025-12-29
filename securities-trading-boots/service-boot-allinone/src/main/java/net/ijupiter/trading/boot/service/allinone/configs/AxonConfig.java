@@ -4,53 +4,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityManager;
-import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.common.jpa.EntityManagerProvider;
-import org.axonframework.config.Configurer;
-import org.axonframework.config.DefaultConfigurer;
-import org.axonframework.eventhandling.TrackingEventProcessorConfiguration;
-import org.axonframework.eventhandling.tokenstore.jpa.JpaTokenStore;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine;
-import org.axonframework.monitoring.NoOpMessageMonitor;
-import org.axonframework.queryhandling.DefaultQueryGateway;
-import org.axonframework.queryhandling.QueryBus;
-import org.axonframework.queryhandling.QueryGateway;
-import org.axonframework.queryhandling.SimpleQueryBus;
+import org.axonframework.eventhandling.tokenstore.jpa.JpaTokenStore;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.json.JacksonSerializer;
+import org.axonframework.springboot.autoconfig.AxonAutoConfiguration;
 import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.concurrent.TimeUnit;
-
 /**
- * 核心：所有 Bean 加 @Primary，确保唯一且优先被注入
+ * 完整的Axon配置，提供必要的事件存储和TokenStore
  */
 @Configuration
+@Import(AxonAutoConfiguration.class)
 public class AxonConfig {
+    
+    static {
+        // 静态初始化块，禁用Axon更新检查
+        System.setProperty("axon.update-check.enabled", "false");
+    }
 
-    // ======================== 1. 基础 Bean：EntityManagerProvider （必须优先注册） ==================================
+    // ======================== 1. 基础 Bean：EntityManagerProvider ========================
     @Bean
+    @Primary
+    @ConditionalOnMissingBean
     public EntityManagerProvider entityManagerProvider(EntityManager entityManager) {
         return () -> entityManager;
     }
 
-    // ======================== 2. 基础 Bean：TransactionManager （必须优先注册） ==================================
+    // ======================== 2. 核心：Jackson序列化器 ========================
     @Bean
-    public SpringTransactionManager axonTransactionManager(PlatformTransactionManager platformTransactionManager) {
-        return new SpringTransactionManager(platformTransactionManager);
-    }
-
-    // ======================== 3. 核心：JacksonSerializer（替代 XStream，消除安全警告） ========================
-    @Bean
-    public Serializer eventSerializer() {
+    @Primary
+    @ConditionalOnMissingBean
+    public Serializer serializer() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -59,114 +52,48 @@ public class AxonConfig {
                 .build();
     }
 
-    // ======================== 4. 核心：CommandBus 命令总线（必须加 @Primary：Spring优先注入） ========================
+    // ======================== 3. 核心：Spring事务管理器 ========================
     @Bean
     @Primary
-    public CommandBus commandBus(SpringTransactionManager axonTransactionManager) {
-        return SimpleCommandBus.builder()
-                .transactionManager(axonTransactionManager)
-                .messageMonitor(NoOpMessageMonitor.instance())
-                .build();
+    @ConditionalOnMissingBean
+    public SpringTransactionManager springTransactionManager(PlatformTransactionManager platformTransactionManager) {
+        return new SpringTransactionManager(platformTransactionManager);
     }
 
-    // ======================== 5. 核心：CommandGateway 命令网关（必须加 @Primary：Spring优先注入） ========================
+    // ======================== 4. 核心：TokenStore 令牌存储 ========================
     @Bean
     @Primary
-    public CommandGateway commandGateway(CommandBus commandBus) {
-        return DefaultCommandGateway.builder()
-                .commandBus(commandBus)
-                .build();
-    }
-
-    // ======================== 6. 核心：QueryBus 查询总线（必须加 @Primary：Spring优先注入） ========================
-    @Bean
-    @Primary
-    public QueryBus queryBus() {
-        return SimpleQueryBus.builder()
-                .messageMonitor(NoOpMessageMonitor.instance())
-                .build();
-    }
-
-    // ======================== 7. 核心：QueryGateway 查询网关（必须加 @Primary：Spring优先注入） ========================
-    @Bean
-    @Primary
-    public QueryGateway queryGateway(QueryBus queryBus) {
-        return DefaultQueryGateway.builder()
-                .queryBus(queryBus)
-                .build();
-    }
-
-    // ======================== 8. 核心：EventStore 事件存储   ========================
-    @Bean
-    public EmbeddedEventStore eventStore(
-            EntityManagerProvider entityManagerProvider,
-            Serializer eventSerializer,
-            SpringTransactionManager axonTransactionManager) {
-        JpaEventStorageEngine storageEngine = JpaEventStorageEngine.builder()
-                .entityManagerProvider(entityManagerProvider)
-                .transactionManager(axonTransactionManager)
-                .eventSerializer(eventSerializer)          // 事件序列化器
-                .snapshotSerializer(eventSerializer)       // 快照序列化器
-                .batchSize(100)
-                .explicitFlush(true)
-                .gapTimeout(60000)
-                .build();
-        return EmbeddedEventStore.builder()
-                .storageEngine(storageEngine)
-                .build();
-    }
-
-    // ======================== 9. 核心：TokenStore 令牌存储   ========================
-    @Bean
-    public JpaTokenStore tokenStore(EntityManagerProvider entityManagerProvider, Serializer eventSerializer) {
+    @ConditionalOnMissingBean
+    public JpaTokenStore tokenStore(EntityManagerProvider entityManagerProvider, Serializer serializer) {
         return JpaTokenStore.builder()
                 .entityManagerProvider(entityManagerProvider)
-                .serializer(eventSerializer)
+                .serializer(serializer)
                 .build();
     }
 
-    // ======================== 10. 核心：Configurer 配置   ========================
+    // ======================== 5. 核心：JPA事件存储引擎 ========================
     @Bean
     @Primary
-    public Configurer axonConfigurer(
+    @ConditionalOnMissingBean
+    public JpaEventStorageEngine eventStorageEngine(
             EntityManagerProvider entityManagerProvider,
-            Serializer eventSerializer,
-            SpringTransactionManager axonTransactionManager,
-            EmbeddedEventStore eventStore,
-            CommandBus commandBus,
-            QueryBus queryBus) {
-
-        Configurer configurer = DefaultConfigurer.defaultConfiguration();
-
-        // 注册所有核心组件到 Axon 配置器
-        configurer.registerComponent(SpringTransactionManager.class, c -> axonTransactionManager);
-        configurer.registerComponent(Serializer.class, c -> eventSerializer);
-        configurer.registerComponent(CommandBus.class, c -> commandBus);
-        configurer.registerComponent(QueryBus.class, c -> queryBus);
-        configurer.registerComponent(EmbeddedEventStore.class, c -> eventStore);
-        configurer.registerComponent(JpaTokenStore.class, c -> tokenStore(entityManagerProvider, eventSerializer));
-
-        // 配置事件处理器
-        configurer.eventProcessing(epc ->
-                epc.registerTrackingEventProcessor(
-                        "net.ijupiter.trading.handlers",
-                        c -> eventStore,
-                        c -> TrackingEventProcessorConfiguration
-                                .forParallelProcessing(2)
-                                .andBatchSize(50)
-                                .andTokenClaimInterval(5000, TimeUnit.MILLISECONDS)
-                                .andEventAvailabilityTimeout(1000, TimeUnit.MILLISECONDS)
-                                .andAutoStart(true)
-                                .andWorkerTerminationTimeout(5000, TimeUnit.MILLISECONDS)
-                )
-        );
-        return configurer;
+            Serializer serializer,
+            SpringTransactionManager transactionManager) {
+        return JpaEventStorageEngine.builder()
+                .entityManagerProvider(entityManagerProvider)
+                .transactionManager(transactionManager)
+                .eventSerializer(serializer)
+                .snapshotSerializer(serializer)
+                .build();
     }
 
+    // ======================== 6. 核心：事件存储 ========================
     @Bean
-    public org.axonframework.config.Configuration axonConfiguration(Configurer configurer) {
-        org.axonframework.config.Configuration configuration = configurer.buildConfiguration();
-        configuration.start();
-        return configuration;
+    @Primary
+    @ConditionalOnMissingBean
+    public EmbeddedEventStore eventStore(JpaEventStorageEngine eventStorageEngine) {
+        return EmbeddedEventStore.builder()
+                .storageEngine(eventStorageEngine)
+                .build();
     }
 }

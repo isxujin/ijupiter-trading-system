@@ -3,6 +3,9 @@ spring:
   # 1.1 应用配置
   application:
     name: service-boot-menagement
+  # 1.2 Bean配置
+  main:
+    allow-bean-definition-overriding: true
   # 1.2 数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
@@ -26,7 +29,7 @@ spring:
       - org.axonframework.eventsourcing.eventstore.jpa
     hibernate:
       ddl-auto: update  # 开发环境：update（自动创建/更新表）；生产环境：none（手动建表，避免误删）
-    show-sql: true     # 显示 SQL（开发环境开启，生产关闭）
+    show-sql: false     # 显示 SQL（开发环境开启，生产关闭）
     properties:
       hibernate:
         #id:
@@ -54,8 +57,14 @@ spring:
 
 # ========== 2. Axon 事件引擎配置 ==========
 axon:
+  # 禁用AxonServer连接，使用本地嵌入式配置
+  axonserver:
+    enabled: false
   # 可选：指定上下文（默认default）
   context: default
+  # 禁用更新检查
+  update-check:
+    enabled: false
   # 2.0 事件处理器配置（可选，默认即可）
   eventhandling:
     processors:
@@ -119,10 +128,10 @@ trading:
 # 日志配置
 logging:
   level:
-    net.ijupiter.trading: DEBUG
-    org.springframework: INFO
-    org.hibernate: INFO
-    org.axonframework: INFO
+    net.ijupiter.trading: INFO
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    org.axonframework: ERROR
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
