@@ -11,7 +11,12 @@ import net.ijupiter.trading.api.securities.dtos.SecuritiesAccountDTO;
 import net.ijupiter.trading.api.securities.dtos.SecuritiesPositionDTO;
 import net.ijupiter.trading.api.securities.dtos.SecuritiesTransferDTO;
 import net.ijupiter.trading.api.securities.services.SecuritiesService;
-import net.ijupiter.trading.core.securities.repositories.SecuritiesRepository;
+import net.ijupiter.trading.core.securities.entities.SecuritiesAccountEntity;
+import net.ijupiter.trading.core.securities.entities.SecuritiesPositionEntity;
+import net.ijupiter.trading.core.securities.entities.SecuritiesTransactionEntity;
+import net.ijupiter.trading.core.securities.repositories.SecuritiesJpaRepository;
+import net.ijupiter.trading.core.securities.repositories.SecuritiesPositionJpaRepository;
+import net.ijupiter.trading.core.securities.repositories.SecuritiesTransactionJpaRepository;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
@@ -32,34 +37,52 @@ import java.util.stream.Collectors;
 public class SecuritiesDomainService implements SecuritiesService {
     
     @Autowired
-    private SecuritiesRepository securitiesRepository;
+    private SecuritiesJpaRepository securitiesJpaRepository;
+    
+    @Autowired
+    private SecuritiesPositionJpaRepository securitiesPositionJpaRepository;
+    
+    @Autowired
+    private SecuritiesTransactionJpaRepository securitiesTransactionJpaRepository;
     
     @Autowired
     private CommandGateway commandGateway;
     
     @Override
     public List<SecuritiesAccountDTO> findAll() {
-        return securitiesRepository.findAllAccounts();
+        List<SecuritiesAccountEntity> entities = securitiesJpaRepository.findAll();
+        return entities.stream()
+                .map(new SecuritiesAccountDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<SecuritiesAccountDTO> findById(Long id) {
-        return securitiesRepository.findAccountById(id);
+        Optional<SecuritiesAccountEntity> entity = securitiesJpaRepository.findById(id);
+        return entity.map(new SecuritiesAccountDTO()::convertFrom);
     }
     
     @Override
     public SecuritiesAccountDTO save(SecuritiesAccountDTO securitiesAccountDTO) {
-        return securitiesRepository.saveAccount(securitiesAccountDTO);
+        SecuritiesAccountEntity entity = new SecuritiesAccountEntity().convertFrom(securitiesAccountDTO);
+        SecuritiesAccountEntity savedEntity = securitiesJpaRepository.save(entity);
+        return new SecuritiesAccountDTO().convertFrom(savedEntity);
     }
     
     @Override
     public void deleteById(Long id) {
-        securitiesRepository.deleteAccountById(id);
+        if (securitiesJpaRepository.existsById(id)) {
+            securitiesJpaRepository.deleteById(id);
+        } else {
+            log.warn("尝试删除不存在的证券账户: {}", id);
+        }
     }
     
     @Override
     public void delete(SecuritiesAccountDTO entity) {
-        securitiesRepository.deleteAccountById(entity.getId());
+        if (entity.getId() != null) {
+            deleteById(entity.getId());
+        }
     }
     
     @Override
@@ -69,100 +92,186 @@ public class SecuritiesDomainService implements SecuritiesService {
     
     @Override
     public SecuritiesAccountDTO saveAndFlush(SecuritiesAccountDTO entity) {
-        return securitiesRepository.saveAccount(entity);
+        return save(entity);
     }
     
     @Override
     public List<SecuritiesAccountDTO> saveAll(List<SecuritiesAccountDTO> entities) {
         return entities.stream()
-                .map(securitiesRepository::saveAccount)
+                .map(this::save)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<SecuritiesAccountDTO> findAllById(List<Long> ids) {
-        return ids.stream()
-                .map(securitiesRepository::findAccountById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        List<SecuritiesAccountEntity> entities = securitiesJpaRepository.findAllById(ids);
+        return entities.stream()
+                .map(new SecuritiesAccountDTO()::convertFrom)
                 .collect(Collectors.toList());
     }
     
     @Override
     public boolean existsById(Long id) {
-        return securitiesRepository.findAccountById(id).isPresent();
+        return securitiesJpaRepository.existsById(id);
     }
     
     @Override
     public long count() {
-        return securitiesRepository.findAllAccounts().size();
+        return securitiesJpaRepository.count();
     }
     
     @Override
     public List<SecuritiesAccountDTO> findByCustomerId(Long customerId) {
-        return securitiesRepository.findAccountsByCustomerId(customerId);
+        List<SecuritiesAccountEntity> entities = securitiesJpaRepository.findByCustomerId(customerId);
+        return entities.stream()
+                .map(new SecuritiesAccountDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<SecuritiesAccountDTO> findByAccountCode(String accountCode) {
-        return securitiesRepository.findAccountByCode(accountCode);
+        SecuritiesAccountEntity entity = securitiesJpaRepository.findByAccountCode(accountCode);
+        return entity != null ? Optional.ofNullable(new SecuritiesAccountDTO().convertFrom(entity)) : Optional.empty();
     }
     
     @Override
     public List<SecuritiesPositionDTO> findPositionsByCustomerId(Long customerId) {
-        return securitiesRepository.findPositionsByCustomerId(customerId);
+        List<SecuritiesPositionEntity> entities = securitiesPositionJpaRepository.findByCustomerId(customerId);
+        return entities.stream()
+                .map(new SecuritiesPositionDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SecuritiesPositionDTO> findPositionsByAccountCode(String accountCode) {
-        return securitiesRepository.findPositionsByAccountCode(accountCode);
+        List<SecuritiesPositionEntity> entities = securitiesPositionJpaRepository.findByAccountCode(accountCode);
+        return entities.stream()
+                .map(new SecuritiesPositionDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SecuritiesTransferDTO> findTransfersByCustomerId(Long customerId) {
-        return securitiesRepository.findTransfersByCustomerId(customerId);
+        // 查询客户的所有交易记录
+        List<SecuritiesTransactionEntity> customerTransactions = securitiesTransactionJpaRepository.findByCustomerId(customerId);
+        
+        // 筛选出交易类型为转托管(3:转入,4:转出)的交易记录
+        List<SecuritiesTransactionEntity> transferTransactions = customerTransactions.stream()
+                .filter(entity -> entity.getTransactionType() == 3 || entity.getTransactionType() == 4)
+                .collect(Collectors.toList());
+        
+        return transferTransactions.stream()
+                .map(entity -> {
+                    SecuritiesTransferDTO dto = new SecuritiesTransferDTO();
+                    dto.setId(entity.getId());
+                    dto.setTransferCode(entity.getTransactionCode());
+                    dto.setFromCustomerId(entity.getCustomerId());
+                    dto.setFromCustomerCode(entity.getCustomerCode());
+                    dto.setFromAccountCode(entity.getAccountCode());
+                    dto.setToBrokerId(entity.getToBrokerId());
+                    dto.setToBrokerName(entity.getToBrokerName());
+                    dto.setSecurityCode(entity.getSecurityCode());
+                    dto.setSecurityName(entity.getSecurityName());
+                    dto.setQuantity(entity.getQuantity());
+                    dto.setTransferType(entity.getTransactionType() == 3 ? 2 : 1); // 3:转入->2, 4:转出->1
+                    dto.setStatus(entity.getStatus());
+                    dto.setTransferTime(entity.getTransactionTime());
+                    dto.setOperatorId(entity.getOperatorId());
+                    dto.setCreateTime(entity.getCreateTime());
+                    dto.setUpdateTime(entity.getUpdateTime());
+                    dto.setRemark(entity.getRemark());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
     
     @Override
     public SecuritiesTransferDTO createTransfer(SecuritiesTransferDTO transferDTO) {
-        // 生成转托管编号
-        String transferCode = generateTransferCode();
-        transferDTO.setTransferCode(transferCode);
-        transferDTO.setStatus(1); // 待处理
-        transferDTO.setTransferTime(LocalDateTime.now());
-        transferDTO.setCreateTime(LocalDateTime.now());
+        // 生成交易编号
+        String transactionCode = generateTransactionCode();
         
-        return securitiesRepository.saveTransfer(transferDTO);
+        // 创建证券交易实体
+        SecuritiesTransactionEntity entity = SecuritiesTransactionEntity.builder()
+                .transactionCode(transactionCode)
+                .accountCode(transferDTO.getFromAccountCode())
+                .customerId(transferDTO.getFromCustomerId())
+                .customerCode(transferDTO.getFromCustomerCode())
+                .securityCode(transferDTO.getSecurityCode())
+                .securityName(transferDTO.getSecurityName())
+                .transactionType(transferDTO.getTransferType() == 2 ? 3 : 4) // 2:转入->3, 1:转出->4
+                .quantity(transferDTO.getQuantity())
+                .toBrokerId(transferDTO.getToBrokerId())
+                .toBrokerName(transferDTO.getToBrokerName())
+                .transactionTime(transferDTO.getTransferTime() != null ? transferDTO.getTransferTime() : LocalDateTime.now())
+                .status(1) // 待处理
+                .operatorId(transferDTO.getOperatorId())
+                .remark(transferDTO.getRemark())
+                .build();
+        
+        // 计算交易金额
+        entity.calculateAmount();
+        
+        SecuritiesTransactionEntity savedEntity = securitiesTransactionJpaRepository.save(entity);
+        
+        // 转换为DTO返回
+        SecuritiesTransferDTO result = new SecuritiesTransferDTO();
+        result.setId(savedEntity.getId());
+        result.setTransferCode(savedEntity.getTransactionCode());
+        result.setFromCustomerId(savedEntity.getCustomerId());
+        result.setFromCustomerCode(savedEntity.getCustomerCode());
+        result.setFromAccountCode(savedEntity.getAccountCode());
+        result.setToBrokerId(savedEntity.getToBrokerId());
+        result.setToBrokerName(savedEntity.getToBrokerName());
+        result.setSecurityCode(savedEntity.getSecurityCode());
+        result.setSecurityName(savedEntity.getSecurityName());
+        result.setQuantity(savedEntity.getQuantity());
+        result.setTransferType(savedEntity.getTransactionType() == 3 ? 2 : 1); // 3:转入->2, 4:转出->1
+        result.setStatus(savedEntity.getStatus());
+        result.setTransferTime(savedEntity.getTransactionTime());
+        result.setOperatorId(savedEntity.getOperatorId());
+        result.setCreateTime(savedEntity.getCreateTime());
+        result.setUpdateTime(savedEntity.getUpdateTime());
+        result.setRemark(savedEntity.getRemark());
+        
+        return result;
     }
     
     @Override
     public SecuritiesStatistics getSecuritiesStatistics() {
-        List<SecuritiesAccountDTO> allAccounts = securitiesRepository.findAllAccounts();
+        // 获取总账户数、活跃账户数、冻结账户数
+        long totalAccounts = securitiesJpaRepository.countAll();
+        long activeAccounts = securitiesJpaRepository.countByStatus(1);
+        long frozenAccounts = securitiesJpaRepository.countByStatus(2);
         
-        long totalAccounts = allAccounts.size();
-        long activeAccounts = allAccounts.stream()
-                .filter(a -> a.getStatus() == 1)
+        // 获取总市值
+        BigDecimal totalMarketValue = securitiesPositionJpaRepository.sumAllMarketValue();
+        
+        // 总资产(证券市值+资金余额)，这里简化处理，只计算证券市值
+        BigDecimal totalAssets = totalMarketValue;
+        
+        // 总持仓数
+        long totalPositions = securitiesPositionJpaRepository.countAll();
+        
+        // 今日转托管数(交易类型为3:转入,4:转出，状态为2:已处理的记录)
+        LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime todayEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        
+        List<SecuritiesTransactionEntity> todayTransferIns = securitiesTransactionJpaRepository.findByTransactionType(3); // 转入
+        List<SecuritiesTransactionEntity> todayTransferOuts = securitiesTransactionJpaRepository.findByTransactionType(4); // 转出
+        
+        List<SecuritiesTransactionEntity> todayTransfers = new java.util.ArrayList<>();
+        todayTransfers.addAll(todayTransferIns);
+        todayTransfers.addAll(todayTransferOuts);
+        
+        long todayTransferCount = todayTransfers.stream()
+                .filter(t -> t.getStatus() == 2 && // 已处理
+                           t.getTransactionTime() != null && 
+                           t.getTransactionTime().isAfter(todayStart) && 
+                           t.getTransactionTime().isBefore(todayEnd))
                 .count();
-        long frozenAccounts = allAccounts.stream()
-                .filter(a -> a.getStatus() == 2)
-                .count();
-        
-        BigDecimal totalMarketValue = allAccounts.stream()
-                .map(a -> a.getTotalMarketValue() != null ? a.getTotalMarketValue() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        BigDecimal totalAssets = allAccounts.stream()
-                .map(a -> a.getTotalAssets() != null ? a.getTotalAssets() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        // 总持仓数(简化处理，实际应该从持仓表统计)
-        long totalPositions = 0;
-        
-        // 今日转托管(简化处理，实际应该从数据库查询)
-        long todayTransfers = 0;
         
         return new SecuritiesStatistics(totalAccounts, activeAccounts, frozenAccounts, 
-                                 totalMarketValue, totalAssets, totalPositions, todayTransfers);
+                                 totalMarketValue, totalAssets, totalPositions, todayTransferCount);
     }
     
     /**
@@ -182,9 +291,9 @@ public class SecuritiesDomainService implements SecuritiesService {
     }
     
     /**
-     * 生成转托管编号
+     * 生成交易编号
      */
-    private String generateTransferCode() {
+    private String generateTransactionCode() {
         // 简单生成规则: TS + 时间戳后8位 + 随机4位数字
         String timestamp = String.valueOf(System.currentTimeMillis());
         String suffix = timestamp.substring(timestamp.length() - 8);

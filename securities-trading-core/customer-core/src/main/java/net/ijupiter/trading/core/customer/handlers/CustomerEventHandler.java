@@ -9,14 +9,10 @@ import org.springframework.stereotype.Component;
 import net.ijupiter.trading.api.customer.events.CustomerCreatedEvent;
 import net.ijupiter.trading.api.customer.events.CustomerUpdatedEvent;
 import net.ijupiter.trading.api.customer.events.CustomerFrozenEvent;
-import net.ijupiter.trading.core.customer.repositories.CustomerRepository;
+import net.ijupiter.trading.core.customer.repositories.CustomerJpaRepository;
+import net.ijupiter.trading.core.customer.entities.CustomerEntity;
 import net.ijupiter.trading.api.customer.dtos.CustomerDTO;
-import net.ijupiter.trading.api.customer.dtos.CustomerAccountDTO;
 import net.ijupiter.trading.api.customer.enums.CustomerStatus;
-import net.ijupiter.trading.api.customer.enums.CustomerType;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 客户事件处理器
@@ -26,7 +22,7 @@ import java.util.List;
 public class CustomerEventHandler {
     
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerJpaRepository customerJpaRepository;
     
     /**
      * 处理客户创建事件
@@ -52,12 +48,15 @@ public class CustomerEventHandler {
                 .remark(event.getRemark())
                 .build();
         
-        customerRepository.save(customer);
+        CustomerEntity entity = new CustomerEntity();
+        entity.convertFrom(customer);
+        // 处理字段名不一致的情况
+        entity.setMobile(customer.getPhone());
+        customerJpaRepository.save(entity);
         
-        // 自动为客户创建资金账户和证券账户
-        createCustomerAccounts(customer);
-        
-        log.info("已创建客户: {}", event.getCustomerCode());
+        // 注意：账户创建应该委托给Funding模块和Securities模块
+        // 这里只记录日志，实际实现应该调用外部服务
+        log.info("已创建客户: {}, 账户创建应委托给Funding和Securities模块", event.getCustomerCode());
     }
     
     /**
@@ -67,18 +66,20 @@ public class CustomerEventHandler {
     public void on(CustomerUpdatedEvent event) {
         log.debug("处理客户更新事件: {}", event);
         
-        CustomerDTO customer = customerRepository.findByCustomerCode(event.getCustomerCode())
-                .orElseThrow(() -> new RuntimeException("客户不存在: " + event.getCustomerCode()));
+        CustomerEntity entity = customerJpaRepository.findByCustomerCode(event.getCustomerCode());
+        if (entity == null) {
+            throw new RuntimeException("客户不存在: " + event.getCustomerCode());
+        }
         
-        customer.setCustomerName(event.getCustomerName());
-        customer.setPhone(event.getPhone());
-        customer.setEmail(event.getEmail());
-        customer.setAddress(event.getAddress());
-        customer.setRiskLevel(event.getRiskLevel());
-        customer.setUpdateTime(event.getEventTime());
-        customer.setRemark(event.getRemark());
+        entity.setCustomerName(event.getCustomerName());
+        entity.setMobile(event.getPhone());
+        entity.setEmail(event.getEmail());
+        entity.setAddress(event.getAddress());
+        entity.setRiskLevel(event.getRiskLevel());
+        entity.setUpdateTime(event.getEventTime());
+        entity.setRemark(event.getRemark());
         
-        customerRepository.update(customer);
+        customerJpaRepository.save(entity);
         
         log.info("已更新客户: {}", event.getCustomerCode());
     }
@@ -90,102 +91,26 @@ public class CustomerEventHandler {
     public void on(CustomerFrozenEvent event) {
         log.debug("处理客户冻结事件: {}", event);
         
-        CustomerDTO customer = customerRepository.findByCustomerCode(event.getCustomerCode())
-                .orElseThrow(() -> new RuntimeException("客户不存在: " + event.getCustomerCode()));
+        CustomerEntity entity = customerJpaRepository.findByCustomerCode(event.getCustomerCode());
+        if (entity == null) {
+            throw new RuntimeException("客户不存在: " + event.getCustomerCode());
+        }
         
-        customer.setStatus(CustomerStatus.FROZEN.getCode());
-        customer.setUpdateTime(event.getEventTime());
+        entity.setStatus(CustomerStatus.FROZEN.getCode());
+        entity.setUpdateTime(event.getEventTime());
         
         // 将冻结原因存储在备注中
-        String remark = customer.getRemark() != null ? customer.getRemark() + "\n" : "";
+        String remark = entity.getRemark() != null ? entity.getRemark() + "\n" : "";
         remark += "冻结原因: " + event.getReason();
-        customer.setRemark(remark);
+        entity.setRemark(remark);
         
-        customerRepository.update(customer);
+        customerJpaRepository.save(entity);
         
-        // 同时冻结客户的所有账户
-        freezeCustomerAccounts(customer.getId(), event.getEventTime());
-        
-        log.info("已冻结客户: {}, 原因: {}", event.getCustomerCode(), event.getReason());
+        // 注意：账户冻结应该委托给Funding模块和Securities模块
+        // 这里只记录日志，实际实现应该调用外部服务
+        log.info("已冻结客户: {}, 原因: {}, 账户冻结应委托给Funding和Securities模块", 
+                event.getCustomerCode(), event.getReason());
     }
     
-    /**
-     * 为客户创建默认账户
-     */
-    private void createCustomerAccounts(CustomerDTO customer) {
-        try {
-            // 创建资金账户
-            CustomerAccountDTO fundingAccount = CustomerAccountDTO.builder()
-                    .customerId(customer.getId())
-                    .customerCode(customer.getCustomerCode())
-                    .accountCode(generateAccountCode(1))
-                    .accountType(1) // 资金账户
-                    .accountName(customer.getCustomerName() + "的资金账户")
-                    .balance(java.math.BigDecimal.ZERO)
-                    .frozenAmount(java.math.BigDecimal.ZERO)
-                    .availableBalance(java.math.BigDecimal.ZERO)
-                    .status(CustomerStatus.NORMAL.getCode())
-                    .openDate(customer.getOpenDate())
-                    .updateTime(customer.getUpdateTime())
-                    .createTime(customer.getCreateTime())
-                    .remark("系统自动创建")
-                    .build();
-            
-            customerRepository.saveAccount(fundingAccount);
-            
-            // 创建证券账户
-            CustomerAccountDTO securitiesAccount = CustomerAccountDTO.builder()
-                    .customerId(customer.getId())
-                    .customerCode(customer.getCustomerCode())
-                    .accountCode(generateAccountCode(2))
-                    .accountType(2) // 证券账户
-                    .accountName(customer.getCustomerName() + "的证券账户")
-                    .balance(java.math.BigDecimal.ZERO)
-                    .frozenAmount(java.math.BigDecimal.ZERO)
-                    .availableBalance(java.math.BigDecimal.ZERO)
-                    .status(CustomerStatus.NORMAL.getCode())
-                    .openDate(customer.getOpenDate())
-                    .updateTime(customer.getUpdateTime())
-                    .createTime(customer.getCreateTime())
-                    .remark("系统自动创建")
-                    .build();
-            
-            customerRepository.saveAccount(securitiesAccount);
-            
-            log.info("已为客户 {} 创建默认账户", customer.getCustomerCode());
-        } catch (Exception e) {
-            log.error("为客户 {} 创建默认账户失败", customer.getCustomerCode(), e);
-            // 不抛出异常，避免影响客户创建流程
-        }
-    }
-    
-    /**
-     * 冻结客户的所有账户
-     */
-    private void freezeCustomerAccounts(Long customerId, LocalDateTime eventTime) {
-        try {
-            List<CustomerAccountDTO> accounts = customerRepository.findAccountsByCustomerId(customerId);
-            for (CustomerAccountDTO account : accounts) {
-                if (account.getStatus() == CustomerStatus.NORMAL.getCode()) {
-                    account.setStatus(CustomerStatus.FROZEN.getCode());
-                    account.setUpdateTime(eventTime);
-                    customerRepository.updateAccount(account);
-                }
-            }
-            log.info("已冻结客户 {} 的所有账户", customerId);
-        } catch (Exception e) {
-            log.error("冻结客户 {} 的账户失败", customerId, e);
-        }
-    }
-    
-    /**
-     * 生成账户编号
-     */
-    private String generateAccountCode(Integer accountType) {
-        String prefix = accountType == 1 ? "F" : "S"; // F:资金账户, S:证券账户
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String suffix = timestamp.substring(timestamp.length() - 8);
-        String random = String.format("%04d", (int)(Math.random() * 10000));
-        return prefix + suffix + random;
-    }
+    // 注意：账户相关的方法已移除，因为账户管理应该由Funding和Securities模块负责
 }

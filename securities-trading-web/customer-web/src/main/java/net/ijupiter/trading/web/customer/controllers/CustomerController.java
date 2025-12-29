@@ -2,7 +2,6 @@ package net.ijupiter.trading.web.customer.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ijupiter.trading.api.customer.dtos.CustomerDTO;
-import net.ijupiter.trading.api.customer.dtos.CustomerAccountDTO;
 import net.ijupiter.trading.api.customer.services.CustomerService;
 import net.ijupiter.trading.web.common.controllers.BaseController;
 import net.ijupiter.trading.web.common.models.Result;
@@ -56,16 +55,7 @@ public class CustomerController extends BaseController {
         return modelAndView;
     }
 
-    /**
-     * 客户账户页面
-     */
-    @GetMapping("/account")
-    public ModelAndView account() {
-        ModelAndView modelAndView = new ModelAndView("customer/account");
-        modelAndView.addObject("activeModule", "customer");
-        
-        return modelAndView;
-    }
+    // 注意：账户相关功能已移至Funding模块和Securities模块
 
     /**
      * 获取客户统计数据
@@ -156,67 +146,7 @@ public class CustomerController extends BaseController {
         }
     }
 
-    /**
-     * 获取客户账户列表数据
-     */
-    @GetMapping("/account/data")
-    @ResponseBody
-    public PageResult<CustomerAccountDTO> getAccountList(
-            @RequestParam(defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(required = false) String customerCode,
-            @RequestParam(required = false) String accountCode,
-            @RequestParam(required = false) Integer accountType,
-            @RequestParam(required = false) Integer status) {
-        
-        try {
-            List<CustomerAccountDTO> allAccounts = List.of();
-            
-            // 如果指定了客户代码，获取该客户的账户
-            if (customerCode != null && !customerCode.trim().isEmpty()) {
-                Optional<CustomerDTO> customerOpt = customerService.findByCustomerCode(customerCode);
-                if (customerOpt.isPresent()) {
-                    allAccounts = customerService.findCustomerAccounts(customerOpt.get().getId());
-                }
-            } else {
-                // 否则获取所有账户(需要遍历所有客户)
-                List<CustomerDTO> allCustomers = customerService.findAll();
-                for (CustomerDTO customer : allCustomers) {
-                    allAccounts.addAll(customerService.findCustomerAccounts(customer.getId()));
-                }
-            }
-            
-            // 应用搜索条件过滤
-            if (accountCode != null && !accountCode.trim().isEmpty()) {
-                allAccounts = allAccounts.stream()
-                    .filter(account -> account.getAccountCode() != null &&
-                            account.getAccountCode().contains(accountCode))
-                    .toList();
-            }
-            if (accountType != null) {
-                allAccounts = allAccounts.stream()
-                    .filter(account -> account.getAccountType().equals(accountType))
-                    .toList();
-            }
-            if (status != null) {
-                allAccounts = allAccounts.stream()
-                    .filter(account -> account.getStatus().equals(status))
-                    .toList();
-            }
-            
-            // 模拟分页数据
-            int total = allAccounts.size();
-            int fromIndex = (pageNum - 1) * pageSize;
-            int toIndex = Math.min(fromIndex + pageSize, total);
-            List<CustomerAccountDTO> pageData = fromIndex < total ? 
-                allAccounts.subList(fromIndex, toIndex) : List.of();
-            
-            return PageResult.success(pageNum, pageSize, total, pageData);
-        } catch (Exception e) {
-            log.error("获取账户列表失败", e);
-            return PageResult.failPage("获取账户列表失败");
-        }
-    }
+    // 注意：获取客户账户列表数据功能已移至Funding模块和Securities模块
 
     /**
      * 获取客户详情
@@ -234,61 +164,5 @@ public class CustomerController extends BaseController {
         }
     }
 
-    /**
-     * 创建客户账户
-     */
-    @PostMapping("/account/create")
-    @ResponseBody
-    public Result<CustomerAccountDTO> createAccount(@RequestBody CustomerAccountDTO accountDTO) {
-        try {
-            // 验证客户是否存在
-            Optional<CustomerDTO> customerOpt = customerService.findByCustomerCode(accountDTO.getCustomerCode());
-            if (customerOpt.isEmpty()) {
-                return Result.fail("客户不存在");
-            }
-            
-            // 设置客户ID
-            accountDTO.setCustomerId(customerOpt.get().getId());
-            
-            // 生成账户编号
-            accountDTO.setAccountCode(generateAccountCode(accountDTO.getAccountType()));
-            
-            // 创建账户
-            CustomerAccountDTO createdAccount = customerService.createAccount(accountDTO);
-            return Result.success("账户创建成功", createdAccount);
-        } catch (Exception e) {
-            log.error("创建账户失败", e);
-            return Result.fail("创建账户失败");
-        }
-    }
-
-    /**
-     * 更新账户状态
-     */
-    @PutMapping("/account/status/{id}")
-    @ResponseBody
-    public Result<Void> updateAccountStatus(@PathVariable Long id, @RequestParam Integer status) {
-        try {
-            boolean success = customerService.updateAccountStatus(id, status);
-            if (success) {
-                return Result.success("账户状态更新成功", null);
-            } else {
-                return Result.fail("账户不存在");
-            }
-        } catch (Exception e) {
-            log.error("更新账户状态失败", e);
-            return Result.fail("更新账户状态失败");
-        }
-    }
-
-    /**
-     * 生成账户编号
-     */
-    private String generateAccountCode(Integer accountType) {
-        String prefix = accountType == 1 ? "F" : "S"; // F:资金账户, S:证券账户
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        String suffix = timestamp.substring(timestamp.length() - 8);
-        String random = String.format("%04d", (int)(Math.random() * 10000));
-        return prefix + suffix + random;
-    }
+    // 注意：创建客户账户和更新账户状态功能已移至Funding模块和Securities模块
 }

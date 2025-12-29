@@ -54,6 +54,9 @@ spring:
 
 # ========== 2. Axon 事件引擎配置 ==========
 axon:
+  # 可选：指定上下文（默认default）
+  context: default
+  # 2.0 事件处理器配置（可选，默认即可）
   eventhandling:
     processors:
       net.ijupiter.trading.core.query.handler:

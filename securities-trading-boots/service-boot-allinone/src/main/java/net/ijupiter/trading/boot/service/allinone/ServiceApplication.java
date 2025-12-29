@@ -1,5 +1,6 @@
 package net.ijupiter.trading.boot.service.allinone;
 
+import org.axonframework.springboot.autoconfig.AxonServerAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -10,7 +11,9 @@ import java.util.concurrent.CountDownLatch;
  * 金融交易系统核心服务启动类
  * @author TradingSystem
  */
-@SpringBootApplication(scanBasePackages = "net.ijupiter.trading")
+@SpringBootApplication(
+        exclude = AxonServerAutoConfiguration.class,
+        scanBasePackages = "net.ijupiter.trading")
 @EnableJpaRepositories(basePackages = "net.ijupiter.trading.core")
 @EntityScan(basePackages = {
         "net.ijupiter.trading.core",                        // 应用自身实体包
@@ -24,6 +27,7 @@ public class ServiceApplication {
     public static void main(String[] args) {
         // 核心：在 Axon 初始化前设置系统属性，屏蔽提示
         System.setProperty("disable-axoniq-console-message", "true");
+        System.setProperty("axon.axonserver.suppressDownloadMessage", "true");
 
         SpringApplication.run(ServiceApplication.class, args);
         System.out.println("==================================================================");

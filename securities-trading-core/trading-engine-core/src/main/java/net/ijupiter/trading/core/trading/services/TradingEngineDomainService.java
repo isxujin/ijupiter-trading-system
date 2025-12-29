@@ -12,7 +12,8 @@ import net.ijupiter.trading.api.trading.commands.ExecuteTradeCommand;
 import net.ijupiter.trading.api.trading.commands.CancelTradeCommand;
 import net.ijupiter.trading.api.trading.dtos.TradingEngineDTO;
 import net.ijupiter.trading.api.trading.services.TradingEngineService;
-import net.ijupiter.trading.core.trading.repositories.TradingEngineRepository;
+import net.ijupiter.trading.core.trading.entities.TradingEngineEntity;
+import net.ijupiter.trading.core.trading.repositories.TradingEngineJpaRepository;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
@@ -33,34 +34,46 @@ import java.util.stream.Collectors;
 public class TradingEngineDomainService implements TradingEngineService {
     
     @Autowired
-    private TradingEngineRepository tradingEngineRepository;
+    private TradingEngineJpaRepository tradingEngineJpaRepository;
     
     @Autowired
     private CommandGateway commandGateway;
     
     @Override
     public List<TradingEngineDTO> findAll() {
-        return tradingEngineRepository.findAllTrades();
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findAll();
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<TradingEngineDTO> findById(Long id) {
-        return tradingEngineRepository.findTradeById(id);
+        Optional<TradingEngineEntity> entity = tradingEngineJpaRepository.findById(id);
+        return entity.map(new TradingEngineDTO()::convertFrom);
     }
     
     @Override
     public TradingEngineDTO save(TradingEngineDTO tradingEngineDTO) {
-        return tradingEngineRepository.saveTrade(tradingEngineDTO);
+        TradingEngineEntity entity = new TradingEngineEntity().convertFrom(tradingEngineDTO);
+        TradingEngineEntity savedEntity = tradingEngineJpaRepository.save(entity);
+        return new TradingEngineDTO().convertFrom(savedEntity);
     }
     
     @Override
     public void deleteById(Long id) {
-        tradingEngineRepository.deleteTradeById(id);
+        if (tradingEngineJpaRepository.existsById(id)) {
+            tradingEngineJpaRepository.deleteById(id);
+        } else {
+            log.warn("尝试删除不存在的交易记录: {}", id);
+        }
     }
     
     @Override
     public void delete(TradingEngineDTO entity) {
-        tradingEngineRepository.deleteTradeById(entity.getId());
+        if (entity.getId() != null) {
+            deleteById(entity.getId());
+        }
     }
     
     @Override
@@ -70,112 +83,126 @@ public class TradingEngineDomainService implements TradingEngineService {
     
     @Override
     public TradingEngineDTO saveAndFlush(TradingEngineDTO entity) {
-        return tradingEngineRepository.saveTrade(entity);
+        return save(entity);
     }
     
     @Override
     public List<TradingEngineDTO> saveAll(List<TradingEngineDTO> entities) {
         return entities.stream()
-                .map(tradingEngineRepository::saveTrade)
+                .map(this::save)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findAllById(List<Long> ids) {
-        return ids.stream()
-                .map(tradingEngineRepository::findTradeById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findAllById(ids);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
                 .collect(Collectors.toList());
     }
     
     @Override
     public boolean existsById(Long id) {
-        return tradingEngineRepository.findTradeById(id).isPresent();
+        return tradingEngineJpaRepository.existsById(id);
     }
     
     @Override
     public long count() {
-        return tradingEngineRepository.findAllTrades().size();
+        return tradingEngineJpaRepository.count();
     }
     
     @Override
     public List<TradingEngineDTO> findByCustomerId(Long customerId) {
-        return tradingEngineRepository.findTradesByCustomerId(customerId);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByCustomerId(customerId);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findByStatus(Integer status) {
-        return tradingEngineRepository.findTradesByStatus(status);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByStatus(status);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findByTradeDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return tradingEngineRepository.findTradesByDateRange(startDate, endDate);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByExecuteTimeBetween(startDate, endDate);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findBySecurityCode(String securityCode) {
-        return tradingEngineRepository.findTradesBySecurityCode(securityCode);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findBySecurityCode(securityCode);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findByTradeType(Integer tradeType) {
-        return tradingEngineRepository.findTradesByTradeType(tradeType);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByTradeType(tradeType);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<TradingEngineDTO> findByMarket(Integer market) {
-        return tradingEngineRepository.findTradesByMarket(market);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByMarket(market);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<TradingEngineDTO> findByTradeCode(String tradeCode) {
-        return tradingEngineRepository.findTradeByCode(tradeCode);
+        TradingEngineEntity entity = tradingEngineJpaRepository.findByTradeCode(tradeCode);
+        return entity != null ? Optional.of(new TradingEngineDTO().convertFrom(entity)) : Optional.empty();
     }
     
     @Override
     public List<TradingEngineDTO> findByOrderCode(String orderCode) {
-        return tradingEngineRepository.findTradesByOrderCode(orderCode);
+        List<TradingEngineEntity> entities = tradingEngineJpaRepository.findByOrderCode(orderCode);
+        return entities.stream()
+                .map(new TradingEngineDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public TradingStatistics getTradingStatistics() {
-        List<TradingEngineDTO> allTrades = tradingEngineRepository.findAllTrades();
+        // 获取总交易数、各状态交易数
+        long totalTrades = tradingEngineJpaRepository.countAll();
+        long pendingTrades = tradingEngineJpaRepository.countByStatus(1); // 待撮合
+        long partialTrades = tradingEngineJpaRepository.countByStatus(2); // 部分成交
+        long completedTrades = tradingEngineJpaRepository.countByStatus(3); // 全部成交
+        long cancelledTrades = tradingEngineJpaRepository.countByStatus(4); // 已撤销
         
-        long totalTrades = allTrades.size();
-        long pendingTrades = allTrades.stream()
-                .filter(t -> t.getStatus() == 1)
-                .count();
-        long partialTrades = allTrades.stream()
-                .filter(t -> t.getStatus() == 2)
-                .count();
-        long completedTrades = allTrades.stream()
-                .filter(t -> t.getStatus() == 3)
-                .count();
-        long cancelledTrades = allTrades.stream()
-                .filter(t -> t.getStatus() == 4)
-                .count();
+        // 获取总金额和总手续费
+        BigDecimal totalAmount = tradingEngineJpaRepository.sumAllAmount();
+        BigDecimal totalFee = tradingEngineJpaRepository.sumAllFee();
         
-        BigDecimal totalAmount = allTrades.stream()
+        // 获取买入和卖出交易数
+        long buyTrades = tradingEngineJpaRepository.countBuyTrades();
+        long sellTrades = tradingEngineJpaRepository.countSellTrades();
+        
+        // 今日交易(根据成交时间范围查询)
+        LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime todayEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        
+        List<TradingEngineEntity> todayTradeEntities = tradingEngineJpaRepository.findByExecuteTimeBetween(todayStart, todayEnd);
+        
+        long todayTrades = todayTradeEntities.size();
+        
+        // 今日交易金额(只统计全部成交的记录)
+        BigDecimal todayTradeAmount = todayTradeEntities.stream()
+                .filter(t -> t.getStatus() == 3) // 全部成交
                 .map(t -> t.getAmount() != null ? t.getAmount() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        BigDecimal totalFee = allTrades.stream()
-                .map(t -> t.getFee() != null ? t.getFee() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        long buyTrades = allTrades.stream()
-                .filter(t -> t.getTradeType() == 1)
-                .count();
-        
-        long sellTrades = allTrades.stream()
-                .filter(t -> t.getTradeType() == 2)
-                .count();
-        
-        // 今日交易(简化处理，实际应该从数据库查询)
-        long todayTrades = 0;
-        BigDecimal todayTradeAmount = BigDecimal.ZERO;
         
         return new TradingStatistics(totalTrades, pendingTrades, partialTrades,
                 completedTrades, cancelledTrades, totalAmount, totalFee,

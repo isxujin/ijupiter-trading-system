@@ -11,7 +11,8 @@ import net.ijupiter.trading.api.settlement.commands.ProcessSettlementCommand;
 import net.ijupiter.trading.api.settlement.commands.CompleteSettlementCommand;
 import net.ijupiter.trading.api.settlement.dtos.SettlementDTO;
 import net.ijupiter.trading.api.settlement.services.SettlementService;
-import net.ijupiter.trading.core.settlement.repositories.SettlementRepository;
+import net.ijupiter.trading.core.settlement.entities.SettlementEntity;
+import net.ijupiter.trading.core.settlement.repositories.SettlementJpaRepository;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
@@ -32,34 +33,46 @@ import java.util.stream.Collectors;
 public class SettlementDomainService implements SettlementService {
     
     @Autowired
-    private SettlementRepository settlementRepository;
+    private SettlementJpaRepository settlementJpaRepository;
     
     @Autowired
     private CommandGateway commandGateway;
     
     @Override
     public List<SettlementDTO> findAll() {
-        return settlementRepository.findAllSettlements();
+        List<SettlementEntity> entities = settlementJpaRepository.findAll();
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<SettlementDTO> findById(Long id) {
-        return settlementRepository.findSettlementById(id);
+        Optional<SettlementEntity> entity = settlementJpaRepository.findById(id);
+        return entity.map(new SettlementDTO()::convertFrom);
     }
     
     @Override
     public SettlementDTO save(SettlementDTO settlementDTO) {
-        return settlementRepository.saveSettlement(settlementDTO);
+        SettlementEntity entity = new SettlementEntity().convertFrom(settlementDTO);
+        SettlementEntity savedEntity = settlementJpaRepository.save(entity);
+        return new SettlementDTO().convertFrom(savedEntity);
     }
     
     @Override
     public void deleteById(Long id) {
-        settlementRepository.deleteSettlementById(id);
+        if (settlementJpaRepository.existsById(id)) {
+            settlementJpaRepository.deleteById(id);
+        } else {
+            log.warn("尝试删除不存在的清算记录: {}", id);
+        }
     }
     
     @Override
     public void delete(SettlementDTO entity) {
-        settlementRepository.deleteSettlementById(entity.getId());
+        if (entity.getId() != null) {
+            deleteById(entity.getId());
+        }
     }
     
     @Override
@@ -69,98 +82,107 @@ public class SettlementDomainService implements SettlementService {
     
     @Override
     public SettlementDTO saveAndFlush(SettlementDTO entity) {
-        return settlementRepository.saveSettlement(entity);
+        return save(entity);
     }
     
     @Override
     public List<SettlementDTO> saveAll(List<SettlementDTO> entities) {
         return entities.stream()
-                .map(settlementRepository::saveSettlement)
+                .map(this::save)
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<SettlementDTO> findAllById(List<Long> ids) {
-        return ids.stream()
-                .map(settlementRepository::findSettlementById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        List<SettlementEntity> entities = settlementJpaRepository.findAllById(ids);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
                 .collect(Collectors.toList());
     }
     
     @Override
     public boolean existsById(Long id) {
-        return settlementRepository.findSettlementById(id).isPresent();
+        return settlementJpaRepository.existsById(id);
     }
     
     @Override
     public long count() {
-        return settlementRepository.findAllSettlements().size();
+        return settlementJpaRepository.count();
     }
     
     @Override
     public List<SettlementDTO> findBySettlementType(Integer settlementType) {
-        return settlementRepository.findSettlementsByType(settlementType);
+        List<SettlementEntity> entities = settlementJpaRepository.findBySettlementType(settlementType);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SettlementDTO> findByStatus(Integer status) {
-        return settlementRepository.findSettlementsByStatus(status);
+        List<SettlementEntity> entities = settlementJpaRepository.findByStatus(status);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SettlementDTO> findBySettlementDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return settlementRepository.findSettlementsByDateRange(startDate, endDate);
+        List<SettlementEntity> entities = settlementJpaRepository.findBySettlementDateBetween(startDate, endDate);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SettlementDTO> findByBuyerCustomerId(Long buyerCustomerId) {
-        return settlementRepository.findSettlementsByBuyerCustomerId(buyerCustomerId);
+        List<SettlementEntity> entities = settlementJpaRepository.findByBuyerCustomerId(buyerCustomerId);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<SettlementDTO> findBySellerCustomerId(Long sellerCustomerId) {
-        return settlementRepository.findSettlementsBySellerCustomerId(sellerCustomerId);
+        List<SettlementEntity> entities = settlementJpaRepository.findBySellerCustomerId(sellerCustomerId);
+        return entities.stream()
+                .map(new SettlementDTO()::convertFrom)
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<SettlementDTO> findBySettlementCode(String settlementCode) {
-        return settlementRepository.findSettlementByCode(settlementCode);
+        SettlementEntity entity = settlementJpaRepository.findBySettlementCode(settlementCode);
+        return entity != null ? Optional.of(new SettlementDTO().convertFrom(entity)) : Optional.empty();
     }
     
     @Override
     public SettlementStatistics getSettlementStatistics() {
-        List<SettlementDTO> allSettlements = settlementRepository.findAllSettlements();
+        // 获取总清算数、各状态清算数
+        long totalSettlements = settlementJpaRepository.countAll();
+        long pendingSettlements = settlementJpaRepository.countByStatus(1); // 待清算
+        long processingSettlements = settlementJpaRepository.countByStatus(2); // 清算中
+        long completedSettlements = settlementJpaRepository.countByStatus(3); // 已清算
+        long failedSettlements = settlementJpaRepository.countByStatus(4); // 清算失败
         
-        long totalSettlements = allSettlements.size();
-        long pendingSettlements = allSettlements.stream()
-                .filter(s -> s.getStatus() == 1)
-                .count();
-        long processingSettlements = allSettlements.stream()
-                .filter(s -> s.getStatus() == 2)
-                .count();
-        long completedSettlements = allSettlements.stream()
-                .filter(s -> s.getStatus() == 3)
-                .count();
-        long failedSettlements = allSettlements.stream()
-                .filter(s -> s.getStatus() == 4)
-                .count();
+        // 获取总金额、总手续费、总印花税
+        BigDecimal totalAmount = settlementJpaRepository.sumAllAmount();
+        BigDecimal totalFee = settlementJpaRepository.sumAllFee();
+        BigDecimal totalTax = settlementJpaRepository.sumAllTax();
         
-        BigDecimal totalAmount = allSettlements.stream()
+        // 今日清算(根据清算日期范围查询)
+        LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime todayEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        
+        List<SettlementEntity> todaySettlementEntities = settlementJpaRepository.findBySettlementDateBetween(todayStart, todayEnd);
+        
+        long todaySettlements = todaySettlementEntities.size();
+        
+        // 今日清算金额(只统计已清算的记录)
+        BigDecimal todaySettlementAmount = todaySettlementEntities.stream()
+                .filter(s -> s.getStatus() == 3) // 已清算
                 .map(s -> s.getAmount() != null ? s.getAmount() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        BigDecimal totalFee = allSettlements.stream()
-                .map(s -> s.getFee() != null ? s.getFee() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        BigDecimal totalTax = allSettlements.stream()
-                .map(s -> s.getTax() != null ? s.getTax() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        // 今日清算(简化处理，实际应该从数据库查询)
-        long todaySettlements = 0;
-        BigDecimal todaySettlementAmount = BigDecimal.ZERO;
         
         return new SettlementStatistics(totalSettlements, pendingSettlements, processingSettlements,
                 completedSettlements, failedSettlements, totalAmount, totalFee, totalTax,

@@ -10,15 +10,16 @@ import net.ijupiter.trading.api.customer.commands.CreateCustomerCommand;
 import net.ijupiter.trading.api.customer.commands.UpdateCustomerCommand;
 import net.ijupiter.trading.api.customer.commands.FreezeCustomerCommand;
 import net.ijupiter.trading.api.customer.dtos.CustomerDTO;
-import net.ijupiter.trading.api.customer.dtos.CustomerAccountDTO;
 import net.ijupiter.trading.api.customer.services.CustomerService;
-import net.ijupiter.trading.core.customer.repositories.CustomerRepository;
+import net.ijupiter.trading.core.customer.repositories.CustomerJpaRepository;
+import net.ijupiter.trading.core.customer.entities.CustomerEntity;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * 客户领域服务实现
@@ -29,141 +30,163 @@ import java.util.concurrent.CompletableFuture;
 public class CustomerDomainService implements CustomerService {
     
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerJpaRepository customerJpaRepository;
     
     @Autowired
     private CommandGateway commandGateway;
     
     @Override
     public List<CustomerDTO> findAll() {
-        return customerRepository.findAll();
+        List<CustomerEntity> entities = customerJpaRepository.findAll();
+        return entities.stream()
+                .map(entity -> {
+                    CustomerDTO dto = new CustomerDTO();
+                    dto.convertFrom(entity);
+                    // 处理字段名不一致的情况
+                    dto.setPhone(entity.getMobile());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
     
     @Override
     public Optional<CustomerDTO> findById(Long id) {
-        return customerRepository.findById(id);
+        Optional<CustomerEntity> entity = customerJpaRepository.findById(id);
+        return entity.map(e -> {
+            CustomerDTO dto = new CustomerDTO();
+            dto.convertFrom(e);
+            // 处理字段名不一致的情况
+            dto.setPhone(e.getMobile());
+            return dto;
+        });
     }
     
     @Override
     public Optional<CustomerDTO> findByCustomerCode(String customerCode) {
-        return customerRepository.findByCustomerCode(customerCode);
+        CustomerEntity entity = customerJpaRepository.findByCustomerCode(customerCode);
+        if (entity == null) {
+            return Optional.empty();
+        }
+        CustomerDTO dto = new CustomerDTO();
+        dto.convertFrom(entity);
+        // 处理字段名不一致的情况
+        dto.setPhone(entity.getMobile());
+        return Optional.of(dto);
     }
     
     @Override
     public CustomerDTO save(CustomerDTO customerDTO) {
-        return customerRepository.save(customerDTO);
-    }
-
-    public CustomerDTO update(CustomerDTO customerDTO) {
-        return customerRepository.update(customerDTO);
+        CustomerEntity entity = new CustomerEntity();
+        entity.convertFrom(customerDTO);
+        // 处理字段名不一致的情况
+        entity.setMobile(customerDTO.getPhone());
+        CustomerEntity savedEntity = customerJpaRepository.save(entity);
+        
+        CustomerDTO resultDTO = new CustomerDTO();
+        resultDTO.convertFrom(savedEntity);
+        // 处理字段名不一致的情况
+        resultDTO.setPhone(savedEntity.getMobile());
+        return resultDTO;
     }
     
     @Override
     public void deleteById(Long id) {
-        customerRepository.deleteById(id);
+        customerJpaRepository.deleteById(id);
     }
     
     @Override
-    public void delete(CustomerDTO customerDTO) {
-        customerRepository.deleteById(customerDTO.getId());
+    public void delete(CustomerDTO entity) {
+        customerJpaRepository.deleteById(entity.getId());
     }
     
     @Override
     public void deleteAll() {
-        // 实际项目中不应该提供此方法，这里仅为了符合接口规范
         throw new UnsupportedOperationException("不支持批量删除所有客户");
     }
     
     @Override
-    public CustomerDTO saveAndFlush(CustomerDTO customerDTO) {
-        CustomerDTO saved = customerRepository.save(customerDTO);
-        // 在真实实现中应该刷新到数据库
-        return saved;
+    public CustomerDTO saveAndFlush(CustomerDTO entity) {
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.convertFrom(entity);
+        // 处理字段名不一致的情况
+        customerEntity.setMobile(entity.getPhone());
+        CustomerEntity savedEntity = customerJpaRepository.save(customerEntity);
+        
+        CustomerDTO resultDTO = new CustomerDTO();
+        resultDTO.convertFrom(savedEntity);
+        // 处理字段名不一致的情况
+        resultDTO.setPhone(savedEntity.getMobile());
+        return resultDTO;
     }
     
     @Override
-    public List<CustomerDTO> saveAll(List<CustomerDTO> customerDTOs) {
-        return customerDTOs.stream()
-                .map(customerRepository::save)
-                .toList();
+    public List<CustomerDTO> saveAll(List<CustomerDTO> entities) {
+        List<CustomerEntity> customerEntities = entities.stream()
+                .map(dto -> {
+                    CustomerEntity entity = new CustomerEntity();
+                    entity.convertFrom(dto);
+                    // 处理字段名不一致的情况
+                    entity.setMobile(dto.getPhone());
+                    return entity;
+                })
+                .collect(Collectors.toList());
+        
+        List<CustomerEntity> savedEntities = customerJpaRepository.saveAll(customerEntities);
+        
+        return savedEntities.stream()
+                .map(entity -> {
+                    CustomerDTO dto = new CustomerDTO();
+                    dto.convertFrom(entity);
+                    // 处理字段名不一致的情况
+                    dto.setPhone(entity.getMobile());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
     
     @Override
     public List<CustomerDTO> findAllById(List<Long> ids) {
-        return ids.stream()
-                .map(customerRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        List<CustomerEntity> entities = customerJpaRepository.findAllById(ids);
+        return entities.stream()
+                .map(entity -> {
+                    CustomerDTO dto = new CustomerDTO();
+                    dto.convertFrom(entity);
+                    // 处理字段名不一致的情况
+                    dto.setPhone(entity.getMobile());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
     
     @Override
     public boolean existsById(Long id) {
-        return customerRepository.findById(id).isPresent();
+        return customerJpaRepository.existsById(id);
     }
     
     @Override
     public long count() {
-        return customerRepository.findAll().size();
+        return customerJpaRepository.count();
+    }
+    
+    // 注意：账户相关方法已移除，因为账户管理应由Funding模块和Securities模块负责
+    
+    @Override
+    public CustomerStatistics getCustomerStatistics() {
+        // 计算客户统计信息
+        long totalCustomers = customerJpaRepository.countAll();
+        long activeCustomers = customerJpaRepository.countByStatus(1); // 1表示正常状态
+        long frozenCustomers = customerJpaRepository.countByStatus(2); // 2表示冻结状态
+        long closedCustomers = customerJpaRepository.countByStatus(3); // 3表示注销状态
+        
+        // TODO: 计算今日新增客户数，需要根据实际需求实现
+        long todayNewCustomers = 0;
+        
+        return new CustomerStatistics(totalCustomers, activeCustomers, frozenCustomers, closedCustomers, todayNewCustomers);
     }
     
     @Override
     public boolean existsByCustomerCode(String customerCode) {
-        return customerRepository.existsByCustomerCode(customerCode);
-    }
-    
-    @Override
-    public List<CustomerAccountDTO> findCustomerAccounts(Long customerId) {
-        return customerRepository.findAccountsByCustomerId(customerId);
-    }
-    
-    @Override
-    public Optional<CustomerAccountDTO> findCustomerAccountByCode(String accountCode) {
-        return customerRepository.findAccountByCode(accountCode);
-    }
-    
-    @Override
-    public CustomerAccountDTO createAccount(CustomerAccountDTO accountDTO) {
-        return customerRepository.saveAccount(accountDTO);
-    }
-    
-    @Override
-    public CustomerAccountDTO updateAccount(CustomerAccountDTO accountDTO) {
-        return customerRepository.updateAccount(accountDTO);
-    }
-    
-    @Override
-    public boolean updateAccountStatus(Long accountId, Integer status) {
-        Optional<CustomerAccountDTO> accountOpt = customerRepository.findAccountById(accountId);
-        if (accountOpt.isPresent()) {
-            CustomerAccountDTO account = accountOpt.get();
-            account.setStatus(status);
-            customerRepository.updateAccount(account);
-            return true;
-        }
-        return false;
-    }
-    
-    @Override
-    public CustomerStatistics getCustomerStatistics() {
-        List<CustomerDTO> allCustomers = findAll();
-        
-        long totalCustomers = allCustomers.size();
-        long activeCustomers = allCustomers.stream()
-                .filter(c -> c.getStatus() == 1)
-                .count();
-        long frozenCustomers = allCustomers.stream()
-                .filter(c -> c.getStatus() == 2)
-                .count();
-        long closedCustomers = allCustomers.stream()
-                .filter(c -> c.getStatus() == 3)
-                .count();
-        
-        // 今日新增客户(简化处理，实际应该从数据库查询)
-        long todayNewCustomers = 0;
-        
-        return new CustomerStatistics(totalCustomers, activeCustomers, 
-                                    frozenCustomers, closedCustomers, todayNewCustomers);
+        return customerJpaRepository.existsByCustomerCode(customerCode);
     }
     
     /**

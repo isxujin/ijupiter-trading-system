@@ -18,42 +18,5 @@ import net.ijupiter.trading.core.trading.aggregates.TradingEngine;
  */
 @Configuration
 public class TradingEngineConfig {
-    
-    /**
-     * 交易引擎聚合仓储
-     */
-    @Bean
-    public Repository<TradingEngine> tradingEngineRepository(EventStore eventStore) {
-        return EventSourcingRepository.builder(TradingEngine.class)
-                .eventStore(eventStore)
-                .build();
-    }
-    
-    /**
-     * 事件存储
-     */
-    @Bean
-    public EventStore tradingEngineEventStore(EventStorageEngine tradingEngineEventStorageEngine) {
-        return org.axonframework.eventsourcing.eventstore.EmbeddedEventStore.builder()
-                .storageEngine(tradingEngineEventStorageEngine)
-                .build();
-    }
-    
-    /**
-     * 命令总线
-     */
-    @Bean
-    public CommandBus tradingEngineCommandBus() {
-        return SimpleCommandBus.builder().build();
-    }
-    
-    /**
-     * 命令网关
-     */
-    @Bean
-    public CommandGateway tradingEngineCommandGateway(CommandBus tradingEngineCommandBus) {
-        return org.axonframework.commandhandling.gateway.DefaultCommandGateway.builder()
-                .commandBus(tradingEngineCommandBus)
-                .build();
-    }
+
 }
