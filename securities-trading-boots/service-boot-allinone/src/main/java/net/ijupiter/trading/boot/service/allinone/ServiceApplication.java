@@ -18,9 +18,9 @@ import java.util.concurrent.CountDownLatch;
                 AxonServerBusAutoConfiguration.class
         },
         scanBasePackages = "net.ijupiter.trading")
-@EnableJpaRepositories(basePackages = "net.ijupiter.trading.core")
+@EnableJpaRepositories(basePackages = "net.ijupiter.trading.core.*.repositories")
 @EntityScan(basePackages = {
-        "net.ijupiter.trading.core",                        // 应用自身实体包
+        "net.ijupiter.trading.core.*.entities",             // 应用自身实体包
         "org.axonframework.eventhandling.tokenstore.jpa",   // Axon TokenEntry 实体包
         "org.axonframework.eventsourcing.eventstore.jpa"    // Axon DomainEventEntry/SnapshotEventEntry 实体包
 })
