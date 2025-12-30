@@ -19,5 +19,6 @@
         <module>service-boot-allinone</module>
         <module>web-boot-investment</module>
         <module>web-boot-management</module>
+        <module>query-boot</module>
     </modules>
 </project>

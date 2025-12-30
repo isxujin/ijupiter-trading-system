@@ -1,0 +1,100 @@
+# ========== 1. Spring 容器配置 ==========
+spring:
+  # 1.1 应用配置
+  application:
+    name: query-boot
+  # 1.2 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/ijupiter_schema?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root              # 数据库账号
+    password: xujin@110418      # 数据库密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接池配置（生产环境必配）
+    hikari:
+      maximum-pool-size: 10  # 最大连接数
+      minimum-idle: 5        # 最小空闲连接
+      idle-timeout: 300000   # 连接空闲超时
+      connection-timeout: 20000 # 连接超时
+  # 1.3 JPA/Hibernate 配置
+  jpa:
+    # 数据库方言（MySQL 8.x 用这个，PostgreSQL 替换为 org.hibernate.dialect.PostgreSQLDialect）
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    # 显式指定实体扫描（兜底，与启动类 @EntityScan 配合）
+    packages-to-scan:
+      - net.ijupiter.trading.core.customer
+      - net.ijupiter.trading.core.funding
+      - net.ijupiter.trading.core.securities
+      - net.ijupiter.trading.core.trading
+    hibernate:
+      ddl-auto: none  # 查询服务不创建表，只读模式
+      show-sql: true     # 显示 SQL（开发环境开启，生产关闭）
+      properties:
+        format_sql: true                  # 格式化 SQL 日志
+        use_sql_comments: true            # 显示 SQL 注释
+        globally_quoted_identifiers: false # 关闭全局引用标识符，避免生成带双引号的标识符
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 使用标准物理命名策略
+    open-in-view: false
+  # 1.4 Spring-data 配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+
+# ========== 2. Axon 查询配置 ==========
+axon:
+  # 禁用AxonServer连接，使用本地嵌入式配置
+  axonserver:
+    enabled: false
+  # 查询处理器配置
+  eventhandling:
+    processors:
+      net.ijupiter.trading.core.query.handlers:
+        mode: tracking
+        tracking:
+          batch-size: 50 # 批量消费事件（默认10，可根据事件量调整）
+          token-claim-interval: 5000ms # Token 认领间隔
+          thread-count: 2 # 多线程消费（事件量较大时增加）
+  # 序列化配置（查询结果序列化/反序列化）
+  serializer:
+    general: jackson       # 通用序列化
+    messages: jackson       # 消息序列化
+  # 禁用更新检查
+  update-check:
+    enabled: false
+
+# 查询模块特定配置
+trading:
+  query:
+    event-processor:
+      thread-pool-size: 4
+      batch-size: 100
+    cache:
+      enabled: true
+      ttl: 300
+      max-size: 10000
+    pagination:
+      default-page: 1
+      default-size: 20
+      max-size: 100
+
+# 日志配置
+logging:
+  level:
+    net.ijupiter.trading: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.axonframework: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 管理端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always

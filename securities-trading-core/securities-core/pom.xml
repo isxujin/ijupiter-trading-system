@@ -19,6 +19,11 @@
         <!-- 二方依赖 -->
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
+            <artifactId>securities-trading-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
             <artifactId>securities-api</artifactId>
             <version>${project.version}</version>
         </dependency>

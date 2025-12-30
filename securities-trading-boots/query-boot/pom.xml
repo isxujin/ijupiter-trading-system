@@ -6,14 +6,14 @@
 
     <parent>
         <groupId>net.ijupiter.trading</groupId>
-        <artifactId>securities-trading-web</artifactId>
+        <artifactId>securities-trading-boots</artifactId>
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>query-web</artifactId>
+    <artifactId>query-boot</artifactId>
     <packaging>jar</packaging>
-    <name>Query Web</name>
-    <description>查询服务Web接口</description>
+    <name>Query Boot</name>
+    <description>查询服务启动器</description>
 
     <dependencies>
         <!-- 二方依赖 -->
@@ -24,14 +24,36 @@
         </dependency>
         <dependency>
             <groupId>net.ijupiter.trading</groupId>
-            <artifactId>common-web</artifactId>
+            <artifactId>query-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ijupiter.trading</groupId>
+            <artifactId>redis-adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
         
         <!-- 三方依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -49,6 +71,18 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

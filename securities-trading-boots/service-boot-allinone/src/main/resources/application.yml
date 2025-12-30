@@ -90,6 +90,25 @@ axon:
   eventstore:
     # 快照触发策略（可选：聚合根事件数达到 50 触发快照）
     snapshot-threshold: 50
+    jpa:
+      # 自定义领域事件表名（替换DomainEventEntry）
+      domain-event-entry-table: axon_domain_event
+      # 自定义快照事件表名（替换SnapshotEventEntry）
+      snapshot-event-entry-table: axon_snapshot_event
+      # 自定义快照触发器表名（替换SnapshotTrigger）
+      snapshot-trigger-table: axon_snapshot_trigger
+      # 自定义领域事件序列名（替换DomainEventEntry_SEQ）
+      domain-event-sequence-name: axon_domain_event_seq
+      # 自定义快照事件序列名（替换SnapshotEventEntry_SEQ）
+      snapshot-event-sequence-name: axon_snapshot_event_seq
+      # 自定义快照触发器序列名（替换SnapshotTrigger_SEQ）
+      snapshot-trigger-sequence-name: axon_snapshot_trigger_seq
+  tokenstore:
+    jpa:
+      # 仅支持部分属性（如序列化器），表名需自定义实体
+      serializer: jackson
+      token-entry-table: axon_token_entry
+      token-sequence-name: axon_token_entry_seq
   # 2.3 AMQP 连接器配置（适配 RabbitMQ）
   amqp:
     exchange: axon-command-exchange  # 命令传输的交换机名称（自动创建）
