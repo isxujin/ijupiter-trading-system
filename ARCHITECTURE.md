@@ -116,12 +116,12 @@ ijupiter-trading-system (父模块)
 - **职责**: 定义系统各模块间的接口契约
 - **子模块**:
   - **business-api**: 业务领域API，包括客户管理、资金、证券、清/结算、交易撮合、通用查询、系统管理等API
-  - **customer-api**: 客户管理API，提供客户、客户资金账户、客户证券账户等接口 - 待实现
-  - **funding-api**: 资金API，提供资金余额、资金变动流水、交易所信息等接口 - 待实现
-  - **securities-api**: 证券API，提供证券持仓、持仓变动流水、银行信息等接口 - 待实现
-  - **settlement-api**: 清/结算API，提供日清/结算相关功能接口 - 待实现
-  - **trading-engine-api**: 交易撮合API，提供日间证券标的交易/撮合相关功能接口 - 待实现
-  - **query-api**: 通用查询API，提供所有上述模块的查询能力接口 - 待实现
+  - **customer-api**: 客户管理API，提供客户、客户资金账户、客户证券账户等接口 - **已实现**
+  - **funding-api**: 资金API，提供资金余额、资金变动流水、交易所信息等接口 - **已实现**
+  - **securities-api**: 证券API，提供证券持仓、持仓变动流水、银行信息等接口 - **已实现**
+  - **settlement-api**: 清/结算API，提供日清/结算相关功能接口 - **API已设计**
+  - **trading-engine-api**: 交易撮合API，提供日间证券标的交易/撮合相关功能接口 - **API已设计**
+  - **query-api**: 通用查询API，提供所有上述模块的查询能力接口 - **已实现**
   - **system-api**: 系统管理API，提供系统操作员、角色、权限、数据字典等接口 - **已实现**
     - UserDTO、RoleDTO、PermissionDTO、DictionaryDTO等
     - UserService、RoleService、PermissionService等接口
@@ -132,30 +132,37 @@ ijupiter-trading-system (父模块)
 #### 4. securities-trading-core
 - **职责**: 实现核心业务逻辑和事件处理
 - **子模块**:
-  - **customer-core**: 客户管理核心，处理客户信息、客户资金账户、客户证券账户等
+  - **customer-core**: 客户管理核心，采用DDD和CQRS架构，处理客户信息、客户资金账户、客户证券账户等 - **已实现**
     - 客户账户拆分设计：交易账户拆分为基本信息和持仓，资金账户拆分为基本信息和余额
+    - 聚合根：客户聚合根及事件处理
     - 实体层：客户、客户资金账户基本信息、客户资金账户余额、客户证券账户基本信息、客户证券账户持仓等实体
+    - 命令处理器和事件处理器：客户创建、更新、冻结等操作的处理器
     - 仓储层：各实体的Repository接口
-    - 服务层：客户管理相关Service实现
-  - **funding-core**: 资金管理核心，处理客户资金余额、资金变动流水、交易所信息、证券产品标的、证券交易日历等
-    - 实体层：资金余额、资金变动流水、交易所信息、证券产品标的、证券交易日历等实体
+    - 领域服务层：客户管理相关服务
+  - **funding-core**: 资金管理核心，采用DDD和CQRS架构，处理客户资金余额、资金变动流水、交易所信息、证券产品标的、证券交易日历等 - **已实现**
+    - 聚合根：资金账户聚合根及事件处理
+    - 实体层：资金账户、资金台账、资金交易记录等实体
+    - 命令处理器和事件处理器：资金账户创建、转账、冻结等操作的处理器
     - 仓储层：各实体的Repository接口
-    - 服务层：资金管理相关Service实现
-  - **securities-core**: 证券管理核心，处理客户证券持仓、持仓变动流水、银行信息等
-    - 实体层：客户证券持仓、持仓变动流水、银行信息等实体
+    - 领域服务层：资金管理相关服务
+  - **securities-core**: 证券管理核心，采用DDD和CQRS架构，处理客户证券持仓、持仓变动流水、银行信息等 - **已实现**
+    - 聚合根：证券账户聚合根及事件处理
+    - 实体层：证券账户、证券持仓、证券交易记录等实体
+    - 命令处理器和事件处理器：证券账户创建、转账等操作的处理器
     - 仓储层：各实体的Repository接口
-    - 服务层：证券管理相关Service实现
-  - **settlement-core**: 清/结算核心，处理日清/结算相关功能
+    - 领域服务层：证券管理相关服务
+  - **settlement-core**: 清/结算核心，处理日清/结算相关功能 - **API已设计**
     - 实体层：结算记录、结算流水等实体
     - 仓储层：各实体的Repository接口
     - 服务层：清/结算相关Service实现
-  - **trading-engine-core**: 交易撮合核心，处理日间证券标的交易/撮合相关功能
+  - **trading-engine-core**: 交易撮合核心，处理日间证券标的交易/撮合相关功能 - **API已设计**
     - 实体层：交易订单、成交记录等实体
     - 仓储层：各实体的Repository接口
     - 服务层：交易撮合相关Service实现
-  - **query-core**: 通用查询核心，处理所有模块的查询请求，采用查询与事件分离架构
-    - 服务层：各模块查询相关Service实现
-    - 查询模型：针对各模块查询需求优化的数据模型
+  - **query-core**: 通用查询核心，采用查询与事件分离架构，处理所有模块的查询请求 - **已实现**
+    - 查询处理器：客户综合信息、交易流水、资金流水、持仓等查询处理器
+    - 实体映射器：用于查询结果与DTO之间的转换
+    - 查询配置：Axon查询相关配置
   - **system-core**: 系统管理核心，采用传统MVC架构，处理系统操作员、角色、权限、数据字典、系统参数等，为管理终端提供标准的CRUD服务 - **已实现**
     - **实体层**: 操作员、角色、权限、数据字典、系统参数等实体定义
     - **仓储层**: 各实体的Repository接口
@@ -178,19 +185,20 @@ ijupiter-trading-system (父模块)
     - 统一的页面模板结构
     - 包结构调整：控制器包名从/controller调整为/controllers，模型包名从/dto调整为/models
   - **system-web**: 系统管理Web模块，提供系统设置界面，继承common-web的公共资源 - **已实现**
+  - **query-web**: 通用查询Web模块，提供客户综合信息、交易流水、资金流水等查询功能，继承common-web的公共资源 - **已实现**
     - **customer-web**: 客户管理Web模块，提供客户管理界面，继承common-web的公共资源 - 待实现
   - **funding-web**: 资金Web模块，提供资金管理界面，继承common-web的公共资源 - 待实现
   - **securities-web**: 证券Web模块，提供证券管理界面，继承common-web的公共资源 - 待实现
   - **settlement-web**: 清/结算Web模块，提供清/结算管理界面，继承common-web的公共资源 - 待实现
   - **trading-engine-web**: 交易撮合Web模块，提供交易撮合管理界面，继承common-web的公共资源 - 待实现
-  - **query-web**: 通用查询Web模块，提供所有模块的查询界面，继承common-web的公共资源 - 待实现
 
 #### 7. securities-trading-boots
 - **职责**: 提供不同场景的应用启动入口
 - **子模块**:
   - **service-boot-allinone**: 服务单体启动器，包含所有核心服务模块 - **已实现**
-  - **web-boot-investment**: 投资者Web启动器，面向证券投资者域的客户端 - **已实现**
   - **web-boot-management**: 管理员Web启动器，面向管理员域的管理终端 - **已实现**
+  - **web-boot-investment**: 投资者Web启动器，面向证券投资者域的客户端 - **已实现**
+  - **query-boot**: 查询服务启动器，提供专用的查询服务接口 - **已实现**
 - **特点**: 支持按业务域分离启动，方便不同角色使用
 
 ## 设计原则
@@ -277,6 +285,7 @@ ijupiter-trading-system (父模块)
 - 自动下载Maven 3.9.5，无需本地安装Maven
 - 提供验证和初始化脚本，简化环境设置
 - 支持跨平台构建（Windows、Linux、macOS）
+- Spring Cloud集成：已集成Spring Cloud 2023.0.5，支持Feign客户端
 
 ## 业务领域划分
 
@@ -610,12 +619,11 @@ ijupiter-trading-system (父模块)
 
 ### ⏳ 待实现模块
 
-1. **customer-core/web** - 客户管理模块
-2. **funding-core/web** - 资金管理模块
-3. **securities-core/web** - 证券管理模块
-4. **settlement-core/web** - 清算模块
-5. **trading-engine-core/web** - 交易引擎模块
-6. **query-core/web** - 通用查询模块
+1. **customer-web** - 客户管理Web界面
+2. **funding-web** - 资金管理Web界面
+3. **securities-web** - 证券管理Web界面
+4. **settlement-core/web** - 清算核心实现和Web界面
+5. **trading-engine-core/web** - 交易引擎核心实现和Web界面
 
 ## 架构特色
 
