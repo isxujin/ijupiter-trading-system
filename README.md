@@ -71,6 +71,7 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 **核心技术栈**：
 - Spring Boot: 3.5.8
 - Axon Framework: 4.12.2
+- Spring Cloud: 2023.0.5
 - MySQL Connector: 9.5.0
 - Lombok: 1.18.42
 - Hutool: 5.8.42
@@ -99,13 +100,34 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
   - UserDTO、RoleDTO、PermissionDTO等
   - UserService、RoleService、PermissionService等接口
 
-**待实现模块**：
 - **customer-api**：客户管理API
+  - CustomerDTO、CustomerType、CustomerStatus等
+  - CustomerService接口及相关枚举
+
 - **funding-api**：资金管理API
+  - FundingAccountDTO、FundingTransactionDTO、FundingTransferDTO等
+  - FundingService接口及相关枚举
+
 - **securities-api**：证券管理API
+  - SecuritiesAccountDTO、SecuritiesPositionDTO、SecuritiesTransactionDTO等
+  - SecuritiesService接口及相关枚举
+
 - **settlement-api**：清算API
+  - SettlementDTO、SettlementStatistics等
+  - SettlementService接口
+
 - **trading-engine-api**：交易引擎API
-- **query-api**：通用查询API
+  - TradingEngineDTO、TradingOrderDTO等
+  - TradingEngineService接口
+
+- **query-api**：查询API
+  - 客户综合信息查询DTO和Query对象
+  - 客户交易流水查询DTO和Query对象
+  - 客户资金流水查询DTO和Query对象
+  - 客户资金余额查询DTO和Query对象
+  - 客户证券持仓查询DTO和Query对象
+  - 客户每日证券收益查询DTO和Query对象
+  - QueryService接口
 
 #### 3.2 middleware-spi（中间件SPI）
 
@@ -126,14 +148,57 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 **仓储层**：提供完整的JPA Repository接口
 **服务层**：完整的业务逻辑实现
 
-#### 4.2 其他核心模块 - **架构已设计，待实现**
+#### 4.2 customer-core（客户管理核心）- **已实现**
 
-- **customer-core**：客户管理核心
-- **funding-core**：资金管理核心
-- **securities-core**：证券管理核心
-- **settlement-core**：清算核心
-- **trading-engine-core**：交易引擎核心
-- **query-core**：通用查询核心
+**职责**：客户管理功能，采用DDD和CQRS架构
+
+**已实现功能**：
+- 客户聚合根（Customer）及事件处理
+- 客户命令处理器和事件处理器
+- 客户领域服务和仓储接口
+- 客户实体和枚举定义
+
+#### 4.3 funding-core（资金管理核心）- **已实现**
+
+**职责**：资金管理功能，采用DDD和CQRS架构
+
+**已实现功能**：
+- 资金账户聚合根（FundingAccount）及事件处理
+- 资金账户实体、台账和交易记录实体
+- 资金命令处理器和事件处理器
+- 资金领域服务和仓储接口
+
+#### 4.4 securities-core（证券管理核心）- **已实现**
+
+**职责**：证券管理功能，采用DDD和CQRS架构
+
+**已实现功能**：
+- 证券账户聚合根（SecuritiesAccount）及事件处理
+- 证券账户、持仓和交易记录实体
+- 证券命令处理器和事件处理器
+- 证券领域服务和仓储接口
+
+#### 4.5 query-core（通用查询核心）- **已实现**
+
+**职责**：实现CQRS中的查询部分，提供对客户综合信息的查询功能
+
+**已实现功能**：
+- 客户综合信息查询处理器
+- 客户交易流水查询处理器
+- 客户资金流水查询处理器
+- 客户资金账户余额查询处理器
+- 客户证券持仓信息查询处理器
+- 客户每日证券收益信息查询处理器
+- 实体映射器（EntityMapper）
+- 查询配置（QueryConfig）
+
+#### 4.6 settlement-core（清算核心）- **架构已设计，部分实现**
+
+**职责**：交易清算和结算功能
+
+#### 4.7 trading-engine-core（交易引擎核心）- **架构已设计，部分实现**
+
+**职责**：核心交易撮合引擎
 
 ### 5. securities-trading-middleware（中间件适配器层）
 
@@ -168,6 +233,14 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 - **system-web**：系统管理Web模块
   - 用户、角色、权限、字典、参数管理控制器
 
+- **query-web**：查询服务Web模块
+  - 客户综合信息查询API
+  - 客户交易流水查询API
+  - 客户资金流水查询API
+  - 客户资金账户余额查询API
+  - 客户证券持仓信息查询API
+  - 客户每日证券收益信息查询API
+
 **待实现**：
 - **customer-web**、**funding-web**、**securities-web**等模块
 
@@ -178,6 +251,7 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 **职责**：服务单体启动器
 - Axon事件引擎配置
 - 消息和查询模块配置
+- 完整的事件存储和TokenStore配置
 
 #### 7.2 web-boot-management - **已实现**
 
@@ -190,6 +264,12 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 **职责**：投资者Web启动器
 - 投资者专属功能和界面
 
+#### 7.4 query-boot - **已实现**
+
+**职责**：查询服务启动器
+- 查询服务Web控制器自动配置
+- Feign客户端支持
+
 ## 技术栈详情
 
 ### 后端技术
@@ -197,6 +277,7 @@ iJupiter 证券交易系统是一个基于事件引擎架构的现代化证券�
 - **Spring Boot 3.5.8**：应用框架
 - **Spring Security 6.5.7**：安全框架
 - **Axon Framework 4.12.2**：事件驱动框架
+- **Spring Cloud 2023.0.5**：微服务框架
 - **Spring Data JPA**：数据访问层
 - **Hibernate**：ORM框架
 - **MySQL 9.5.0**：主数据库
@@ -261,44 +342,50 @@ cd securities-trading-boots/web-boot-investment
 ./mvnw spring-boot:run
 ```
 
+### 6. 启动查询服务应用
+```bash
+cd securities-trading-boots/query-boot
+./mvnw spring-boot:run
+```
+
 ## 配置说明
 
 ### 数据库配置
 ```yaml
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/ijupiter_trading?useUnicode=true&characterEncoding=utf8
-    username: your-username
-    password: your-password
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
+ datasource:
+  url: jdbc:mysql://localhost:3306/ijupiter_trading?useUnicode=true&characterEncoding=utf8
+  username: your-username
+  password: your-password
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    maximum-pool-size: 20
+    minimum-idle: 5
 ```
 
 ### Redis配置
 ```yaml
 spring:
-  redis:
-    host: localhost
-    port: 6379
-    password: your-redis-password
-    timeout: 5000ms
-    lettuce:
-      pool:
-        max-active: 20
-        max-idle: 8
+ redis:
+   host: localhost
+   port: 6379
+   password: your-redis-password
+   timeout: 5000ms
+   lettuce:
+     pool:
+       max-active: 20
+       max-idle: 8
 ```
 
 ### RabbitMQ配置
 ```yaml
 spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: your-rabbitmq-username
-    password: your-rabbitmq-password
-    virtual-host: /
+ rabbitmq:
+   host: localhost
+   port: 5672
+   username: your-rabbitmq-username
+   password: your-rabbitmq-password
+   virtual-host: /
 ```
 
 ## 项目结构
@@ -310,11 +397,21 @@ ijupiter-trading-system/
 ├── securities-trading-api/            # 接口定义层
 │   ├── business-api/                # 业务API接口
 │   │   ├── system-api/             # 系统管理API
-│   │   └── [其他业务api]/
+│   │   ├── customer-api/            # 客户管理API
+│   │   ├── funding-api/             # 资金管理API
+│   │   ├── securities-api/           # 证券管理API
+│   │   ├── settlement-api/          # 清算API
+│   │   ├── trading-engine-api/       # 交易引擎API
+│   │   └── query-api/              # 查询API
 │   └── middleware-spi/             # 中间件SPI
 ├── securities-trading-core/            # 核心业务实现层
 │   ├── system-core/                # 系统管理核心
-│   └── [其他业务core]/
+│   ├── customer-core/              # 客户管理核心
+│   ├── funding-core/               # 资金管理核心
+│   ├── securities-core/             # 证券管理核心
+│   ├── settlement-core/            # 清算核心
+│   ├── trading-engine-core/          # 交易引擎核心
+│   └── query-core/                 # 通用查询核心
 ├── securities-trading-middleware/       # 中间件适配器层
 │   ├── redis-adapter/             # Redis缓存适配器
 │   └── rabbitmq-adapter/          # RabbitMQ消息适配器
@@ -322,11 +419,12 @@ ijupiter-trading-system/
 │   ├── common-web/               # 公共Web模块
 │   └── domain-web/               # 业务Web模块
 │       ├── system-web/             # 系统管理Web
-│       └── [其他业务web]/
+│       └── query-web/              # 查询服务Web
 ├── securities-trading-boots/          # 应用启动层
 │   ├── service-boot-allinone/       # 服务单体启动器
 │   ├── web-boot-management/         # 管理端启动器
-│   └── web-boot-investment/         # 投资端启动器
+│   ├── web-boot-investment/         # 投资端启动器
+│   └── query-boot/                # 查询服务启动器
 └── pom.xml                          # 主POM文件
 ```
 
@@ -356,25 +454,63 @@ ijupiter-trading-system/
   - PUT `/system/permission/update/{id}` - 更新权限
   - DELETE `/system/permission/delete/{id}` - 删除权限
 
+### 查询服务模块API
+
+- **客户综合信息查询**：
+  - GET `/api/query/customer/financial-summary/{customerId}` - 查询客户综合信息
+
+- **客户交易流水查询**：
+  - GET `/api/query/customer/transactions/{customerId}` - 查询客户交易流水
+  - 参数：securityCode, transactionType, status, market, startTime, endTime, page, size
+
+- **客户资金流水查询**：
+  - GET `/api/query/customer/funding-transactions/{customerId}` - 查询客户资金流水
+  - 参数：accountId, transactionType, status, startTime, endTime, page, size
+
+- **客户资金账户余额查询**：
+  - GET `/api/query/customer/funding-balance/{customerId}` - 查询客户资金账户余额
+  - 参数：accountId, accountType, status, referenceDate
+
+- **客户证券持仓信息查询**：
+  - GET `/api/query/customer/securities-positions/{customerId}` - 查询客户证券持仓信息
+  - 参数：securityCode, securityType, page, size
+
+- **客户每日证券收益信息查询**：
+  - GET `/api/query/customer/daily-securities-profit/{customerId}` - 查询客户每日证券收益信息
+  - 参数：securityCode, startDate, endDate, page, size
+
+- **客户综合信息订阅**：
+  - GET `/api/query/customer/financial-summary/{customerId}/subscribe` - 订阅客户综合信息变化
+
 ## 实现状态
 
 ### ✅ 已完成功能
 
 1. **完整的系统管理模块**（用户、角色、权限、字典、参数管理）
-2. **中间件适配器**（Redis缓存、RabbitMQ消息）
-3. **Web公共基础框架**
-4. **应用启动器**（服务单体、管理端、投资者端）
-5. **Maven Wrapper集成**和依赖版本管理
-6. **统一异常处理**和API响应格式
+2. **完整的客户管理核心模块**（聚合、命令处理器、事件处理器、领域服务）
+3. **完整的资金管理核心模块**（聚合、命令处理器、事件处理器、领域服务）
+4. **完整的证券管理核心模块**（聚合、命令处理器、事件处理器、领域服务）
+5. **完整的查询核心模块**（多场景查询处理器、实体映射器、查询配置）
+6. **查询服务Web模块**（完整的查询API控制器）
+7. **中间件适配器**（Redis缓存、RabbitMQ消息）
+8. **Web公共基础框架**
+9. **应用启动器**（服务单体、管理端、投资者端、查询服务）
+10. **Maven Wrapper集成**和依赖版本管理
+11. **统一异常处理**和API响应格式
+12. **Spring Cloud集成**（Feign客户端支持）
 
-### ⏳ 待实现功能
+### ⏳ 部分实现功能
 
-1. **客户管理核心模块**及Web界面
-2. **资金管理核心模块**及Web界面
-3. **证券管理核心模块**及Web界面
-4. **清算核心模块**及Web界面
-5. **交易引擎核心模块**及Web界面
-6. **通用查询核心模块**及Web界面
+1. **清算核心模块**（基础架构已设计）
+2. **交易引擎核心模块**（基础架构已设计）
+
+### 📋 待实现功能
+
+1. **客户管理Web界面**
+2. **资金管理Web界面**
+3. **证券管理Web界面**
+4. **清算Web界面**
+5. **交易引擎Web界面**
 
 ## 部署说明
 
@@ -442,7 +578,15 @@ kubectl apply -f k8s/
 - 实现Redis缓存和RabbitMQ消息中间件
 - 建立Web公共框架
 - 完成服务启动器和管理端、投顾端应用
+- 实现完整的客户管理核心模块
+- 实现完整的资金管理核心模块
+- 实现完整的证券管理核心模块
+- 实现完整的查询核心模块
+- 实现查询服务Web模块
+- 添加Spring Cloud集成支持
+- 修复Bean定义冲突问题
+- 修复类型转换和日期处理问题
 
 ---
 
-**注意**：本系统目前处于开发阶段，部分业务模块尚未实现。请参考实现状态了解当前进度。
+**注意**：本系统目前处于开发阶段，部分业务模块的Web界面尚未实现。请参考实现状态了解当前进度。
