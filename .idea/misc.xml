@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="MavenProjectsManager">
-    <option name="originalFiles">
-      <list>
-        <option value="$PROJECT_DIR$/pom.xml" />
-      </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/securities-trading-boots/service-test-boot/pom.xml" />
-        <option value="$PROJECT_DIR$/securities-trading-web/management-web/pom.xml" />
-      </set>
-    </option>
+  <component name="Kotlin2JsCompilerArguments">
+    <option name="moduleKind" value="plain" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="temurin-17" project-jdk-type="JavaSDK" />
+  <component name="Kotlin2JvmCompilerArguments">
+    <option name="jvmTarget" value="1.8" />
+  </component>
+  <component name="KotlinCommonCompilerArguments">
+    <option name="apiVersion" value="2.1" />
+    <option name="languageVersion" value="2.1" />
+  </component>
 </project>
